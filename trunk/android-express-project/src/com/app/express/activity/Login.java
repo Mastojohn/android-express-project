@@ -71,9 +71,11 @@ public class Login extends Activity {
 		Login.context = getApplicationContext();
 		setContentView(R.layout.activity_login);
 
-		// Set up the login form.
+		// Get settings for auto fill the input email.
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-		mEmail = settings.getString("lastEmail", "");
+		
+		// Set up the login form.
+		mEmail = settings.getString("lastEmail", "");// Put the value referenced by the key lastEmail and empty string in the key don't exists.
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
 
@@ -90,6 +92,12 @@ public class Login extends Activity {
 						return false;
 					}
 				});
+		
+		// Autoselect password input.
+		if(mEmailView.getText().length() > 0){
+			// Autoselect the input password.
+			mPasswordView.requestFocus();
+		}
 
 		mLoginFormView = findViewById(R.id.login_form);
 		mLoginStatusView = findViewById(R.id.login_status);
