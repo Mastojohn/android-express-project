@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.LocalActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,8 +27,16 @@ import android.widget.TextView;
  * well.
  */
 public class LoginActivity extends Activity {
+	/**
+	 * Context initialized on create.
+	 */
 	public static Context context;
-	
+
+	/**
+	 * Name of the Shared Preference file.
+	 */
+	public static final String PREFS_NAME = "login";
+
 	/**
 	 * The default email to populate the email field with.
 	 */
@@ -57,7 +66,8 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+		mEmail = settings.getString("lastEmail", "");
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
 
@@ -219,9 +229,16 @@ public class LoginActivity extends Activity {
 			if (success) {
 				// Connect the user.
 				Session.doConnect(mEmail);
-				
+
+				// Save the mail into preferences.
+				SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putString("lastEmail", mEmail);
+				editor.commit();
+
 				// Call next activity.
-				Intent intent = new Intent(LoginActivity.context, NextDelivery.class);
+				Intent intent = new Intent(LoginActivity.context,
+						NextDelivery.class);
 				startActivity(intent);
 
 				finish();
