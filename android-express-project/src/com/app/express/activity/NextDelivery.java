@@ -1,4 +1,8 @@
-package com.app.express;
+package com.app.express.activity;
+
+import com.app.express.R;
+import com.app.express.R.layout;
+import com.app.express.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;

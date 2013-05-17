@@ -1,5 +1,11 @@
-package com.app.express;
+package com.app.express.activity;
 
+import com.app.express.R;
+import com.app.express.R.id;
+import com.app.express.R.layout;
+import com.app.express.R.menu;
+import com.app.express.R.string;
+import com.app.express.helper.Session;
 import com.server.erp.Erp;
 
 import android.animation.Animator;
@@ -26,7 +32,7 @@ import android.widget.TextView;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class LoginActivity extends Activity {
+public class Login extends Activity {
 	/**
 	 * Context initialized on create.
 	 */
@@ -62,7 +68,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		LoginActivity.context = getApplicationContext();
+		Login.context = getApplicationContext();
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
@@ -237,7 +243,7 @@ public class LoginActivity extends Activity {
 				editor.commit();
 
 				// Call next activity.
-				Intent intent = new Intent(LoginActivity.context,
+				Intent intent = new Intent(Login.context,
 						NextDelivery.class);
 				startActivity(intent);
 
