@@ -1,12 +1,14 @@
 package com.app.express.activity;
 
-import com.app.express.R;
-import com.app.express.R.layout;
-import com.app.express.R.menu;
+import java.io.InputStream;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+
+import com.app.express.R;
+import com.server.erp.Erp;
 
 public class NextDelivery extends Activity {
 
@@ -14,6 +16,9 @@ public class NextDelivery extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_next_delivery);
+		
+		// Get the round xml file from the ERP. (Simulation)
+		InputStream rounds = Erp.getRoundsByUser(this);
 	}
 
 	@Override
