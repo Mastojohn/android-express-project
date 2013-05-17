@@ -1,0 +1,555 @@
+<tournee>
+	<livreur>
+		<id>789</id>
+		<nom>Eric LAMBERT</nom>
+	</livreur>
+	<date_tournee>27/05/2013</date_tournee>
+    <livraison>
+		<id>20130527789004505</id>
+        <expediteur>
+			<nom>SARL TOTO</nom>
+			<rue>3 cours Alsace Lorraine</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556903186</telephone>
+		</expediteur>
+        <colis>
+			<nombre>4</nombre>
+			<paquet>
+				<code_barre>8806071525143</code_barre>
+				<taille>30x10x25</taille>
+				<poids>0.67</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8806071532530</code_barre>
+				<taille>20*40*20</taille>
+				<poids>0.39</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8872021349011</code_barre>
+				<taille>30*30*30</taille>
+				<poids>0.67</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8806071525143</code_barre>
+				<taille>30x10x25
+				</taille>
+				<poids>0.67</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>EXIA-CESI à l'attention de M. Jean MARTIN</nom>
+			<rue>60 rue du Maurian</rue>
+			<cp>33291</cp>
+			<ville>BLANQUEFORT</ville>
+			<complement_adresse>Déposer le colis à l'accueil</complement_adresse>
+			<telephone>0556955050</telephone>
+			<portable>0626277647</portable>
+		</destinataire>
+    </livraison>
+    <livraison>
+		<id>20130527789004509</id>
+         <expediteur>
+			<nom>SARL TOTO</nom>
+			<rue>3 cours Alsace Lorraine</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556903186</telephone>
+		</expediteur>
+        <colis>
+			<nombre>7</nombre>
+			<paquet>
+				<code_barre>8830715542722</code_barre>
+				<taille>45x25x10</taille>
+				<poids>0,84</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8892040291660</code_barre>
+				<taille>20x40x30</taille>
+				<poids>1,62</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8862846115145</code_barre>
+				<taille>35x20x35</taille>
+				<poids>1,26</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8842852801475</code_barre>
+				<taille>15x50x45</taille>
+				<poids>1,39</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8860552083115</code_barre>
+				<taille>15x50x15</taille>
+				<poids>0,94</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8811850742694</code_barre>
+				<taille>20x30x40</taille>
+				<poids>1,57</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8857936058198</code_barre>
+				<taille>20x35x50</taille>
+				<poids>1,26</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Sébastien JOLIVET</nom>
+			<rue>55 rue Jardin Public</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<complement_adresse>Résidence les lilas Appartement 3 Deuxieme étage Batiment E</complement_adresse>
+			<telephone>0554720474</telephone>
+			<portable>0674365174</portable>
+		</destinataire>
+    </livraison>
+	<livraison>
+		<id>20130527789004812</id>
+        <expediteur>
+			<nom>IER</nom>
+			<rue>58 rue Leberthon</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556978693</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8846341799516</code_barre>
+				<taille>20x15x35</taille>
+				<poids>1,2</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Julien LEONARD</nom>
+			<rue>194 Bis boulevard Albert 1er</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<complement_adresse></complement_adresse>
+			<telephone>0553783952</telephone>
+			<portable>0680727147</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004832</id>
+        <expediteur>
+			<nom>Espace GUILO</nom>
+			<rue>19 avenue Labarde</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556709973</telephone>
+		</expediteur>
+        <colis>
+			<nombre>3</nombre>
+			<paquet>
+				<code_barre>8847389360426</code_barre>
+				<taille>45x25x25</taille>
+				<poids>1,48</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8847506767559</code_barre>
+				<taille>5x15x10</taille>
+				<poids>0,47</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8810849727021</code_barre>
+				<taille>10x10x15</taille>
+				<poids>0,76</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Jean-Aymeric DIET</nom>
+			<rue>217 Bis cours Marne</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<complement_adresse></complement_adresse>
+			<telephone>0553811154</telephone>
+			<portable>0612548798</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004835</id>
+        <expediteur>
+			<nom>Duo S.A.</nom>
+			<rue>335 rue Georges Bonnac</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556467358</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8895276751479</code_barre>
+				<taille>50x50x20</taille>
+				<poids>1,45</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>Mme Marie-Amélie Trias</nom>
+			<rue>42 rue Tauzia</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0559758930</telephone>
+			<portable>0661478246</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004941</id>
+        <expediteur>
+			<nom>Duo S.A.</nom>
+			<rue>335 rue Georges Bonnac</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556467358</telephone>
+		</expediteur>
+        <colis>
+			<nombre>5</nombre>
+			<paquet>
+				<code_barre>882395647294</code_barre>
+				<taille>25x35x15</taille>
+				<poids>1,64</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8836498769063</code_barre>
+				<taille>45x40x25</taille>
+				<poids>1,29</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8839517296941</code_barre>
+				<taille>30x50x20</taille>
+				<poids>0,55</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8857099701204</code_barre>
+				<taille>10x25x10</taille>
+				<poids>1,8</poids>
+			</paquet>
+			<paquet>
+				<code_barre>8852549122941</code_barre>
+				<taille>35x50x10</taille>
+				<poids>1,94</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>Mlle Jessica BOUVIER</nom>
+			<rue>25 cours Verdun</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0553273378</telephone>
+			<portable>0617014164</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004956</id>
+        <expediteur>
+			<nom>Duo S.A.</nom>
+			<rue>335 rue Georges Bonnac</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556467358</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8823527651780</code_barre>
+				<taille>30x10x50</taille>
+				<poids>0,95</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Guillaume BRAULT</nom>
+			<rue>21 rue Nuits</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0551972682</telephone>
+			<portable>0632979672</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004964</id>
+        <expediteur>
+			<nom>Duo S.A.</nom>
+			<rue>335 rue Georges Bonnac</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556467358</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8863544493473</code_barre>
+				<taille>40x35x30</taille>
+				<poids>1,6</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Stéphane AMET</nom>
+			<rue>87 quai Brazza</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0554065612</telephone>
+			<portable>0665626828</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004966</id>
+        <expediteur>
+			<nom>Espace GUILO</nom>
+			<rue>19 avenue Labarde</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556709973</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8834521736750</code_barre>
+				<taille>25x15x40</taille>
+				<poids>0,48</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>Mme Vanessa Barbier</nom>
+			<rue>30 rue Joseph Bonnet</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0557607930</telephone>
+			<portable>0643375110</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004969</id>
+        <expediteur>
+			<nom>Espace GUILO</nom>
+			<rue>19 avenue Labarde</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556709973</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8891195685691</code_barre>
+				<taille>40x40x45</taille>
+				<poids>1,17</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Jacques LEFEBVRE</nom>
+			<rue>3 place Mareilhac</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0554380252</telephone>
+			<portable>0668553212</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004973</id>
+        <expediteur>
+			<nom>IER</nom>
+			<rue>58 rue Leberthon</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556978693</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8890057149756</code_barre>
+				<taille>25x20x15</taille>
+				<poids>1,05</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>Mme Emmanuelle NAULEAU</nom>
+			<rue>88 cours Victor Hugo</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0552075453</telephone>
+			<portable>0664332697</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004982</id>
+        <expediteur>
+			<nom>SARL TOTO</nom>
+			<rue>3 cours Alsace Lorraine</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556903186</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8839845778152</code_barre>
+				<taille>25x10x15</taille>
+				<poids>0,42</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>Mme Myriam SOLER</nom>
+			<rue>21 rue Loup</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0554144461</telephone>
+			<portable>0636111738</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789004985</id>
+        <expediteur>
+			<nom>Duo S.A.</nom>
+			<rue>335 rue Georges Bonnac</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556467358</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8843477904608</code_barre>
+				<taille>15x35x10</taille>
+				<poids>0,59</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Romain TEKLA</nom>
+			<rue>6 rue Candale</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>055156562</telephone>
+			<portable>0676967450</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789005005</id>
+        <expediteur>
+			<nom>Bounif</nom>
+			<rue>79 rue Marsan</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556723646</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8814519209596</code_barre>
+				<taille>10x10x30</taille>
+				<poids>1,49</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Laurent HAMON</nom>
+			<rue>140 boulevard Godard</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0557333447</telephone>
+			<portable>0656046897</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789005006</id>
+        <expediteur>
+			<nom>Bounif</nom>
+			<rue>79 rue Marsan</rue>
+			<cp>33000</cp>
+			<ville>33000</ville>
+			<telephone>0556723646</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8888645580156</code_barre>
+				<taille>50x30x50</taille>
+				<poids>0,48</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Thomas MAINGUET</nom>
+			<rue>116 quai Souys</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0554369965</telephone>
+			<portable>0693301786</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789005040</id>
+        <expediteur>
+			<nom>IER</nom>
+			<rue>58 rue Leberthon</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556978693</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8873252088678</code_barre>
+				<taille>40x45x45</taille>
+				<poids>1,84</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>M. Thomas AUDREN</nom>
+			<rue>127 cours Médoc</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0557262098</telephone>
+			<portable>0641247097</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789005045</id>
+        <expediteur>
+			<nom>Duo S.A.</nom>
+			<rue>335 rue Georges Bonnac</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556467358</telephone>
+		</expediteur>
+       <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8898801165226</code_barre>
+				<taille>20x45x30</taille>
+				<poids>0,67</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>Mlle Roxanne RICHARD</nom>
+			<rue>10 place Parlement</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556661167</telephone>
+			<portable>0646331998</portable>
+		</destinataire>
+	</livraison>
+	<livraison>
+		<id>20130527789005051</id>
+        <expediteur>
+			<nom>Bounif</nom>
+			<rue>79 rue Marsan</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0556723646</telephone>
+		</expediteur>
+        <colis>
+			<nombre>1</nombre>
+			<paquet>
+				<code_barre>8858148966703</code_barre>
+				<taille>15x20x15</taille>
+				<poids>0,61</poids>
+			</paquet>
+		</colis>
+        <destinataire>
+			<nom>Mme. Marie PANTALEON</nom>
+			<rue>116 quai Souys</rue>
+			<cp>33000</cp>
+			<ville>BORDEAUX</ville>
+			<telephone>0554781503</telephone>
+			<portable>0664709519</portable>
+		</destinataire>
+	</livraison>
+</tournee>
