@@ -1,18 +1,19 @@
 package com.app.express.db.persistence;
 
 import com.app.express.db.dao.DelivererDao;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "deliverer", daoClass = DelivererDao.class)
 public class Deliverer {
-	@DatabaseField(id = true)
+	@DatabaseField(generatedId = true, columnName = "deliverer_id", dataType = DataType.INTEGER_OBJ)
 	private Integer delivererId;
 
-	@DatabaseField
+	@DatabaseField(canBeNull = false, dataType = DataType.STRING)
 	private String name;
 
-	@DatabaseField
+	@DatabaseField(index = true, dataType = DataType.STRING)
 	private String email;
 
 	public Deliverer() {
@@ -23,7 +24,7 @@ public class Deliverer {
 		this.name = name;
 		this.email = email;
 	}
-	
+
 	public Deliverer(Integer delivererId, String name, String email) {
 		this.delivererId = delivererId;
 		this.name = name;
