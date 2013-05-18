@@ -1,19 +1,22 @@
 package com.app.express.activity;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.List;
 
-import android.app.Activity;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
 import com.app.express.R;
+import com.app.express.db.DatabaseHelper;
+import com.app.express.db.dao.DeliveryDao;
+import com.app.express.db.persistence.Delivery;
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.j256.ormlite.dao.Dao;
 import com.server.erp.Erp;
 
-public class NextDelivery extends Activity {
+public class NextDelivery extends OrmLiteBaseActivity<DatabaseHelper> {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

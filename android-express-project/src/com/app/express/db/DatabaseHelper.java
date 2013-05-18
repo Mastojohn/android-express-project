@@ -1,109 +1,120 @@
 package com.app.express.db;
 
-
 import java.sql.SQLException;
+import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.app.express.R;
-import com.app.express.db.model.SimpleData;
+import com.app.express.db.dao.DelivererDao;
+import com.app.express.db.persistence.Deliverer;
+import com.app.express.db.persistence.Delivery;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 /**
- * Database helper class used to manage the creation and upgrading of your database. This class also usually provides
- * the DAOs used by the other classes.
+ * Database helper which creates and upgrades the database and provides the DAOs for the app.
+ * 
+ * @author Ambroise
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-	// name of the database file for your application -- change to something appropriate for your app
-	private static final String DATABASE_NAME = "helloAndroid.db";
-	// any time you make changes to your database objects, you may have to increase the database version
-	private static final int DATABASE_VERSION = 1;
+	/************************************************
+	 * Suggested Copy/Paste code. Everything from here to the done block.
+	 ************************************************/
 
-	// the DAO object we use to access the SimpleData table
-	private Dao<SimpleData, Integer> simpleDao = null;
-	private RuntimeExceptionDao<SimpleData, Integer> simpleRuntimeDao = null;
+	private static final String DATABASE_NAME = "express.db";
+	private static final int DATABASE_VERSION = 6;
+
+	private Dao<Deliverer, Integer> delivererDao;
+	private Dao<Delivery, Integer> clickDao;
 
 	public DatabaseHelper(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
-	/**
-	 * This is called when the database is first created. Usually you should call createTable statements here to create
-	 * the tables that will store your data.
-	 */
+	/************************************************
+	 * Suggested Copy/Paste Done
+	 ************************************************/
+
 	@Override
-	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
+	public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
 		try {
-			Log.i(DatabaseHelper.class.getName(), "onCreate");
-			TableUtils.createTable(connectionSource, SimpleData.class);
+			TableUtils.createTable(connectionSource, Deliverer.class);
+			TableUtils.createTable(connectionSource, Delivery.class);
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
-			throw new RuntimeException(e);
+			Log.e(DatabaseHelper.class.getName(), "Impossible de créer les tables de la BDD.", e);
 		}
+		
+		// ---------------------------- SAMPLES SOURCE CODE ---------------------------
+		
+		// Add DELIVERER.
+//		Deliverer deliverer = new Deliverer(789, "Eric LAMBERT", "eric.lambert@gmail.com");
+//		Dao<Deliverer, String> dao;
+//		try {
+//			dao = new DelivererDao(connectionSource);
+//			dao.createIfNotExists(deliverer);
+//			
+//		} catch (SQLException e) {
+//			Log.e(DatabaseHelper.class.getName(), "Impossible de générer les valeurs par défaut de la BDD.", e);
+//		}
+		
+		// GET DELIVERER BY ID
+//		try {
+//			Dao<Deliverer, Integer> dao = getHelper().getDelivererDao();
+//			Deliverer deliverer2 = dao.queryForId(789);
+//			Toast.makeText(this, "ID: "+Integer.toString(deliverer2.getDelivererId()), Toast.LENGTH_LONG).show();
+//		} catch (SQLException e) {
+//			throw new RuntimeException(e);
+//		}catch (Exception e) {
+//			Toast.makeText(this, "Impossible de récupérer l'utilisateur 789.", Toast.LENGTH_LONG)
+//			.show();
+//		}
+		
 
-		// here we try inserting data in the on-create as a test
-		RuntimeExceptionDao<SimpleData, Integer> dao = getSimpleDataDao();
-		long millis = System.currentTimeMillis();
-		// create some entries in the onCreate
-		SimpleData simple = new SimpleData(millis);
-		dao.create(simple);
-		simple = new SimpleData(millis + 1);
-		dao.create(simple);
-		Log.i(DatabaseHelper.class.getName(), "created new entries in onCreate: " + millis);
+		// Create and get all deliveries.
+//		Delivery delivery = new Delivery(1, 1, 1);
+//		Dao<Delivery, Integer> dao;
+//		try {
+//			dao = getHelper().getDeliveryDao();
+//			dao.createIfNotExists(delivery);
+//			List<Delivery> deliverer2 = dao.queryForAll();
+//			Toast.makeText(this, "Taille : "+Integer.toString(deliverer2.size()), Toast.LENGTH_LONG).show();
+//			
+//		} catch (Exception e) {
+//			
+//		}
+		
 	}
 
-	/**
-	 * This is called when your application is upgraded and it has a higher version number. This allows you to adjust
-	 * the various data to match the new version number.
-	 */
 	@Override
-	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+	public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
 		try {
-			Log.i(DatabaseHelper.class.getName(), "onUpgrade");
-			TableUtils.dropTable(connectionSource, SimpleData.class, true);
-			// after we drop the old databases, we create the new ones
-			onCreate(db, connectionSource);
+			TableUtils.dropTable(connectionSource, Deliverer.class, true);
+			TableUtils.dropTable(connectionSource, Delivery.class, true);
+			onCreate(sqliteDatabase, connectionSource);
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
-			throw new RuntimeException(e);
+			Log.e(DatabaseHelper.class.getName(), "Impossible de passer de la version " + oldVer + " à "
+					+ newVer +".", e);
 		}
 	}
 
-	/**
-	 * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
-	 * value.
-	 */
-	public Dao<SimpleData, Integer> getDao() throws SQLException {
-		if (simpleDao == null) {
-			simpleDao = getDao(SimpleData.class);
+	public Dao<Deliverer, Integer> getDelivererDao() throws SQLException {
+		if (delivererDao == null) {
+			delivererDao = getDao(Deliverer.class);
 		}
-		return simpleDao;
+		return delivererDao;
 	}
 
-	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our SimpleData class. It will
-	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
-	 */
-	public RuntimeExceptionDao<SimpleData, Integer> getSimpleDataDao() {
-		if (simpleRuntimeDao == null) {
-			simpleRuntimeDao = getRuntimeExceptionDao(SimpleData.class);
+	public Dao<Delivery, Integer> getDeliveryDao() throws SQLException {
+		if (clickDao == null) {
+			clickDao = getDao(Delivery.class);
 		}
-		return simpleRuntimeDao;
-	}
-
-	/**
-	 * Close the database connections and clear any cached DAOs.
-	 */
-	@Override
-	public void close() {
-		super.close();
-		simpleRuntimeDao = null;
+		return clickDao;
 	}
 }
