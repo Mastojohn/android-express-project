@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.app.express.R;
+import com.app.express.activity.NextDelivery;
 import com.app.express.db.dao.DelivererDao;
 import com.app.express.db.persistence.Deliverer;
 import com.app.express.db.persistence.Delivery;
@@ -29,7 +30,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 ************************************************/
 
 	private static final String DATABASE_NAME = "express.db";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 8;
 
 	private Dao<Deliverer, Integer> delivererDao;
 	private Dao<Delivery, Integer> clickDao;
@@ -54,14 +55,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		// ---------------------------- SAMPLES SOURCE CODE ---------------------------
 		
 		// Add DELIVERER.
-//		Deliverer deliverer = new Deliverer(789, "Eric LAMBERT", "eric.lambert@gmail.com");
-//		Dao<Deliverer, String> dao;
+//		Delivery deliverer = new Delivery(1, 1, 2);
+//		Dao<Delivery, Integer> dao;
 //		try {
-//			dao = new DelivererDao(connectionSource);
+//			dao = getHelper().getDeliveryDao();
 //			dao.createIfNotExists(deliverer);
 //			
-//		} catch (SQLException e) {
-//			Log.e(DatabaseHelper.class.getName(), "Impossible de générer les valeurs par défaut de la BDD.", e);
+//			List<Delivery> deliverer2 = dao.queryForAll();
+//			Toast.makeText(this, "Taille : "+Integer.toString(deliverer2.size()), Toast.LENGTH_LONG).show();
+//			
+//		} catch(SQLException e){
+//			Log.e(NextDelivery.class.getName(), "Erreur SQL."+e.getMessage(), e);
+//			Toast.makeText(this, "Erreur SQL : "+e.getMessage(), Toast.LENGTH_LONG).show();
+//		} catch(Exception e){
+//			Log.e(NextDelivery.class.getName(), "Erreur."+e.getMessage(), e);
+//			Toast.makeText(this, "Erreur : "+e.getMessage(), Toast.LENGTH_LONG).show();
 //		}
 		
 		// GET DELIVERER BY ID
@@ -103,7 +111,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 					+ newVer +".", e);
 		}
 	}
-
+	
 	public Dao<Deliverer, Integer> getDelivererDao() throws SQLException {
 		if (delivererDao == null) {
 			delivererDao = getDao(Deliverer.class);

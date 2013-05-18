@@ -1,22 +1,28 @@
 package com.app.express.db.persistence;
 
+import com.app.express.config.Categories;
 import com.app.express.db.dao.DeliveryDao;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "delivery", daoClass = DeliveryDao.class)
-public class Delivery {
-	@DatabaseField(id = true)
+public class Delivery extends BaseDaoEnabled {
+	@DatabaseField(generatedId = true, columnName = "delivery_id", dataType = DataType.INTEGER_OBJ)
 	private Integer deliveryId;
 	
-	@DatabaseField
+	@DatabaseField(columnName = "round_id", uniqueIndexName = "priority_uniq", dataType = DataType.INTEGER_OBJ, canBeNull = false)
 	private Integer roundId;
 	
-	@DatabaseField
+	@DatabaseField(columnName = "sender_id", dataType = DataType.INTEGER_OBJ, canBeNull = false)
 	private Integer senderId;
 
-	@DatabaseField
+	@DatabaseField(uniqueIndexName = "priority_uniq", dataType = DataType.INTEGER_OBJ, canBeNull = false)
 	private Integer priority;
+	
+	@DatabaseField(columnName = "type_delivery", dataType = DataType.STRING, canBeNull = false, defaultValue = Categories.Types.TypeDelivery.DELIVERY, index = true)
+	private String typeDelivery;
 
 	public Delivery() {
 		// ORMLite needs a no-arg constructor
@@ -33,6 +39,14 @@ public class Delivery {
 		this.roundId = roundId;
 		this.senderId = senderId;
 		this.priority = priority;
+	}
+	
+	public Delivery(Integer deliveryId, Integer roundId, Integer senderId, Integer priority, String typeDelivery) {
+		this.deliveryId = deliveryId;
+		this.roundId = roundId;
+		this.senderId = senderId;
+		this.priority = priority;
+		this.typeDelivery = typeDelivery;
 	}
 
 	public Integer getDeliveryId() {
@@ -65,5 +79,13 @@ public class Delivery {
 
 	public void setPriority(Integer priority) {
 		this.priority = priority;
-	}	
+	}
+
+	public String getTypeDelivery() {
+		return typeDelivery;
+	}
+
+	public void setTypeDelivery(String typeDelivery) {
+		this.typeDelivery = typeDelivery;
+	}
 }
