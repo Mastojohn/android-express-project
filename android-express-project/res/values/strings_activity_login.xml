@@ -4,14 +4,14 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
+    <string name="prompt_password">Mot de passe</string>
     <string name="action_sign_in_register"><b>Connectez-vous</b></string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="action_forgot_password">Recover lost password</string>
-    <string name="login_progress_signing_in">Signing in&#8230;</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="action_sign_in_short">Connexion</string>
+    <string name="action_forgot_password">Récupération de mot de passe</string>
+    <string name="login_progress_signing_in">Authentification en cours&#8230;</string>
+    <string name="error_invalid_email">Adresse email incorrecte</string>
+    <string name="error_invalid_password">Mot de passe trop court (3)</string>
+    <string name="error_incorrect_password">Mot de passe ou login incorrect.</string>
+    <string name="error_field_required">Champ obligatoire</string>
 
 </resources>
