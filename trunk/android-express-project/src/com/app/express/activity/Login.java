@@ -1,18 +1,9 @@
 package com.app.express.activity;
 
-import com.app.express.R;
-import com.app.express.R.id;
-import com.app.express.R.layout;
-import com.app.express.R.menu;
-import com.app.express.R.string;
-import com.app.express.helper.Session;
-import com.server.erp.Erp;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.LocalActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,13 +11,16 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.app.express.R;
+import com.app.express.helper.Session;
+import com.server.erp.Erp;
 
 /**
  * Activity which displays a login screen to the user, offering registration as

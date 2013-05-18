@@ -1,6 +1,5 @@
 package com.server.erp;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +12,7 @@ public class Erp {
 	 * Users who are authorized to access to the app.
 	 */
 	private static final String[] USERS_AUTH = new String[] {
-			"livreur@gmail.com:livreur", "ambroise@gmail.com:amb",
+			"eric.lambert@gmail.com:eric", "ambroise@gmail.com:amb",
 			"leo@gmail.com:leo", "julien@gmail.com:julien" };
 
 	/**
