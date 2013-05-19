@@ -2,6 +2,11 @@ package com.app.express.helper;
 
 import java.util.Date;
 
+/**
+ * Helper for manage the current user session.
+ * 
+ * @author Ambroise
+ */
 public class Session {
 	/**
 	 * Email used by the user for the connection.

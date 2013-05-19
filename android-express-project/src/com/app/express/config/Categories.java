@@ -8,7 +8,7 @@ package com.app.express.config;
  */
 public abstract class Categories {
 	public abstract class Types {
-		public abstract class TypeDelivery {
+		public abstract class type_delivery {
 			/**
 			 * Livraison
 			 */
