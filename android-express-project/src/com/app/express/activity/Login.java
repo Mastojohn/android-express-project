@@ -1,11 +1,11 @@
 package com.app.express.activity;
 
 import roboguice.activity.RoboActivity;
+import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,6 +29,7 @@ import com.server.erp.Erp;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
+@ContentView(R.layout.activity_login)
 public class Login extends RoboActivity {
 	/**
 	 * Context initialized on create.
@@ -57,12 +58,16 @@ public class Login extends RoboActivity {
 	// UI references.
 	@InjectView(R.id.email)
 	private EditText mEmailView;
+
 	@InjectView(R.id.password)
 	private EditText mPasswordView;
+
 	@InjectView(R.id.login_form)
 	private View mLoginFormView;
+
 	@InjectView(R.id.login_status)
 	private View mLoginStatusView;
+
 	@InjectView(R.id.login_status_message)
 	private TextView mLoginStatusMessageView;
 
@@ -72,8 +77,6 @@ public class Login extends RoboActivity {
 
 		Login.context = getApplicationContext();
 		App.context = getApplicationContext();
-
-		setContentView(R.layout.activity_login);
 
 		// Get settings for auto fill the input email.
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
