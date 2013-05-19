@@ -15,7 +15,6 @@
 			<attribute name="javadoc_location" value="jar:file:/C:/Android/Projects/Express/ormlite-core-4.45-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Android/Projects/Express/libs/jsr305-1.3.9.jar"/>
 	<classpathentry kind="lib" path="C:/Android/Projects/Express/libs/guice-3.0-no_aop.jar" sourcepath="guice-3.0-rc3-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/Express/guice-3.0-rc3-javadoc.jar!/"/>
@@ -24,6 +23,11 @@
 	<classpathentry kind="lib" path="C:/Android/Projects/Express/libs/roboguice-3.0b-experimental.jar" sourcepath="roboguice-3.0b-experimental-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/Express/roboguice-3.0b-experimental-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Android/Projects/Express/libs/javax.inject.jar" sourcepath="javax.inject-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Express/javax.inject-javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
