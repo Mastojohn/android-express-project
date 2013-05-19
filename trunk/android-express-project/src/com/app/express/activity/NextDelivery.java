@@ -1,5 +1,7 @@
 package com.app.express.activity;
 
+import java.util.List;
+
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import android.database.SQLException;
@@ -10,22 +12,21 @@ import android.widget.Toast;
 
 import com.app.express.R;
 import com.app.express.db.DatabaseHelper;
-import com.app.express.db.persistence.Delivery;
+import com.app.express.db.persistence.*;
 import com.app.express.helper.App;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.server.erp.Erp;
 
 @ContentView(R.layout.activity_next_delivery)
 public class NextDelivery extends RoboActivity {
-	private DatabaseHelper dbHelper;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		// Initialize helpers.
 		App.context = getApplicationContext();
-		
-		this.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
 				
 		// Get the round xml file from the ERP. (Simulation)
 		StringBuffer rounds = Erp.getRoundsByUser(this);
@@ -36,7 +37,7 @@ public class NextDelivery extends RoboActivity {
 		}
 		
 		try {
-			Delivery delivery = new Delivery(dbHelper.getDeliveryDao(), 3, 1, 3);
+			Delivery delivery = new Delivery(App.dbHelper.getDeliveryDao(), 3, 1, 3);
 			delivery.create();
 			Toast.makeText(this, "ID généré : "+Integer.toString(delivery.getDeliveryId()), Toast.LENGTH_LONG).show();
 		} catch(SQLException e){

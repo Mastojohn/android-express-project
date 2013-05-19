@@ -1,6 +1,12 @@
 package com.app.express.db.persistence;
 
+import java.sql.SQLException;
+
+import android.util.Log;
+
+import com.app.express.db.DatabaseHelper;
 import com.app.express.db.dao.CategoryDao;
+import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
@@ -63,7 +69,28 @@ public class Category extends BaseDaoEnabled {
 
 	@Override
 	public String toString() {
-		return "Category [categoryId=" + categoryId + ", types=" + types + "]";
+		CloseableIterator<Type> typeIterator = this.getTypes()
+				.closeableIterator();
+		
+		String typesReadables = "";
+		
+		try {
+			// Foreach types in this category.
+			while (typeIterator.hasNext()) {
+				typesReadables += typesReadables.length() > 0 ? ", " : "";
+				Type type = typeIterator.next();
+				typesReadables += type.getTypeId();
+			}
+		} finally {
+			// Always close the iterator, else the connection from the database isn't destroyed.
+			try {
+				typeIterator.close();
+			} catch (SQLException e) {
+				Log.e(DatabaseHelper.class.getName(), e.getMessage(), e);
+			}
+		}
+		
+		return "Category [categoryId=" + categoryId + ", types=" + typesReadables + "]";
 	}
 
 	/*
