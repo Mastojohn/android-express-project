@@ -17,8 +17,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 /**
- * Database helper which creates and upgrades the database and provides the DAOs
- * for the app.
+ * Database helper which creates and upgrades the database and provides the DAOs for the app.
  * 
  * @author Ambroise
  */
@@ -29,10 +28,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static final String DATABASE_NAME = "express.db";
 
 	/**
-	 * Version of the database. Must be changed when models persistence are
-	 * changed for regenerated all tables.
+	 * Version of the database. Must be changed when models persistence are changed for regenerated all tables.
 	 */
-	private static final int DATABASE_VERSION = 31;
+	private static final int DATABASE_VERSION = 33;
 
 	/**
 	 * DAO for deliverer instance.
@@ -69,8 +67,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	/**
-	 * Event called on create. Generate all tables who are not already generated
-	 * before. Generate defaults values to insert to the DB.
+	 * Event called on create. Generate all tables who are not already generated before. Generate defaults values to insert to the DB.
 	 * 
 	 * @param sqliteDatabase
 	 * @param connectionSource
@@ -85,7 +82,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			this.deliveryDao = new DeliveryDao(connectionSource);
 			this.categoryDao = new CategoryDao(connectionSource);
 			this.typeDao = new TypeDao(connectionSource);
-			
 
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier les DAO." + e.getMessage(), e);
@@ -103,63 +99,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			Log.e(DatabaseHelper.class.getName(), "Impossible de créer les tables de la BDD." + e.getMessage(), e);
 		}
 
-		// Create default values.
-		try {
-			Category catDelivery = new Category(categoryDao, Categories.Types.type_delivery.class.getSimpleName());
-			categoryDao.assignEmptyForeignCollection(catDelivery, "types");
+		// Generate all default categories and types.
+		this.generateCategories();
 
-			// Add first type.
-			catDelivery.getTypes().add(new Type(Categories.Types.type_delivery.DELIVERY));
-
-			// Add second type.
-			catDelivery.getTypes().add(new Type(Categories.Types.type_delivery.RECOVERY));
-
-			// Create the category.
-			int catDeliveryId = catDelivery.create();
-
-			// Log message.
-			Log.i(DatabaseHelper.class.getName(), "Catégorie créée: " + catDelivery.toString());
-
-			// Display all categories & types created.
-			List<Category> categories = categoryDao.queryForAll();
-
-			CloseableIterator<Category> categoryIterator = categoryDao.closeableIterator();
-			try {
-				// For each category.
-				while (categoryIterator.hasNext()) {
-					Category category = categoryIterator.next();
-
-					// Display the category name.
-					Log.i(DatabaseHelper.class.getName(), "\n=============\nContenu de la catégorie : " + category.getCategoryId());
-
-					CloseableIterator<Type> typeIterator = category.getTypes().closeableIterator();
-
-					try {
-						// Foreach types in this category.
-						while (typeIterator.hasNext()) {
-							Type type = typeIterator.next();
-
-							// Display the type name.
-							Log.i(DatabaseHelper.class.getName(), "===> " + type.getTypeId());
-						}
-					} finally {
-						// Always close the iterator, else the connection from
-						// the database isn't destroyed.
-						typeIterator.close();
-					}
-				}
-				// End.
-				Log.i(DatabaseHelper.class.getName(), "\n=============\n");
-
-			} finally {
-				// Always close the iterator, else the connection from the
-				// database isn't destroyed.
-				categoryIterator.close();
-			}
-
-		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(), "Impossible de créer les valeurs par défaut de la BDD." + e.getMessage(), e);
-		}
+		// Display categories and types generated.
+		displayCategories();
 
 		// ---------------------------- SAMPLES SOURCE CODE
 		// ---------------------------
@@ -235,10 +179,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	/**
-	 * Event called on update. When the database already exists but the
-	 * DATABASE_VERSION was upgraded, this method is called automatically for
-	 * delete all tables/datas from the DB. It's will regenerate all the
-	 * database by call to onCreate() method.
+	 * Event called on update. When the database already exists but the DATABASE_VERSION was upgraded, this method is called automatically for delete all
+	 * tables/datas from the DB. It's will regenerate all the database by call to onCreate() method.
 	 * 
 	 * @param sqliteDatabase
 	 * @param connectionSource
@@ -258,6 +200,123 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Impossible de passer de la version " + oldVer + " à " + newVer + "." + e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Display all categories from the database.
+	 */
+	public void displayCategories() {
+		try {
+			// Display all categories & types created.
+			List<Category> categories = categoryDao.queryForAll();
+
+			CloseableIterator<Category> categoryIterator = categoryDao.closeableIterator();
+			try {
+				// For each category.
+				while (categoryIterator.hasNext()) {
+					Category category = categoryIterator.next();
+
+					// Display the category name.
+					Log.i(DatabaseHelper.class.getName(), "\n=============\nContenu de la catégorie : " + category.getCategoryId());
+
+					CloseableIterator<Type> typeIterator = category.getTypes().closeableIterator();
+
+					try {
+						// Foreach types in this category.
+						while (typeIterator.hasNext()) {
+							Type type = typeIterator.next();
+
+							// Display the type name.
+							Log.i(DatabaseHelper.class.getName(), "===> " + type.getTypeId());
+						}
+					} finally {
+						// Always close the iterator, else the connection from
+						// the database isn't destroyed.
+						typeIterator.close();
+					}
+				}
+				// End.
+				Log.i(DatabaseHelper.class.getName(), "\n=============\n");
+
+			} finally {
+				// Always close the iterator, else the connection from the
+				// database isn't destroyed.
+				categoryIterator.close();
+			}
+
+		} catch (SQLException e) {
+			Log.e(DatabaseHelper.class.getName(), "Impossible de récupérer les catégories et types de la BDD." + e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * generate all categories and types defined into config.Categories.
+	 */
+	private void generateCategories() {
+		try {
+			// Generate type_delivery category.
+			Category type_delivery = new Category(categoryDao, Categories.Types.type_delivery.class.getSimpleName());
+			categoryDao.assignEmptyForeignCollection(type_delivery, "types");
+
+			// Add first type.
+			type_delivery.getTypes().add(new Type(Categories.Types.type_delivery.DELIVERY));
+
+			// Add second type.
+			type_delivery.getTypes().add(new Type(Categories.Types.type_delivery.RECOVERY));
+
+			// Create the category.
+			type_delivery.create();
+
+			// Log message.
+			Log.i(DatabaseHelper.class.getName(), "Catégorie créée: " + type_delivery.toString());
+
+			// ---------------
+
+			// Generate type_delivery_state category.
+			Category type_delivery_state = new Category(categoryDao, Categories.Types.type_delivery_state.class.getSimpleName());
+			categoryDao.assignEmptyForeignCollection(type_delivery_state, "types");
+
+			// Add first type.
+			type_delivery_state.getTypes().add(new Type(Categories.Types.type_delivery_state.DELIVERED));
+
+			// Add second type.
+			type_delivery_state.getTypes().add(new Type(Categories.Types.type_delivery_state.FORGOTTEN));
+
+			// Add third type.
+			type_delivery_state.getTypes().add(new Type(Categories.Types.type_delivery_state.PENDING));
+
+			// Add fourth type.
+			type_delivery_state.getTypes().add(new Type(Categories.Types.type_delivery_state.REFUSED));
+
+			// Create the category.
+			type_delivery_state.create();
+
+			// Log message.
+			Log.i(DatabaseHelper.class.getName(), "Catégorie créée: " + type_delivery_state.toString());
+
+			// ---------------
+
+			// Generate type_delivery category.
+			Category type_user = new Category(categoryDao, Categories.Types.type_user.class.getSimpleName());
+			categoryDao.assignEmptyForeignCollection(type_user, "types");
+
+			// Add first type.
+			type_user.getTypes().add(new Type(Categories.Types.type_user.RECEIVER));
+
+			// Add second type.
+			type_user.getTypes().add(new Type(Categories.Types.type_user.SENDER));
+
+			// Create the category.
+			type_user.create();
+
+			// Log message.
+			Log.i(DatabaseHelper.class.getName(), "Catégorie créée: " + type_user.toString());
+
+			// ---------------
+
+		} catch (SQLException e) {
+			Log.e(DatabaseHelper.class.getName(), "Impossible de créer les valeurs par défaut de la BDD." + e.getMessage(), e);
 		}
 	}
 
