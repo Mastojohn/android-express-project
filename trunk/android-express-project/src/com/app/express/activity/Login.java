@@ -1,5 +1,7 @@
 package com.app.express.activity;
 
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -27,7 +29,7 @@ import com.server.erp.Erp;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class Login extends Activity {
+public class Login extends RoboActivity {
 	/**
 	 * Context initialized on create.
 	 */
@@ -53,10 +55,15 @@ public class Login extends Activity {
 	private String mPassword;
 
 	// UI references.
+	@InjectView(R.id.email)
 	private EditText mEmailView;
+	@InjectView(R.id.password)
 	private EditText mPasswordView;
+	@InjectView(R.id.login_form)
 	private View mLoginFormView;
+	@InjectView(R.id.login_status)
 	private View mLoginStatusView;
+	@InjectView(R.id.login_status_message)
 	private TextView mLoginStatusMessageView;
 
 	@Override
@@ -65,23 +72,23 @@ public class Login extends Activity {
 
 		Login.context = getApplicationContext();
 		App.context = getApplicationContext();
-		
+
 		setContentView(R.layout.activity_login);
 
 		// Get settings for auto fill the input email.
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-		
+
 		// Set up the login form.
-		mEmail = settings.getString("lastEmail", "");// Put the value referenced by the key lastEmail and empty string in the key don't exists.
-		mEmailView = (EditText) findViewById(R.id.email);
+		mEmail = settings.getString("lastEmail", "");// Put the value referenced
+														// by the key lastEmail
+														// and empty string in
+														// the key don't exists.
 		mEmailView.setText(mEmail);
 
-		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
-					public boolean onEditorAction(TextView textView, int id,
-							KeyEvent keyEvent) {
+					public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
 						if (id == R.id.login || id == EditorInfo.IME_NULL) {
 							attemptLogin();
 							return true;
@@ -89,19 +96,15 @@ public class Login extends Activity {
 						return false;
 					}
 				});
-		
+
 		// Autoselect password input.
-		if(mEmailView.getText().length() > 0){
+		if (mEmailView.getText().length() > 0) {
 			// Autoselect the input password.
 			mPasswordView.requestFocus();
 		}
 
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener() {
+		findViewById(R.id.sign_in_button)
+				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
 						attemptLogin();
@@ -182,8 +185,8 @@ public class Login extends Activity {
 		// for very easy animations. If available, use these APIs to fade-in
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-			int shortAnimTime = getResources().getInteger(
-					android.R.integer.config_shortAnimTime);
+			int shortAnimTime = getResources()
+					.getInteger(android.R.integer.config_shortAnimTime);
 
 			mLoginStatusView.setVisibility(View.VISIBLE);
 			mLoginStatusView.animate().setDuration(shortAnimTime)
@@ -248,8 +251,7 @@ public class Login extends Activity {
 				editor.commit();
 
 				// Call next activity.
-				Intent intent = new Intent(Login.context,
-						NextDelivery.class);
+				Intent intent = new Intent(Login.context, NextDelivery.class);
 				startActivity(intent);
 
 				finish();
