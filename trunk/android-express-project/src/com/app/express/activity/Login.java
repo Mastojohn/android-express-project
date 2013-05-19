@@ -1,5 +1,7 @@
 package com.app.express.activity;
 
+import java.util.Date;
+
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -9,22 +11,28 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.SQLException;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.express.R;
 import com.app.express.db.DatabaseHelper;
+import com.app.express.db.persistence.Deliverer;
+import com.app.express.db.persistence.Round;
 import com.app.express.helper.App;
 import com.app.express.helper.Session;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 import com.server.erp.Erp;
 
 /**
@@ -81,23 +89,21 @@ public class Login extends RoboActivity {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
 		// Set up the login form.
-		mEmail = settings.getString("lastEmail", "");// Put the value referenced
-														// by the key lastEmail
-														// and empty string in
-														// the key don't exists.
+		// Put the value referenced by the key lastEmail and empty string in the
+		// key don't exists.
+		mEmail = settings.getString("lastEmail", "");
 		mEmailView.setText(mEmail);
 
-		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
-							attemptLogin();
-							return true;
-						}
-						return false;
-					}
-				});
+		mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+				if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					attemptLogin();
+					return true;
+				}
+				return false;
+			}
+		});
 
 		// Autoselect password input.
 		if (mEmailView.getText().length() > 0) {
@@ -105,13 +111,25 @@ public class Login extends RoboActivity {
 			mPasswordView.requestFocus();
 		}
 
-		findViewById(R.id.sign_in_button)
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						attemptLogin();
-					}
-				});
+		findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				attemptLogin();
+			}
+		});
+
+		try {
+			Dao<Round, Integer> roundDao = App.dbHelper.getRoundDao();
+			Round round = new Round(roundDao, new Deliverer("Ambroise", "email@xx.com"), new Date());
+			round.create();
+			Log.i(NextDelivery.class.getName(), "Tournée: " + round.toString());
+		} catch (SQLException e) {
+			Log.e(NextDelivery.class.getName(), "Erreur SQL." + e.getMessage(), e);
+			Toast.makeText(this, "Erreur SQL : " + e.getMessage(), Toast.LENGTH_LONG).show();
+		} catch (Exception e) {
+			Log.e(NextDelivery.class.getName(), "Erreur." + e.getMessage(), e);
+			Toast.makeText(this, "Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override
@@ -187,30 +205,23 @@ public class Login extends RoboActivity {
 		// for very easy animations. If available, use these APIs to fade-in
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-			int shortAnimTime = getResources()
-					.getInteger(android.R.integer.config_shortAnimTime);
+			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
 			mLoginStatusView.setVisibility(View.VISIBLE);
-			mLoginStatusView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 1 : 0)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginStatusView.setVisibility(show ? View.VISIBLE
-									: View.GONE);
-						}
-					});
+			mLoginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+				}
+			});
 
 			mLoginFormView.setVisibility(View.VISIBLE);
-			mLoginFormView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 0 : 1)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginFormView.setVisibility(show ? View.GONE
-									: View.VISIBLE);
-						}
-					});
+			mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+				}
+			});
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
@@ -220,8 +231,7 @@ public class Login extends RoboActivity {
 	}
 
 	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
+	 * Represents an asynchronous login/registration task used to authenticate the user.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
@@ -258,8 +268,7 @@ public class Login extends RoboActivity {
 
 				finish();
 			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
+				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
 			}
 		}

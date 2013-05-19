@@ -1,8 +1,7 @@
 package com.app.express.config;
 
 /**
- * Contains all STATICS type who can be changed.
- * Already exists in the database.
+ * Contains all STATICS type who can be changed. Already exists in the database.
  * 
  * @author Ambroise
  */
@@ -13,7 +12,7 @@ public abstract class Categories {
 			 * Livraison
 			 */
 			public static final String DELIVERY = "Livraison";
-			
+
 			/**
 			 * Récupération
 			 */

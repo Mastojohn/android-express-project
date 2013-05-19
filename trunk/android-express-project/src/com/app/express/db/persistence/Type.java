@@ -8,8 +8,8 @@ import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * Type model persistence for ORM using ORMLite.
- * {@link http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite.html#Top} 
+ * Type model persistence for ORM using ORMLite. 
+ * {@link http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite.html#Top}
  * 
  * Cette classe correspond à un type, il appartient forcément à une catégorie.
  * 
@@ -19,7 +19,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Type extends BaseDaoEnabled {
 	@DatabaseField(generatedId = true, dataType = DataType.INTEGER_OBJ, useGetSet = true)
 	private Integer id;
-	
+
 	@DatabaseField(columnName = "type_id", uniqueIndexName = "type_uniq", dataType = DataType.STRING, useGetSet = true)
 	private String typeId;
 
@@ -58,7 +58,7 @@ public class Type extends BaseDaoEnabled {
 	 */
 	public Type(Dao dao, String typeId) {
 		this.typeId = typeId;
-		
+
 		this.setDao(dao);
 	}
 
@@ -77,12 +77,12 @@ public class Type extends BaseDaoEnabled {
 	 * Constructor with DAO.
 	 * 
 	 * @param dao
-	 *  @param category
+	 * @param category
 	 */
 	public Type(Dao dao, String typeId, Category category) {
 		this.typeId = typeId;
 		this.category = category;
-		
+
 		this.setDao(dao);
 	}
 

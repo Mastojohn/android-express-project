@@ -16,8 +16,8 @@ import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * Category model persistence for ORM using ORMLite.
- * {@link http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite.html#Top} 
+ * Category model persistence for ORM using ORMLite. 
+ * {@link http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite.html#Top}
  * 
  * Cette classe correspond à une catégorie, elle contient plusieurs types.
  * 
@@ -27,7 +27,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Category extends BaseDaoEnabled {
 	@DatabaseField(id = true, columnName = "category_id", dataType = DataType.STRING, useGetSet = true)
 	private String categoryId;
-	
+
 	@ForeignCollectionField(eager = true, orderColumnName = "type_id")
 	private ForeignCollection<Type> types;
 
@@ -59,7 +59,7 @@ public class Category extends BaseDaoEnabled {
 	 * Constructor with DAO.
 	 * 
 	 * @param dao
-	 *  @param categoryId
+	 * @param categoryId
 	 */
 	public Category(Dao dao, String categoryId) {
 		this.categoryId = categoryId;
@@ -69,11 +69,10 @@ public class Category extends BaseDaoEnabled {
 
 	@Override
 	public String toString() {
-		CloseableIterator<Type> typeIterator = this.getTypes()
-				.closeableIterator();
-		
+		CloseableIterator<Type> typeIterator = this.getTypes().closeableIterator();
+
 		String typesReadables = "";
-		
+
 		try {
 			// Foreach types in this category.
 			while (typeIterator.hasNext()) {
@@ -82,14 +81,15 @@ public class Category extends BaseDaoEnabled {
 				typesReadables += type.getTypeId();
 			}
 		} finally {
-			// Always close the iterator, else the connection from the database isn't destroyed.
+			// Always close the iterator, else the connection from the database
+			// isn't destroyed.
 			try {
 				typeIterator.close();
 			} catch (SQLException e) {
 				Log.e(DatabaseHelper.class.getName(), e.getMessage(), e);
 			}
 		}
-		
+
 		return "Category [categoryId=" + categoryId + ", types=" + typesReadables + "]";
 	}
 
