@@ -5,8 +5,7 @@ import com.app.express.db.DatabaseHelper;
 import android.content.Context;
 
 /**
- * Helper for the application.
- * Contains some instance of static objects.
+ * Helper for the application. Contains some instance of static objects.
  * 
  * @author Ambroise
  */

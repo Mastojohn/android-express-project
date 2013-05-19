@@ -8,14 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.app.express.config.Categories;
-import com.app.express.db.dao.CategoryDao;
-import com.app.express.db.dao.DelivererDao;
-import com.app.express.db.dao.DeliveryDao;
-import com.app.express.db.dao.TypeDao;
-import com.app.express.db.persistence.Category;
-import com.app.express.db.persistence.Deliverer;
-import com.app.express.db.persistence.Delivery;
-import com.app.express.db.persistence.Type;
+import com.app.express.db.dao.*;
+import com.app.express.db.persistence.*;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
@@ -38,7 +32,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Version of the database. Must be changed when models persistence are
 	 * changed for regenerated all tables.
 	 */
-	private static final int DATABASE_VERSION = 22;
+	private static final int DATABASE_VERSION = 31;
 
 	/**
 	 * DAO for deliverer instance.
@@ -59,6 +53,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * DAO for type instance.
 	 */
 	private Dao<Type, Integer> typeDao;
+
+	/**
+	 * DAO for type instance.
+	 */
+	private Dao<Round, Integer> roundDao;
 
 	/**
 	 * Constructor.
@@ -82,76 +81,70 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		// Instantiate all DAO.
 		try {
 			this.delivererDao = new DelivererDao(connectionSource);
+			this.roundDao = new RoundDao(connectionSource);
 			this.deliveryDao = new DeliveryDao(connectionSource);
 			this.categoryDao = new CategoryDao(connectionSource);
 			this.typeDao = new TypeDao(connectionSource);
+			
 
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier les DAO."
-					+ e.getMessage(), e);
+			Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier les DAO." + e.getMessage(), e);
 		}
 
 		// Create all tables.
 		try {
 			TableUtils.createTable(connectionSource, Deliverer.class);
+			TableUtils.createTable(connectionSource, Round.class);
 			TableUtils.createTable(connectionSource, Delivery.class);
 			TableUtils.createTable(connectionSource, Category.class);
 			TableUtils.createTable(connectionSource, Type.class);
 
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(), "Impossible de créer les tables de la BDD."
-					+ e.getMessage(), e);
+			Log.e(DatabaseHelper.class.getName(), "Impossible de créer les tables de la BDD." + e.getMessage(), e);
 		}
 
 		// Create default values.
 		try {
-			Category catDelivery = new Category(categoryDao, Categories.Types.type_delivery.class
-					.getSimpleName());
+			Category catDelivery = new Category(categoryDao, Categories.Types.type_delivery.class.getSimpleName());
 			categoryDao.assignEmptyForeignCollection(catDelivery, "types");
 
 			// Add first type.
-			catDelivery.getTypes()
-					.add(new Type(Categories.Types.type_delivery.DELIVERY));
+			catDelivery.getTypes().add(new Type(Categories.Types.type_delivery.DELIVERY));
 
 			// Add second type.
-			catDelivery.getTypes()
-					.add(new Type(Categories.Types.type_delivery.RECOVERY));
+			catDelivery.getTypes().add(new Type(Categories.Types.type_delivery.RECOVERY));
 
 			// Create the category.
 			int catDeliveryId = catDelivery.create();
 
 			// Log message.
-			Log.i(DatabaseHelper.class.getName(), "Catégorie créée: "
-					+ catDelivery.toString());
+			Log.i(DatabaseHelper.class.getName(), "Catégorie créée: " + catDelivery.toString());
 
 			// Display all categories & types created.
 			List<Category> categories = categoryDao.queryForAll();
 
-			CloseableIterator<Category> categoryIterator = categoryDao
-					.closeableIterator();
+			CloseableIterator<Category> categoryIterator = categoryDao.closeableIterator();
 			try {
 				// For each category.
 				while (categoryIterator.hasNext()) {
 					Category category = categoryIterator.next();
 
 					// Display the category name.
-					Log.i(DatabaseHelper.class.getName(), "\n=============\nContenu de la catégorie : "
-							+ category.getCategoryId());
+					Log.i(DatabaseHelper.class.getName(), "\n=============\nContenu de la catégorie : " + category.getCategoryId());
 
-					CloseableIterator<Type> typeIterator = category.getTypes()
-							.closeableIterator();
-					
+					CloseableIterator<Type> typeIterator = category.getTypes().closeableIterator();
+
 					try {
 						// Foreach types in this category.
 						while (typeIterator.hasNext()) {
 							Type type = typeIterator.next();
 
 							// Display the type name.
-							Log.i(DatabaseHelper.class.getName(), "===> "
-									+ type.getTypeId());
+							Log.i(DatabaseHelper.class.getName(), "===> " + type.getTypeId());
 						}
 					} finally {
-						// Always close the iterator, else the connection from the database isn't destroyed.
+						// Always close the iterator, else the connection from
+						// the database isn't destroyed.
 						typeIterator.close();
 					}
 				}
@@ -159,13 +152,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 				Log.i(DatabaseHelper.class.getName(), "\n=============\n");
 
 			} finally {
-				// Always close the iterator, else the connection from the database isn't destroyed.
+				// Always close the iterator, else the connection from the
+				// database isn't destroyed.
 				categoryIterator.close();
 			}
 
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(), "Impossible de créer les valeurs par défaut de la BDD."
-					+ e.getMessage(), e);
+			Log.e(DatabaseHelper.class.getName(), "Impossible de créer les valeurs par défaut de la BDD." + e.getMessage(), e);
 		}
 
 		// ---------------------------- SAMPLES SOURCE CODE
@@ -255,14 +248,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
 		try {
-			TableUtils.dropTable(connectionSource, Deliverer.class, true);
 			TableUtils.dropTable(connectionSource, Delivery.class, true);
-			TableUtils.dropTable(connectionSource, Category.class, true);
+			TableUtils.dropTable(connectionSource, Round.class, true);
+			TableUtils.dropTable(connectionSource, Deliverer.class, true);
 			TableUtils.dropTable(connectionSource, Type.class, true);
+			TableUtils.dropTable(connectionSource, Category.class, true);
+
 			onCreate(sqliteDatabase, connectionSource);
+
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(), "Impossible de passer de la version "
-					+ oldVer + " à " + newVer + "." + e.getMessage(), e);
+			Log.e(DatabaseHelper.class.getName(), "Impossible de passer de la version " + oldVer + " à " + newVer + "." + e.getMessage(), e);
 		}
 	}
 
@@ -276,8 +271,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			try {
 				delivererDao = getDao(Deliverer.class);
 			} catch (SQLException e) {
-				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un DelivererDao.\n"
-						+ e.getMessage(), e);
+				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un DelivererDao.\n" + e.getMessage(), e);
 			}
 		}
 		return delivererDao;
@@ -293,8 +287,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			try {
 				deliveryDao = getDao(Delivery.class);
 			} catch (SQLException e) {
-				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un DeliveryDao.\n"
-						+ e.getMessage(), e);
+				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un DeliveryDao.\n" + e.getMessage(), e);
 			}
 		}
 		return deliveryDao;
@@ -310,8 +303,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			try {
 				categoryDao = getDao(Category.class);
 			} catch (SQLException e) {
-				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un CategoryDao.\n"
-						+ e.getMessage(), e);
+				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un CategoryDao.\n" + e.getMessage(), e);
 			}
 		}
 		return categoryDao;
@@ -327,10 +319,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			try {
 				typeDao = getDao(Type.class);
 			} catch (SQLException e) {
-				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un TypeDao.\n"
-						+ e.getMessage(), e);
+				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un TypeDao.\n" + e.getMessage(), e);
 			}
 		}
 		return typeDao;
+	}
+
+	/**
+	 * Helper for get a RoundDao instance object.
+	 * 
+	 * @return {@link RoundDao}
+	 */
+	public Dao<Round, Integer> getRoundDao() {
+		if (roundDao == null) {
+			try {
+				roundDao = getDao(Round.class);
+			} catch (SQLException e) {
+				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un RoundDao.\n" + e.getMessage(), e);
+			}
+		}
+		return roundDao;
 	}
 }

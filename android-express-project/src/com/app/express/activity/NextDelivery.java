@@ -32,20 +32,7 @@ public class NextDelivery extends RoboActivity {
 		StringBuffer rounds = Erp.getRoundsByUser(this);
 		if(rounds != null){
 			// Rounds are available. Display content.
-			Toast.makeText(this, rounds.toString(), Toast.LENGTH_LONG)
-					.show();
-		}
-		
-		try {
-			Delivery delivery = new Delivery(App.dbHelper.getDeliveryDao(), 3, 1, 3);
-			delivery.create();
-			Toast.makeText(this, "ID généré : "+Integer.toString(delivery.getDeliveryId()), Toast.LENGTH_LONG).show();
-		} catch(SQLException e){
-			Log.e(NextDelivery.class.getName(), "Erreur SQL."+e.getMessage(), e);
-			Toast.makeText(this, "Erreur SQL : "+e.getMessage(), Toast.LENGTH_LONG).show();
-		} catch(Exception e){
-			Log.e(NextDelivery.class.getName(), "Erreur."+e.getMessage(), e);
-			Toast.makeText(this, "Erreur : "+e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, rounds.toString(), Toast.LENGTH_LONG).show();
 		}
 	}
 

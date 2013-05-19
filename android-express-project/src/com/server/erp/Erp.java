@@ -56,16 +56,10 @@ public class Erp {
 
 			return content;
 		} catch (FileNotFoundException e) {
-			Toast.makeText(
-					context,
-					"Impossible de récupérer le fichier de configuration de votre tournée.\n"
-							+ e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, "Impossible de récupérer le fichier de configuration de votre tournée.\n" + e.getMessage(), Toast.LENGTH_LONG).show();
 			return null;
 		} catch (IOException e) {
-			Toast.makeText(
-					context,
-					"Impossible d'ouvrir le fichier de configuration de votre tournée.\n"
-							+ e.getMessage(), Toast.LENGTH_LONG).show();
+			Toast.makeText(context, "Impossible d'ouvrir le fichier de configuration de votre tournée.\n" + e.getMessage(), Toast.LENGTH_LONG).show();
 			return null;
 		}
 	}
