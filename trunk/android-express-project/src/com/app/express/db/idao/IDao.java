@@ -9,6 +9,6 @@ import com.j256.ormlite.dao.Dao;
  *
  * @param <T>
  */
-public interface IDao<T> extends Dao<T, String> {
+public interface IDao<T> extends Dao<T, Integer> {
 
 }

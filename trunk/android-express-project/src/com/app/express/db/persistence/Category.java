@@ -1,91 +1,89 @@
 package com.app.express.db.persistence;
 
-import com.app.express.config.Categories;
-import com.app.express.db.dao.DeliveryDao;
+import com.app.express.db.dao.CategoryDao;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "delivery", daoClass = DeliveryDao.class)
+/**
+ * Category model persistence for ORM using ORMLite.
+ * {@link http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite.html#Top} 
+ * 
+ * Cette classe correspond à une catégorie, elle contient plusieurs types.
+ * 
+ * @author Ambroise
+ */
+@DatabaseTable(tableName = "category", daoClass = CategoryDao.class)
 public class Category extends BaseDaoEnabled {
-	@DatabaseField(generatedId = true, columnName = "delivery_id", dataType = DataType.INTEGER_OBJ)
-	private Integer deliveryId;
+	@DatabaseField(id = true, columnName = "category_id", dataType = DataType.STRING, useGetSet = true)
+	private String categoryId;
 	
-	@DatabaseField(columnName = "round_id", uniqueIndexName = "priority_uniq", dataType = DataType.INTEGER_OBJ, canBeNull = false)
-	private Integer roundId;
-	
-	@DatabaseField(columnName = "sender_id", dataType = DataType.INTEGER_OBJ, canBeNull = false)
-	private Integer senderId;
+	@ForeignCollectionField(eager = true, orderColumnName = "type_id")
+	private ForeignCollection<Type> types;
 
-	@DatabaseField(uniqueIndexName = "priority_uniq", dataType = DataType.INTEGER_OBJ, canBeNull = false)
-	private Integer priority;
-	
-	@DatabaseField(columnName = "type_delivery", dataType = DataType.STRING, canBeNull = false, defaultValue = Categories.Types.TypeDelivery.DELIVERY, index = true)
-	private String typeDelivery;
-
+	/**
+	 * Constructor empty for ORMLite.
+	 */
 	public Category() {
-		// ORMLite needs a no-arg constructor
 	}
 
-	public Category(Integer roundId, Integer senderId, Integer priority) {
-		this.roundId = roundId;
-		this.senderId = senderId;
-		this.priority = priority;
-	}
-	
-	public Category(Integer deliveryId, Integer roundId, Integer senderId, Integer priority) {
-		this.deliveryId = deliveryId;
-		this.roundId = roundId;
-		this.senderId = senderId;
-		this.priority = priority;
-	}
-	
-	public Category(Integer deliveryId, Integer roundId, Integer senderId, Integer priority, String typeDelivery) {
-		this.deliveryId = deliveryId;
-		this.roundId = roundId;
-		this.senderId = senderId;
-		this.priority = priority;
-		this.typeDelivery = typeDelivery;
+	/**
+	 * Constructor with DAO.
+	 * 
+	 * @param dao
+	 */
+	public Category(Dao dao) {
+		this.setDao(dao);
 	}
 
-	public Integer getDeliveryId() {
-		return deliveryId;
+	/**
+	 * Constructor.
+	 * 
+	 * @param categoryId
+	 */
+	public Category(String categoryId) {
+		this.categoryId = categoryId;
 	}
 
-	public void setDeliveryId(Integer deliveryId) {
-		this.deliveryId = deliveryId;
+	/**
+	 * Constructor with DAO.
+	 * 
+	 * @param dao
+	 *  @param categoryId
+	 */
+	public Category(Dao dao, String categoryId) {
+		this.categoryId = categoryId;
+
+		this.setDao(dao);
 	}
 
-	public Integer getRoundId() {
-		return roundId;
+	@Override
+	public String toString() {
+		return "Category [categoryId=" + categoryId + ", types=" + types + "]";
 	}
 
-	public void setRoundId(Integer roundId) {
-		this.roundId = roundId;
+	/*
+	 * ******************** Accessors. **********************
+	 */
+
+	public String getCategoryId() {
+		return categoryId;
 	}
 
-	public Integer getSenderId() {
-		return senderId;
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
 	}
 
-	public void setSenderId(Integer senderId) {
-		this.senderId = senderId;
+	public ForeignCollection<Type> getTypes() {
+		return types;
 	}
 
-	public Integer getPriority() {
-		return priority;
+	public void setTypes(ForeignCollection<Type> types) {
+		this.types = types;
 	}
 
-	public void setPriority(Integer priority) {
-		this.priority = priority;
-	}
-
-	public String getTypeDelivery() {
-		return typeDelivery;
-	}
-
-	public void setTypeDelivery(String typeDelivery) {
-		this.typeDelivery = typeDelivery;
-	}
 }
