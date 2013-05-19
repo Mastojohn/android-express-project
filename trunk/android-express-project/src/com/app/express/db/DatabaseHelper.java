@@ -13,6 +13,7 @@ import com.app.express.activity.NextDelivery;
 import com.app.express.db.dao.DelivererDao;
 import com.app.express.db.persistence.Deliverer;
 import com.app.express.db.persistence.Delivery;
+import com.app.express.helper.App;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
@@ -44,7 +45,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 ************************************************/
 
 	@Override
-	public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
+	public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {		
 		try {
 			TableUtils.createTable(connectionSource, Deliverer.class);
 			TableUtils.createTable(connectionSource, Delivery.class);
@@ -54,7 +55,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		
 		// ---------------------------- SAMPLES SOURCE CODE ---------------------------
 		
-		// Add DELIVERER.
+		// ADD DELIVERER with intern DAO.
+//		try {
+//			Delivery delivery = new Delivery(getHelper().getDeliveryDao(), 2, 1, 3);
+//			delivery.create();
+//			Toast.makeText(this, "ID généré : "+Integer.toString(delivery.getDeliveryId()), Toast.LENGTH_LONG).show();
+//		} catch(SQLException e){
+//			Log.e(NextDelivery.class.getName(), "Erreur SQL."+e.getMessage(), e);
+//			Toast.makeText(this, "Erreur SQL : "+e.getMessage(), Toast.LENGTH_LONG).show();
+//		} catch(Exception e){
+//			Log.e(NextDelivery.class.getName(), "Erreur."+e.getMessage(), e);
+//			Toast.makeText(this, "Erreur : "+e.getMessage(), Toast.LENGTH_LONG).show();
+//		}
+		
+		// Add DELIVERER with extern DAO.
 //		Delivery deliverer = new Delivery(1, 1, 2);
 //		Dao<Delivery, Integer> dao;
 //		try {

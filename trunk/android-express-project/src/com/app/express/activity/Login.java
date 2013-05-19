@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.app.express.R;
+import com.app.express.helper.App;
 import com.app.express.helper.Session;
 import com.server.erp.Erp;
 
@@ -63,6 +64,8 @@ public class Login extends Activity {
 		super.onCreate(savedInstanceState);
 
 		Login.context = getApplicationContext();
+		App.context = getApplicationContext();
+		
 		setContentView(R.layout.activity_login);
 
 		// Get settings for auto fill the input email.
