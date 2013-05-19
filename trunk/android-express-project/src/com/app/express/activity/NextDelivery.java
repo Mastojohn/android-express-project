@@ -1,6 +1,7 @@
 package com.app.express.activity;
 
 import roboguice.activity.RoboActivity;
+import roboguice.inject.ContentView;
 import android.database.SQLException;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,12 +13,12 @@ import com.app.express.db.DatabaseHelper;
 import com.app.express.db.persistence.Delivery;
 import com.app.express.helper.App;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.server.erp.Erp;
 
-public class NextDelivery extends OrmLiteBaseActivity<DatabaseHelper> {
+@ContentView(R.layout.activity_next_delivery)
+public class NextDelivery extends RoboActivity {
 	private DatabaseHelper dbHelper;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,9 +26,7 @@ public class NextDelivery extends OrmLiteBaseActivity<DatabaseHelper> {
 		App.context = getApplicationContext();
 		
 		this.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-		
-		setContentView(R.layout.activity_next_delivery);
-		
+				
 		// Get the round xml file from the ERP. (Simulation)
 		StringBuffer rounds = Erp.getRoundsByUser(this);
 		if(rounds != null){
