@@ -21,8 +21,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.app.express.R;
+import com.app.express.db.DatabaseHelper;
 import com.app.express.helper.App;
 import com.app.express.helper.Session;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.server.erp.Erp;
 
 /**
@@ -31,10 +33,6 @@ import com.server.erp.Erp;
  */
 @ContentView(R.layout.activity_login)
 public class Login extends RoboActivity {
-	/**
-	 * Context initialized on create.
-	 */
-	public static Context context;
 
 	/**
 	 * Name of the Shared Preference file.
@@ -75,8 +73,9 @@ public class Login extends RoboActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Login.context = getApplicationContext();
+		// Initialize helpers.
 		App.context = getApplicationContext();
+		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
 
 		// Get settings for auto fill the input email.
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -254,7 +253,7 @@ public class Login extends RoboActivity {
 				editor.commit();
 
 				// Call next activity.
-				Intent intent = new Intent(Login.context, NextDelivery.class);
+				Intent intent = new Intent(App.context, NextDelivery.class);
 				startActivity(intent);
 
 				finish();
