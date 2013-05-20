@@ -10,5 +10,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_test">Test</string>
     <string name="title_activity_next_delivery">Prochaine destination</string>
+    <string name="mapApiKey">AIzaSyBL3RUaAm3h5GZTRP3FnWX5T5l26LZUpss</string>
 
 </resources>
