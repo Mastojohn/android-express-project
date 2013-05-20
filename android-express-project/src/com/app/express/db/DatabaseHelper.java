@@ -1,15 +1,18 @@
 package com.app.express.db;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.app.express.activity.NextDelivery;
 import com.app.express.config.Categories;
 import com.app.express.db.dao.*;
 import com.app.express.db.persistence.*;
+import com.app.express.helper.App;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
@@ -30,7 +33,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	/**
 	 * Version of the database. Must be changed when models persistence are changed for regenerated all tables.
 	 */
-	private static final int DATABASE_VERSION = 33;
+	private static final int DATABASE_VERSION = 35;
 
 	/**
 	 * DAO for deliverer instance.
@@ -58,6 +61,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<Round, Integer> roundDao;
 
 	/**
+	 * DAO for type instance.
+	 */
+	private Dao<User, Integer> userDao;
+	
+	/**
+	 * DAO for type instance.
+	 */
+	private Dao<Packet, Integer> packetDao;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param context
@@ -82,6 +95,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			this.deliveryDao = new DeliveryDao(connectionSource);
 			this.categoryDao = new CategoryDao(connectionSource);
 			this.typeDao = new TypeDao(connectionSource);
+			this.userDao = new UserDao(connectionSource);
+			this.packetDao = new PacketDao(connectionSource);
 
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier les DAO." + e.getMessage(), e);
@@ -94,6 +109,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, Delivery.class);
 			TableUtils.createTable(connectionSource, Category.class);
 			TableUtils.createTable(connectionSource, Type.class);
+			TableUtils.createTable(connectionSource, User.class);
+			TableUtils.createTable(connectionSource, Packet.class);
 
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Impossible de créer les tables de la BDD." + e.getMessage(), e);
@@ -105,8 +122,57 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		// Display categories and types generated.
 		displayCategories();
 
-		// ---------------------------- SAMPLES SOURCE CODE
-		// ---------------------------
+		// ---------------------------- SAMPLES SOURCE CODE ---------------------------
+
+		// 2.0
+
+		// Create deliverer.
+		// Dao<Deliverer, Integer> delivererDao = App.dbHelper.getDelivererDao();
+		// Deliverer deliverer = new Deliverer(delivererDao, "Ambroise", "amb@test.fr");
+		// deliverer.create();
+		// deliverer.refresh();
+		// Log.i(NextDelivery.class.getName(), "Livreur ajouté: " + deliverer.toString());
+		//
+		// // Create round.
+		// Dao<Round, Integer> roundDao = App.dbHelper.getRoundDao();
+		// Round round = new Round(roundDao, deliverer, new Date());
+		// round.create();
+		// round.refresh();
+		// Log.i(NextDelivery.class.getName(), "Tournée ajoutée: " + round.toString());
+		//
+		// // Create delivery.
+		// Dao<Delivery, Integer> deliveryDao = App.dbHelper.getDeliveryDao();
+		// Delivery delivery = new Delivery(deliveryDao, round, 1);
+		// delivery.create();
+		// delivery.refresh();
+		// Log.i(NextDelivery.class.getName(), "Livraison ajoutée: " + delivery.toString());
+		//
+		// // Create receiver.
+		// Dao<User, Integer> receiverDao = App.dbHelper.getUserDao();
+		// User receiver = new User(receiverDao, delivery, "Destinataire mathieu", Categories.Types.type_user.RECEIVER, "240 b xxx", "", "13100", "Aix", "");
+		// receiver.create();
+		// receiver.refresh();
+		// Log.i(NextDelivery.class.getName(), "Utilisateur ajouté: " + receiver.toString());
+		//
+		// // Create sender.
+		// Dao<User, Integer> senderDao = App.dbHelper.getUserDao();
+		// User sender = new User(senderDao, delivery, "Expéditeur paul", Categories.Types.type_user.SENDER, "", "", "", "", "");
+		// sender.create();
+		// sender.refresh();
+		// Log.i(NextDelivery.class.getName(), "Utilisateur ajouté: " + sender.toString());
+		//
+		// // Create packet.
+		// Dao<Packet, Integer> packetDao = App.dbHelper.getPacketDao();
+		// Packet packet = new Packet(packetDao, delivery, "", "", 515789423.68785531561);
+		// packet.create();
+		// packet.refresh();
+		// Log.i(NextDelivery.class.getName(), "Colis ajouté: " + packet.toString());
+		//
+		// // Refresh the local delivery for add users.
+		// delivery.refresh();
+		// Log.i(NextDelivery.class.getName(), "Utilisateurs de la livraison: " + delivery.toString());
+
+		// 1.0 - DEPRECATED
 
 		// ADD DELIVERER with intern DAO.
 		// try {
@@ -190,6 +256,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
 		try {
+			TableUtils.dropTable(connectionSource, User.class, true);
+			TableUtils.dropTable(connectionSource, Packet.class, true);
 			TableUtils.dropTable(connectionSource, Delivery.class, true);
 			TableUtils.dropTable(connectionSource, Round.class, true);
 			TableUtils.dropTable(connectionSource, Deliverer.class, true);
@@ -398,5 +466,37 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			}
 		}
 		return roundDao;
+	}
+
+	/**
+	 * Helper for get a UserDao instance object.
+	 * 
+	 * @return {@link UserDao}
+	 */
+	public Dao<User, Integer> getUserDao() {
+		if (userDao == null) {
+			try {
+				userDao = getDao(User.class);
+			} catch (SQLException e) {
+				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un UserDao.\n" + e.getMessage(), e);
+			}
+		}
+		return userDao;
+	}
+	
+	/**
+	 * Helper for get a PacketDao instance object.
+	 * 
+	 * @return {@link PacketDao}
+	 */
+	public Dao<Packet, Integer> getPacketDao() {
+		if (packetDao == null) {
+			try {
+				packetDao = getDao(Packet.class);
+			} catch (SQLException e) {
+				Log.e(DatabaseHelper.class.getName(), "Impossible d'instancier un PacketDao.\n" + e.getMessage(), e);
+			}
+		}
+		return packetDao;
 	}
 }

@@ -2,11 +2,8 @@ package com.app.express.db.persistence;
 
 import java.util.Date;
 
-import com.app.express.db.dao.DelivererDao;
 import com.app.express.db.dao.RoundDao;
-import com.app.express.helper.DateHelper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
@@ -22,16 +19,16 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = "round", daoClass = RoundDao.class)
 public class Round extends BaseDaoEnabled {
-	@DatabaseField(generatedId = true, columnName = "round_id", dataType = DataType.INTEGER_OBJ, useGetSet = true)
+	@DatabaseField(generatedId = true, columnName = "round_id", useGetSet = true)
 	private Integer roundId;
 
-	@DatabaseField(canBeNull = false, columnName = "deliverer_id", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true, useGetSet = true)
+	@DatabaseField(index = true, canBeNull = false, columnName = "deliverer_id", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, useGetSet = true)
 	private Deliverer deliverer;
 
-	@DatabaseField(index = true, canBeNull = false, dataType = DataType.DATE_STRING, useGetSet = true)
+	@DatabaseField(index = true, canBeNull = false, useGetSet = true)
 	private Date day;
 
-	@DatabaseField(columnName = "date_end", canBeNull = true, dataType = DataType.DATE_STRING, useGetSet = true)
+	@DatabaseField(columnName = "date_end", useGetSet = true)
 	private Date dateEnd;
 
 	/**

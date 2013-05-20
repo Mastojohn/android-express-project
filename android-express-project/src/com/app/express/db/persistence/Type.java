@@ -2,7 +2,6 @@ package com.app.express.db.persistence;
 
 import com.app.express.db.dao.TypeDao;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
@@ -17,10 +16,10 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = "type", daoClass = TypeDao.class)
 public class Type extends BaseDaoEnabled {
-	@DatabaseField(generatedId = true, dataType = DataType.INTEGER_OBJ, useGetSet = true)
+	@DatabaseField(generatedId = true, useGetSet = true)
 	private Integer id;
 
-	@DatabaseField(columnName = "type_id", uniqueIndexName = "type_uniq", dataType = DataType.STRING, useGetSet = true)
+	@DatabaseField(columnName = "type_id", uniqueIndexName = "type_uniq", useGetSet = true)
 	private String typeId;
 
 	@DatabaseField(columnName = "category_id", uniqueIndexName = "type_uniq", canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true, useGetSet = true)
