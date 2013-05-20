@@ -4,7 +4,9 @@ import java.util.Date;
 
 import com.app.express.db.dao.RoundDao;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -30,6 +32,9 @@ public class Round extends BaseDaoEnabled {
 
 	@DatabaseField(columnName = "date_end", useGetSet = true)
 	private Date dateEnd;
+
+	@ForeignCollectionField(eager = true, orderColumnName = "priority", maxEagerLevel = 3)
+	private ForeignCollection<Delivery> deliveries;
 
 	/**
 	 * Constructor empty for ORMLite.
@@ -94,7 +99,7 @@ public class Round extends BaseDaoEnabled {
 
 	@Override
 	public String toString() {
-		return "Round [roundId=" + roundId + ", deliverer=" + deliverer + ", day=" + day + ", dateEnd=" + dateEnd + "]";
+		return "Round [roundId=" + roundId + ", deliverer=" + deliverer + ", day=" + day + ", dateEnd=" + dateEnd + ", deliveries=" + deliveries + "]";
 	}
 
 	/*

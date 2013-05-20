@@ -54,9 +54,12 @@ public class Delivery extends BaseDaoEnabled {
 
 	@DatabaseField(useGetSet = true)
 	private String longitude;
-
+	
 	@ForeignCollectionField(eager = true, orderColumnName = "name", maxEagerLevel = 3)
 	private ForeignCollection<User> users;
+	
+	@ForeignCollectionField(eager = true)
+	private ForeignCollection<Packet> packets;
 
 	private User sender;
 
@@ -170,32 +173,7 @@ public class Delivery extends BaseDaoEnabled {
 
 	@Override
 	public String toString() {
-		String usersReadables = "";
-		
-		try {
-			CloseableIterator<User> userIterator = this.getUsers().closeableIterator();
-
-			try {
-				// For each user.
-				while (userIterator.hasNext()) {
-					usersReadables += usersReadables.length() > 0 ? ", " : "";
-					User user = userIterator.next();
-					usersReadables += user.getName();
-				}
-			} finally {
-				// Always close the iterator, else the connection from the database
-				// isn't destroyed.
-				try {
-					userIterator.close();
-				} catch (SQLException e) {
-					Log.e(Delivery.class.getName(), e.getMessage(), e);
-				}
-			}
-		} catch (Exception e) {
-			usersReadables = "null";
-		}
-
-		return "Delivery [deliveryId=" + deliveryId + ", round=" + round + ", typeDelivery=" + typeDelivery + ", priority=" + priority + ", deliveryOver=" + deliveryOver + ", receiverAvailable=" + receiverAvailable + ", signature=" + signature + ", dateOver=" + dateOver + ", latitude=" + latitude + ", longitude=" + longitude + ", users=" + usersReadables + ", sender=" + sender + ", receiver=" + receiver + "]";
+		return "Delivery [deliveryId=" + deliveryId + ", round=" + round + ", typeDelivery=" + typeDelivery + ", priority=" + priority + ", deliveryOver=" + deliveryOver + ", receiverAvailable=" + receiverAvailable + ", signature=" + signature + ", dateOver=" + dateOver + ", latitude=" + latitude + ", longitude=" + longitude + ", users=" + users + ", packets=" + packets + ", sender=" + sender + ", receiver=" + receiver + "]";
 	}
 
 	/**
@@ -328,6 +306,14 @@ public class Delivery extends BaseDaoEnabled {
 
 	public void setUsers(ForeignCollection<User> users) {
 		this.users = users;
+	}
+
+	public ForeignCollection<Packet> getPackets() {
+		return packets;
+	}
+
+	public void setPackets(ForeignCollection<Packet> packets) {
+		this.packets = packets;
 	}
 
 	public User getSender() {
