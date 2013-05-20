@@ -8,10 +8,8 @@ import roboguice.inject.InjectView;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.SQLException;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,21 +21,20 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.express.R;
 import com.app.express.config.Categories;
 import com.app.express.db.DatabaseHelper;
 import com.app.express.db.persistence.*;
 import com.app.express.helper.App;
+import com.app.express.helper.Gmap;
 import com.app.express.helper.Session;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.server.erp.Erp;
 
 /**
- * Activity which displays a login screen to the user, offering registration as
- * well.
+ * Activity which displays a login screen to the user, offering registration as well.
  */
 @ContentView(R.layout.activity_login)
 public class Login extends RoboActivity {
@@ -118,7 +115,10 @@ public class Login extends RoboActivity {
 			}
 		});
 
-		
+		// Check if GooglePlayServices are available.		
+		if(!Gmap.isGoogleMapsInstalled()){
+			Gmap.displayError();
+		}
 	}
 
 	@Override
@@ -129,9 +129,8 @@ public class Login extends RoboActivity {
 	}
 
 	/**
-	 * Attempts to sign in or register the account specified by the login form.
-	 * If there are form errors (invalid email, missing fields, etc.), the
-	 * errors are presented and no actual login attempt is made.
+	 * Attempts to sign in or register the account specified by the login form. If there are form errors (invalid email, missing fields, etc.), the errors are
+	 * presented and no actual login attempt is made.
 	 */
 	public void attemptLogin() {
 		if (mAuthTask != null) {
