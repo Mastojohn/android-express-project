@@ -26,9 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.express.R;
+import com.app.express.config.Categories;
 import com.app.express.db.DatabaseHelper;
-import com.app.express.db.persistence.Deliverer;
-import com.app.express.db.persistence.Round;
+import com.app.express.db.persistence.*;
 import com.app.express.helper.App;
 import com.app.express.helper.Session;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -118,18 +118,7 @@ public class Login extends RoboActivity {
 			}
 		});
 
-		try {
-			Dao<Round, Integer> roundDao = App.dbHelper.getRoundDao();
-			Round round = new Round(roundDao, new Deliverer("Ambroise", "email@xx.com"), new Date());
-			round.create();
-			Log.i(NextDelivery.class.getName(), "Tournée: " + round.toString());
-		} catch (SQLException e) {
-			Log.e(NextDelivery.class.getName(), "Erreur SQL." + e.getMessage(), e);
-			Toast.makeText(this, "Erreur SQL : " + e.getMessage(), Toast.LENGTH_LONG).show();
-		} catch (Exception e) {
-			Log.e(NextDelivery.class.getName(), "Erreur." + e.getMessage(), e);
-			Toast.makeText(this, "Erreur : " + e.getMessage(), Toast.LENGTH_LONG).show();
-		}
+		
 	}
 
 	@Override

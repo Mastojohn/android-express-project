@@ -9,7 +9,6 @@ import com.app.express.db.dao.CategoryDao;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
@@ -25,7 +24,7 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = "category", daoClass = CategoryDao.class)
 public class Category extends BaseDaoEnabled {
-	@DatabaseField(id = true, columnName = "category_id", dataType = DataType.STRING, useGetSet = true)
+	@DatabaseField(id = true, columnName = "category_id", useGetSet = true)
 	private String categoryId;
 
 	@ForeignCollectionField(eager = true, orderColumnName = "type_id")

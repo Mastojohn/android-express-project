@@ -2,7 +2,6 @@ package com.app.express.db.persistence;
 
 import com.app.express.db.dao.DelivererDao;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
@@ -18,13 +17,13 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = "deliverer", daoClass = DelivererDao.class)
 public class Deliverer extends BaseDaoEnabled {
-	@DatabaseField(generatedId = true, columnName = "deliverer_id", dataType = DataType.INTEGER_OBJ, useGetSet = true)
+	@DatabaseField(generatedId = true, columnName = "deliverer_id", useGetSet = true)
 	private Integer delivererId;
 
-	@DatabaseField(canBeNull = false, dataType = DataType.STRING, useGetSet = true)
+	@DatabaseField(canBeNull = false, useGetSet = true)
 	private String name;
 
-	@DatabaseField(index = true, dataType = DataType.STRING, useGetSet = true)
+	@DatabaseField(index = true, useGetSet = true)
 	private String email;
 
 	/**
