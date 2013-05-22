@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.app.express.R;
 import com.app.express.db.DatabaseHelper;
 import com.app.express.helper.App;
+import com.app.express.helper.Gmap;
+import com.app.express.task.RoundTask;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
@@ -35,7 +37,8 @@ import com.server.erp.Erp;
 public class NextDelivery extends RoboActivity {
 
 	private FollowMeLocationSource followMeLocationSource;
-
+	
+	//@InjectFragment(R.id.map)
 	private GoogleMap map;
 
 	private Marker delivererMarker;
@@ -53,7 +56,7 @@ public class NextDelivery extends RoboActivity {
 
 		// Initialize map.
 		setUpMapIfNeeded();
-
+		
 		delivererMarker = map.addMarker(new MarkerOptions().title("Vous êtes ici").position(new LatLng(0, 0)));
 
 		// // Initialize helpers.
@@ -78,7 +81,7 @@ public class NextDelivery extends RoboActivity {
 		 */
 		followMeLocationSource.getBestAvailableProvider();
 
-		// Get a reference to the map/GoogleMap object
+		// Get a reference to the map/GoogleMap object.
 		setUpMapIfNeeded();
 
 		/*
@@ -114,7 +117,7 @@ public class NextDelivery extends RoboActivity {
 	private void setUpMapIfNeeded() {
 		// Do a null check to confirm that we have not already instantiated the map.
 		if (map == null) {
-			this.map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+			map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 			// Check if we were successful in obtaining the map.
 			if (map != null) {
 				// The Map is verified. It is now safe to manipulate the map:
@@ -206,8 +209,10 @@ public class NextDelivery extends RoboActivity {
 			/*
 			 * ..and Animate camera to center on that location ! (the reason for we created this custom Location Source !)
 			 */
-			//map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-			map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+			map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+			
+			// Display the round on the map.
+			new RoundTask(((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap(), location).execute();
 
 			String msg = "lat: " + location.getLatitude() + "; lng : " + location.getLongitude();
 
@@ -233,6 +238,11 @@ public class NextDelivery extends RoboActivity {
 		@Override
 		public void onProviderDisabled(String s) {
 
+		}
+
+		@Override
+		public String toString() {
+			return "FollowMeLocationSource [mListener=" + mListener + ", locationManager=" + locationManager + ", criteria=" + criteria + ", bestAvailableProvider=" + bestAvailableProvider + ", minTime=" + minTime + ", minDistance=" + minDistance + "]";
 		}
 	}
 
