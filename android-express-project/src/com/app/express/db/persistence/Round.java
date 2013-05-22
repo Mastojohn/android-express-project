@@ -99,7 +99,9 @@ public class Round extends BaseDaoEnabled {
 
 	@Override
 	public String toString() {
-		return "Round [roundId=" + roundId + ", deliverer=" + deliverer + ", day=" + day + ", dateEnd=" + dateEnd + ", deliveries=" + deliveries + "]";
+		return "Round [roundId=" + roundId + ", deliverer=" + deliverer
+				+ ", day=" + day + ", dateEnd=" + dateEnd + ", deliveries="
+				+ deliveries + "]";
 	}
 
 	/*
@@ -136,6 +138,14 @@ public class Round extends BaseDaoEnabled {
 
 	public void setDateEnd(Date dateEnd) {
 		this.dateEnd = dateEnd;
+	}
+
+	public ForeignCollection<Delivery> getDeliveries() {
+		return deliveries;
+	}
+
+	public void setDeliveries(ForeignCollection<Delivery> deliveries) {
+		this.deliveries = deliveries;
 	}
 
 }
