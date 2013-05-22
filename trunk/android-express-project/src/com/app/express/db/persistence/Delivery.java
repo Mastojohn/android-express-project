@@ -27,6 +27,9 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Delivery extends BaseDaoEnabled {
 	@DatabaseField(generatedId = true, columnName = "delivery_id", useGetSet = true)
 	private Integer deliveryId;
+	
+	@DatabaseField(columnName = "id", useGetSet = true)
+	private String id;
 
 	@DatabaseField(columnName = "round_id", uniqueIndexName = "priority_uniq", canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, useGetSet = true)
 	private Round round;
@@ -83,8 +86,20 @@ public class Delivery extends BaseDaoEnabled {
 	/**
 	 * Constructor.
 	 * 
+	 * @param id
+	 * @param round
+	 * @param priority
+	 */
+	public Delivery(String id, Round round, Integer priority) {
+		this.id = id;
+		this.round = round;
+		this.priority = priority;
+	}
+	
+	/**
+	 * Constructor.
+	 * 
 	 * @param roundId
-	 * @param senderId
 	 * @param priority
 	 */
 	public Delivery(Round roundId, Integer priority) {
@@ -97,7 +112,6 @@ public class Delivery extends BaseDaoEnabled {
 	 * 
 	 * @param dao
 	 * @param roundId
-	 * @param senderId
 	 * @param priority
 	 */
 	public Delivery(Dao dao, Round roundId, Integer priority) {
@@ -111,7 +125,6 @@ public class Delivery extends BaseDaoEnabled {
 	 * Constructor.
 	 * 
 	 * @param roundId
-	 * @param senderId
 	 * @param priority
 	 * @param typeDelivery
 	 */
@@ -126,7 +139,6 @@ public class Delivery extends BaseDaoEnabled {
 	 * 
 	 * @param dao
 	 * @param roundId
-	 * @param senderId
 	 * @param priority
 	 * @param typeDelivery
 	 */
@@ -173,7 +185,14 @@ public class Delivery extends BaseDaoEnabled {
 
 	@Override
 	public String toString() {
-		return "Delivery [deliveryId=" + deliveryId + ", round=" + round + ", typeDelivery=" + typeDelivery + ", priority=" + priority + ", deliveryOver=" + deliveryOver + ", receiverAvailable=" + receiverAvailable + ", signature=" + signature + ", dateOver=" + dateOver + ", latitude=" + latitude + ", longitude=" + longitude + ", users=" + users + ", packets=" + packets + ", sender=" + sender + ", receiver=" + receiver + "]";
+		return "Delivery [deliveryId=" + deliveryId + ", id=" + id + ", round="
+				+ round + ", typeDelivery=" + typeDelivery + ", priority="
+				+ priority + ", deliveryOver=" + deliveryOver
+				+ ", receiverAvailable=" + receiverAvailable + ", signature="
+				+ signature + ", dateOver=" + dateOver + ", latitude="
+				+ latitude + ", longitude=" + longitude + ", users=" + users
+				+ ", packets=" + packets + ", sender=" + sender + ", receiver="
+				+ receiver + "]";
 	}
 
 	/**
@@ -218,6 +237,14 @@ public class Delivery extends BaseDaoEnabled {
 
 	public void setDeliveryId(Integer deliveryId) {
 		this.deliveryId = deliveryId;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public Round getRoundId() {
