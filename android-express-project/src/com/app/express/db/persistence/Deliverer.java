@@ -47,7 +47,7 @@ public class Deliverer extends BaseDaoEnabled {
 	 * @param delivererId
 	 * @param name
 	 */
-	public Deliverer(Integer delivererId, String nom) {
+	public Deliverer(Integer delivererId, String name) {
 		this.delivererId = delivererId;
 		this.name = name;
 	}
