@@ -36,6 +36,9 @@ public class Packet extends BaseDaoEnabled {
 	@DatabaseField(index = true, columnName = "delivery_attempted", defaultValue = "0", useGetSet = true)
 	private Boolean deliveryAttempted = false;
 
+	@DatabaseField(index = true, columnName = "packet_scanned", defaultValue = "0", useGetSet = true)
+	private Boolean packetScanned = false;
+
 	@DatabaseField(index = true, columnName = "delivered_state", defaultValue = Categories.Types.type_delivery_state.PENDING, canBeNull = false, useGetSet = true)
 	private String deliveredState = Categories.Types.type_delivery_state.PENDING;
 
@@ -92,10 +95,34 @@ public class Packet extends BaseDaoEnabled {
 		
 		this.setDao(dao);
 	}
+	/**
+	 * Constructor with DAO.
+	 * 
+	 * @param dao
+	 * @param delivery
+	 * @param barcode
+	 * @param size
+	 * @param weight
+	 * @param deliveredState
+	 */
+	public Packet(Dao dao, Delivery delivery, String barcode, String size, Double weight, String deliveredState) {
+		this.delivery = delivery;
+		this.barcode = barcode;
+		this.size = size;
+		this.weight = weight;
+		this.deliveredState = deliveredState;
+		
+		this.setDao(dao);
+	}
 
 	@Override
 	public String toString() {
-		return "Packet [packetId=" + packetId + ", delivery=" + delivery + ", barcode=" + barcode + ", size=" + size + ", weight=" + weight + ", deliveryAttempted=" + deliveryAttempted + ", deliveredState=" + deliveredState + ", description=" + description + ", dateDelivery=" + dateDelivery + "]";
+		return "Packet [packetId=" + packetId + ", delivery=" + delivery
+				+ ", barcode=" + barcode + ", size=" + size + ", weight="
+				+ weight + ", deliveryAttempted=" + deliveryAttempted
+				+ ", packetScanned=" + packetScanned + ", deliveredState="
+				+ deliveredState + ", description=" + description
+				+ ", dateDelivery=" + dateDelivery + "]";
 	}
 
 	/*
@@ -156,6 +183,14 @@ public class Packet extends BaseDaoEnabled {
 
 	public void setDeliveredState(String deliveredState) {
 		this.deliveredState = deliveredState;
+	}
+
+	public Boolean getPacketScanned() {
+		return packetScanned;
+	}
+
+	public void setPacketScanned(Boolean packetScanned) {
+		this.packetScanned = packetScanned;
 	}
 
 	public String getDescription() {
