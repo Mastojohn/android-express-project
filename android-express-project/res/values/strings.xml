@@ -11,5 +11,11 @@
     <string name="title_activity_test">Test</string>
     <string name="title_activity_next_delivery">Prochaine destination</string>
     <string name="mapApiKey">AIzaSyBL3RUaAm3h5GZTRP3FnWX5T5l26LZUpss</string>
+    <string name="title_activity_scan">Scan</string>
+    <string name="packetForgotten"><i>Coli(s) manquant(s)</i></string>
+    <string name="packetNumber">Il reste 0 coli(s) à scanner</string>
+    <string name="packetWeight"></string>
+    <string name="packetSize"> </string>
+    
 
 </resources>
