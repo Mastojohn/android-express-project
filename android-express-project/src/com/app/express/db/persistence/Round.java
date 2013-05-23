@@ -1,8 +1,16 @@
 package com.app.express.db.persistence;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import android.util.Log;
+
+import com.app.express.db.DatabaseHelper;
 import com.app.express.db.dao.RoundDao;
+import com.google.android.gms.maps.model.LatLng;
+import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
@@ -103,7 +111,32 @@ public class Round extends BaseDaoEnabled {
 				+ ", day=" + day + ", dateEnd=" + dateEnd + ", deliveries="
 				+ deliveries + "]";
 	}
+	
 
+	public static List<String> getDeliveriesAsLatLngByRound(Round round){		
+		List<String> points = new ArrayList<String>();		
+		CloseableIterator<Delivery> typeIterator = round.getDeliveries().closeableIterator();
+
+		try {
+			// Foreach types in this category.
+			while (typeIterator.hasNext()) {
+				Delivery delivery = typeIterator.next();
+				User receiver = delivery.getReceiver();
+				points.add(receiver.getAddress());
+			}
+		} finally {
+			// Always close the iterator, else the connection from the database
+			// isn't destroyed.
+			try {
+				typeIterator.close();
+			} catch (SQLException e) {
+				Log.e(DatabaseHelper.class.getName(), e.getMessage(), e);
+			}
+		}
+		
+		return points;
+	}
+	
 	/*
 	 * ******************** Accessors. **********************
 	 */

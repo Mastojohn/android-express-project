@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.app.express.config.Categories;
 import com.app.express.db.dao.DeliveryDao;
+import com.app.express.helper.App;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -229,15 +230,19 @@ public class Delivery extends BaseDaoEnabled {
 	 * @return User
 	 */
 	private User _getUserByType(String type) {
-		if (receiver.equals(null)) {
-			if (!users.equals(null)) {
-				CloseableIterator<User> userIterator = dao.closeableIterator();
+		User user = null;
+		
+		if (receiver == null) {
+			if (users != null) {
+				CloseableIterator<User> userIterator = this.getUsers().closeableIterator();
 				try {
 
 					while (userIterator.hasNext()) {
-						User user = userIterator.next();
-						if (user.getTypeUser().equals(type)) {
-							return user;
+						User userToMatch = userIterator.next();
+						String typeUser = userToMatch.getTypeUser();
+						if (typeUser.equals(type)) {
+							user = userToMatch;
+							break;
 						}
 					}
 				} finally {
@@ -250,7 +255,8 @@ public class Delivery extends BaseDaoEnabled {
 				}
 			}
 		}
-		return null;
+		
+		return user;
 	}
 
 	/*
@@ -370,7 +376,7 @@ public class Delivery extends BaseDaoEnabled {
 	}
 
 	public User getSender() {
-		sender = _getUserByType(Categories.Types.type_user.SENDER);
+		this.sender = _getUserByType(Categories.Types.type_user.SENDER);
 		return sender;
 	}
 
@@ -379,7 +385,7 @@ public class Delivery extends BaseDaoEnabled {
 	}
 
 	public User getReceiver() {
-		sender = _getUserByType(Categories.Types.type_user.RECEIVER);
+		this.receiver = _getUserByType(Categories.Types.type_user.RECEIVER);
 		return receiver;
 	}
 
