@@ -6,6 +6,7 @@ import java.util.Date;
 import android.util.Log;
 
 import com.app.express.config.Categories;
+import com.app.express.db.DatabaseHelper;
 import com.app.express.db.dao.DeliveryDao;
 import com.app.express.helper.App;
 import com.j256.ormlite.dao.CloseableIterator;
@@ -220,6 +221,32 @@ public class Delivery extends BaseDaoEnabled {
 				+ latitude + ", longitude=" + longitude + ", users=" + users
 				+ ", packets=" + packets + ", sender=" + sender + ", receiver="
 				+ receiver + "]";
+	}
+	
+	public Integer countPacketToScan(){
+		CloseableIterator<Packet> packetIterator = this.getPackets().closeableIterator();
+
+		Integer count = 0;
+
+		try {
+			// Foreach types in this category.
+			while (packetIterator.hasNext()) {
+				Packet packet = packetIterator.next();
+				if(!packet.getPacketScanned()){
+					count++;
+				}
+			}
+		} finally {
+			// Always close the iterator, else the connection from the database
+			// isn't destroyed.
+			try {
+				packetIterator.close();
+			} catch (SQLException e) {
+				Log.e(Delivery.class.getName(), e.getMessage(), e);
+			}
+		}
+		
+		return count;
 	}
 
 	/**
