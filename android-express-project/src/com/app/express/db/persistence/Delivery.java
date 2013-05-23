@@ -28,7 +28,7 @@ public class Delivery extends BaseDaoEnabled {
 	@DatabaseField(generatedId = true, columnName = "delivery_id", useGetSet = true)
 	private Integer deliveryId;
 	
-	@DatabaseField(columnName = "id", useGetSet = true)
+	@DatabaseField(columnName = "id", uniqueIndexName = "priority_uniq", useGetSet = true)
 	private String id;
 
 	@DatabaseField(columnName = "round_id", uniqueIndexName = "priority_uniq", canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, useGetSet = true)
@@ -116,6 +116,32 @@ public class Delivery extends BaseDaoEnabled {
 	 */
 	public Delivery(Dao dao, Round roundId, Integer priority) {
 		this.round = roundId;
+		this.priority = priority;
+
+		this.setDao(dao);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param roundId
+	 * @param priority
+	 */
+	public Delivery(Round roundId, String id, Integer priority) {
+		this.round = roundId;
+		this.id = id;
+		this.priority = priority;
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param roundId
+	 * @param priority
+	 */
+	public Delivery(Dao dao, Round roundId, String id, Integer priority) {
+		this.round = roundId;
+		this.id = id;
 		this.priority = priority;
 
 		this.setDao(dao);
