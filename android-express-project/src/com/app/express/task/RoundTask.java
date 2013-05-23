@@ -191,26 +191,4 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 			map.addMarker(markerB);
 		}
 	}
-
-	/**
-	 * Get the name of the city by Location.
-	 * 
-	 * @param location
-	 * @return String
-	 */
-	public static String getCityNameByLocation(Location location) {
-		String cityName = null;
-		Geocoder gcd = new Geocoder(App.context, Locale.getDefault());
-		List<Address> addresses;
-		try {
-			addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-			if (addresses.size() > 0)
-				System.out.println(addresses.get(0).getLocality());
-			cityName = addresses.get(0).getLocality();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return cityName;
-	}
 }

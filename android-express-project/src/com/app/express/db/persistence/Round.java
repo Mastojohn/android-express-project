@@ -1,14 +1,20 @@
 package com.app.express.db.persistence;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.util.Log;
 
 import com.app.express.db.DatabaseHelper;
 import com.app.express.db.dao.RoundDao;
+import com.app.express.helper.App;
 import com.google.android.gms.maps.model.LatLng;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
@@ -135,6 +141,26 @@ public class Round extends BaseDaoEnabled {
 		}
 		
 		return points;
+	}
+
+	/**
+	 * Get the name of the city by Location.
+	 * 
+	 * @param location
+	 * @return String
+	 */
+	public static String getCityNameByLocation(Location location) {
+		String cityName = null;
+		Geocoder gcd = new Geocoder(App.context, Locale.getDefault());
+		List<Address> addresses;
+		try {
+			addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+			cityName = addresses.get(0).getLocality();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return cityName;
 	}
 	
 	/*

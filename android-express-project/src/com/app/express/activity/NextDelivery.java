@@ -1,5 +1,8 @@
 package com.app.express.activity;
 
+import java.sql.SQLException;
+import java.util.Date;
+
 import roboguice.RoboGuice;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
@@ -17,7 +20,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 import com.app.express.R;
+import com.app.express.config.Categories;
 import com.app.express.db.DatabaseHelper;
+import com.app.express.db.persistence.Deliverer;
+import com.app.express.db.persistence.Delivery;
+import com.app.express.db.persistence.Packet;
+import com.app.express.db.persistence.Round;
+import com.app.express.db.persistence.User;
 import com.app.express.helper.App;
 import com.app.express.helper.Gmap;
 import com.app.express.task.RoundTask;
@@ -31,6 +40,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 import com.server.erp.Erp;
 
 @ContentView(R.layout.activity_next_delivery)
@@ -58,6 +68,13 @@ public class NextDelivery extends RoboActivity {
 		setUpMapIfNeeded();
 		
 		delivererMarker = map.addMarker(new MarkerOptions().title("Vous êtes ici").position(new LatLng(0, 0)));
+		
+		try {
+			Round.getDeliveriesAsLatLngByRound(App.dbHelper.getRoundDao().queryForId(1));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// // Initialize helpers.
 		// App.context = getApplicationContext();
