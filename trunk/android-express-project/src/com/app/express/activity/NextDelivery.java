@@ -1,5 +1,15 @@
 package com.app.express.activity;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -15,19 +25,26 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.app.express.R;
 import com.app.express.config.Categories;
 import com.app.express.db.DatabaseHelper;
+import com.app.express.db.persistence.Round;
 import com.app.express.db.persistence.Deliverer;
 import com.app.express.db.persistence.Delivery;
 import com.app.express.db.persistence.Packet;
 import com.app.express.db.persistence.Round;
 import com.app.express.db.persistence.User;
 import com.app.express.helper.App;
+import com.app.express.helper.XmlParser;
+import com.app.express.helper.XmlParser.Entry;
 import com.app.express.helper.Gmap;
 import com.app.express.task.RoundTask;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -56,6 +73,40 @@ public class NextDelivery extends RoboActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Initialize helpers.
+		App.context = getApplicationContext();
+		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+				
+		// Get the round xml file from the ERP. (Simulation)
+		StringBuffer roundBuffer = Erp.getRoundsByUser(this);
+		InputStream roundStream = null;  
+		XmlParser xmlparser = new XmlParser();
+		
+		if(roundBuffer != null){
+			// Rounds are available. Display content.
+			roundStream = fromStringBuffer(roundBuffer);
+
+			try {
+				try {
+					Round round = xmlparser.parse(roundStream);
+					
+					// Save the round created as round to do for this day.
+					App.setCurrentRound(round);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.e("NextDelivery", "Une exception SQL a été attrapée durant la lecture du fichier XML", e);
+				}
+			} catch (XmlPullParserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}      
+
 
 		// Initialize helpers.
 		App.context = getApplicationContext();
@@ -70,22 +121,12 @@ public class NextDelivery extends RoboActivity {
 		delivererMarker = map.addMarker(new MarkerOptions().title("Vous êtes ici").position(new LatLng(0, 0)));
 		
 		try {
-			Round.getDeliveriesAsLatLngByRound(App.dbHelper.getRoundDao().queryForId(1));
+			Round roundtest = App.dbHelper.getRoundDao().queryForId(1);
+			Round.getDeliveriesAsLatLngByRound(roundtest);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		// // Initialize helpers.
-		// App.context = getApplicationContext();
-		// App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-		//
-		// // Get the round xml file from the ERP. (Simulation)
-		// StringBuffer rounds = Erp.getRoundsByUser(this);
-		// if(rounds != null){
-		// // Rounds are available. Display content.
-		// Toast.makeText(this, rounds.toString(), Toast.LENGTH_LONG).show();
-		// }
 	}
 
 	@Override
@@ -123,7 +164,9 @@ public class NextDelivery extends RoboActivity {
 		getMenuInflater().inflate(R.menu.next_delivery, menu);
 		return true;
 	}
-
+	public static InputStream fromStringBuffer(StringBuffer buf) {
+		  return new ByteArrayInputStream(buf.toString().getBytes());
+		}
 	/**
 	 * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly installed) and the map has not already been instantiated.
 	 * This will ensure that we only ever manipulate the map once when it {@link #map} is not null.
