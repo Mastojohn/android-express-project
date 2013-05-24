@@ -23,6 +23,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -53,6 +54,8 @@ import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.LocationSource.OnLocationChangedListener;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -62,55 +65,24 @@ import com.server.erp.Erp;
 
 @ContentView(R.layout.activity_next_delivery)
 public class NextDelivery extends RoboActivity {
+	public final static String PREFS_NAME = "round";
 
 	private FollowMeLocationSource followMeLocationSource;
-	
-	//@InjectFragment(R.id.map)
+
+	// @InjectFragment(R.id.map)
 	private GoogleMap map;
 
 	private Marker delivererMarker;
+	
+	private Location lastLocation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		// Initialize helpers.
-		App.context = getApplicationContext();
-		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-				
-		// Get the round xml file from the ERP. (Simulation)
-		StringBuffer roundBuffer = Erp.getRoundsByUser(this);
-		InputStream roundStream = null;  
-		XmlParser xmlparser = new XmlParser();
-		
-		if(roundBuffer != null){
-			// Rounds are available. Display content.
-			roundStream = fromStringBuffer(roundBuffer);
-
-			try {
-				try {
-					Round round = xmlparser.parse(roundStream);
-					
-					// Save the round created as round to do for this day.
-					App.setCurrentRound(round);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					Log.e("NextDelivery", "Une exception SQL a été attrapée durant la lecture du fichier XML", e);
-				}
-			} catch (XmlPullParserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}      
-
 
 		// Initialize helpers.
 		App.context = getApplicationContext();
-		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+ 		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
 
 		// Creates our custom LocationSource and initializes some of its members.
 		followMeLocationSource = new FollowMeLocationSource();
@@ -118,15 +90,7 @@ public class NextDelivery extends RoboActivity {
 		// Initialize map.
 		setUpMapIfNeeded();
 		
-		delivererMarker = map.addMarker(new MarkerOptions().title("Vous êtes ici").position(new LatLng(0, 0)));
-		
-		try {
-			Round roundtest = App.dbHelper.getRoundDao().queryForId(1);
-			Round.getDeliveriesAsLatLngByRound(roundtest);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		new RoundXmlTask().execute();
 	}
 
 	@Override
@@ -164,9 +128,7 @@ public class NextDelivery extends RoboActivity {
 		getMenuInflater().inflate(R.menu.next_delivery, menu);
 		return true;
 	}
-	public static InputStream fromStringBuffer(StringBuffer buf) {
-		  return new ByteArrayInputStream(buf.toString().getBytes());
-		}
+
 	/**
 	 * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly installed) and the map has not already been instantiated.
 	 * This will ensure that we only ever manipulate the map once when it {@link #map} is not null.
@@ -204,7 +166,7 @@ public class NextDelivery extends RoboActivity {
 		/*
 		 * Updates are restricted to one every 10 seconds, and only when movement of more than 10 meters has been detected.
 		 */
-		private final int minTime = 50000; // minimum time interval between location updates, in milliseconds
+		private final int minTime = 5000; // minimum time interval between location updates, in milliseconds
 		private final int minDistance = 10; // minimum distance between location updates, in meters
 
 		private FollowMeLocationSource() {
@@ -259,6 +221,7 @@ public class NextDelivery extends RoboActivity {
 
 		@Override
 		public void onLocationChanged(Location location) {
+			lastLocation = location;
 			/*
 			 * Push location updates to the registered listener.. (this ensures that my-location layer will set the blue dot at the new/received location)
 			 */
@@ -270,18 +233,28 @@ public class NextDelivery extends RoboActivity {
 			 * ..and Animate camera to center on that location ! (the reason for we created this custom Location Source !)
 			 */
 			map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-			
-			// Display the round on the map.
-			new RoundTask(((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap(), location).execute();
+
+//			// Display the round on the map.
+//			try {
+//				new RoundTask(((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap(), location, Round.getDeliveriesToDeliver(App.getCurrendRound())).execute();
+//			} catch (Exception e) {
+//				Log.e("NextDelivery:FollowMeLocationSource", "Impossible de lancer RoundTask()", e);
+//				e.printStackTrace();
+//			}
 
 			String msg = "lat: " + location.getLatitude() + "; lng : " + location.getLongitude();
 
-			// Update the deliverer marker.
-			delivererMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
-			delivererMarker.setSnippet(msg);
+			if(delivererMarker == null){
+				// Create the marker.
+				delivererMarker = map.addMarker(new MarkerOptions().title("Vous êtes ici").snippet(msg).position(new LatLng(location.getLatitude(), location.getLongitude())).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+			}else{
+				// Update the marker.
+				delivererMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+				delivererMarker.setSnippet(msg);				
+			}
 
 			// Display for debug.
-			Toast.makeText(App.context, msg.toString(), Toast.LENGTH_SHORT).show();
+//			Toast.makeText(App.context, msg.toString(), Toast.LENGTH_SHORT).show();
 			Log.i(getClass().getSimpleName(), msg.toString());
 		}
 
@@ -304,6 +277,59 @@ public class NextDelivery extends RoboActivity {
 		public String toString() {
 			return "FollowMeLocationSource [mListener=" + mListener + ", locationManager=" + locationManager + ", criteria=" + criteria + ", bestAvailableProvider=" + bestAvailableProvider + ", minTime=" + minTime + ", minDistance=" + minDistance + "]";
 		}
+	}
+
+	private class RoundXmlTask extends AsyncTask<Void, Integer, Round> {
+		private static final String TOAST_MSG_GET_ROUND = "Recherche du parcours à effectuer ...";
+		private static final String TOAST_MSG_ROUND_FIND = "Récupération du parcours à effectuer ...";
+		private static final String TOAST_MSG_ROUND_FIND_CACHE = "Récupération des livraisons restantes ...";
+
+		/**
+		 * Display message for tu user. {@inheritDoc}
+		 */
+		@Override
+		protected void onPreExecute() {
+			Toast.makeText(App.context, TOAST_MSG_GET_ROUND, Toast.LENGTH_LONG).show();
+			
+			if (App.currentRoundSet()) {
+				// The round is already set.
+				Toast.makeText(App.context, TOAST_MSG_ROUND_FIND_CACHE, Toast.LENGTH_LONG).show();
+			} else {
+				// We have to load the XML file and refresh the DB.
+				Toast.makeText(App.context, TOAST_MSG_ROUND_FIND, Toast.LENGTH_LONG).show();
+			}
+		}
+		
+		public RoundXmlTask(){
+			
+		}
+
+		/**
+		 * Check if a round is already cached or if the round must be get before. {@inheritDoc}
+		 */
+		@Override
+		protected Round doInBackground(Void... params) {
+			if (!App.currentRoundSet()) {
+				// Get, parse, store on the DB and refresh the App.currentRound.
+				Round.tryParseXmlFileRound();
+			}
+
+			return App.getCurrendRound();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		protected void onPostExecute(final Round round) {
+			// Display the round on the map.
+			try {
+				new RoundTask(((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap(), lastLocation, Round.getDeliveriesToDeliver(round)).execute();
+			} catch (Exception e) {
+				Log.w("NextDelivery:RoundXmlTask", "Impossible de lancer RoundTask()", e);
+			}
+		}
+
 	}
 
 }

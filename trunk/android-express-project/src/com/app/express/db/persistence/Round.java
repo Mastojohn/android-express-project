@@ -1,11 +1,15 @@
 package com.app.express.db.persistence;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,6 +19,8 @@ import android.util.Log;
 import com.app.express.db.DatabaseHelper;
 import com.app.express.db.dao.RoundDao;
 import com.app.express.helper.App;
+import com.app.express.helper.StringHelper;
+import com.app.express.helper.XmlParser;
 import com.google.android.gms.maps.model.LatLng;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
@@ -23,13 +29,12 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
 import com.j256.ormlite.table.DatabaseTable;
+import com.server.erp.Erp;
 
 /**
- * Round model persistence for ORM using ORMLite. 
- * {@link http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite.html#Top}
+ * Round model persistence for ORM using ORMLite. {@link http://ormlite.com/javadoc/ormlite-core/doc-files/ormlite.html#Top}
  * 
- * Cette classe correspond à une tournée au niveau de l'application. La tournée
- * est effectuée par un livreur. Elle contient plusieurs livraisons. (Delivery)
+ * Cette classe correspond à une tournée au niveau de l'application. La tournée est effectuée par un livreur. Elle contient plusieurs livraisons. (Delivery)
  * 
  * @author Ambroise
  */
@@ -113,22 +118,23 @@ public class Round extends BaseDaoEnabled {
 
 	@Override
 	public String toString() {
-		return "Round [roundId=" + roundId + ", deliverer=" + deliverer
-				+ ", day=" + day + ", dateEnd=" + dateEnd + ", deliveries="
-				+ deliveries + "]";
+		return "Round [roundId=" + roundId + ", deliverer=" + deliverer + ", day=" + day + ", dateEnd=" + dateEnd + ", deliveries=" + deliveries + "]";
 	}
-	
 
-	public static List<String> getDeliveriesAsLatLngByRound(Round round){		
-		List<String> points = new ArrayList<String>();		
+	public static List<Delivery> getDeliveriesToDeliver(Round round) {
+		List<Delivery> deliveries = new ArrayList<Delivery>();
 		CloseableIterator<Delivery> typeIterator = round.getDeliveries().closeableIterator();
 
 		try {
-			// Foreach types in this category.
+			// Foreach deliveries in this round.
 			while (typeIterator.hasNext()) {
 				Delivery delivery = typeIterator.next();
-				User receiver = delivery.getReceiver();
-				points.add(receiver.getAddress());
+
+				// If the delivery isn't already deliver (over).
+				if (!delivery.getDeliveryOver()) {
+					// Add to the list.
+					deliveries.add(delivery);
+				}
 			}
 		} finally {
 			// Always close the iterator, else the connection from the database
@@ -139,8 +145,8 @@ public class Round extends BaseDaoEnabled {
 				Log.e(DatabaseHelper.class.getName(), e.getMessage(), e);
 			}
 		}
-		
-		return points;
+
+		return deliveries;
 	}
 
 	/**
@@ -159,10 +165,75 @@ public class Round extends BaseDaoEnabled {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return cityName;
 	}
 	
+	/**
+	 * Get LatLng object from address string.
+	 * @param strAddress
+	 * @return LatLng|null
+	 */
+	public static LatLng getLatLngByAddress(String strAddress){
+		Geocoder coder = new Geocoder(App.context);
+		List<Address> address;
+
+		try {
+		    address = coder.getFromLocationName(strAddress, 5);
+		    if (address == null) {
+		        return null;
+		    }
+		    
+		    Address location = address.get(0);
+		    location.getLatitude();
+		    location.getLongitude();
+		    
+		    return new LatLng(location.getLatitude(), location.getLongitude());
+		}catch(Exception e){
+			Log.w("Round", "Impossible de déterminer la position de l'adresse: "+strAddress, e);
+			return null;
+		}
+	}
+
+	/**
+	 * Try to parse the XML file where are stored the data of the round.
+	 * Parse only if it's useful.
+	 * 
+	 * @return boolean
+	 */
+	public static boolean tryParseXmlFileRound() {
+		// Get the round xml file from the ERP. (Simulation)
+		StringBuffer roundBuffer = Erp.getRoundsByUser(App.context);
+		InputStream roundStream = null;
+		XmlParser xmlparser = new XmlParser();
+
+		if (roundBuffer != null) {
+			// Rounds are available. Display content.
+			roundStream = StringHelper.fromStringBuffer(roundBuffer);
+
+			try {
+				try {
+					Round round = xmlparser.parse(roundStream);
+
+					// Save the round created as round to do for this day.
+					App.setCurrentRound(round);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.e("NextDelivery", "Une exception SQL a été attrapée durant la lecture du fichier XML", e);
+				}
+			} catch (XmlPullParserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return false;
+	}
+
 	/*
 	 * ******************** Accessors. **********************
 	 */
