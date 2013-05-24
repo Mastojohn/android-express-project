@@ -20,12 +20,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Scan extends Activity {
 
@@ -33,6 +35,13 @@ public class Scan extends Activity {
 	private Button button_UnScanable;
 	private Button button_Valid;
 	private Button button_packet_away;
+	private boolean resumeHasRun = false;
+	private TextView tvcolis_restant;
+	private TextView tvResult;
+	private TextView tvpoids;
+	private TextView tvtaille;
+	private TextView tvResult_Unscanned;
+	private Boolean screenchange = false;
 	
 	private List<Packet> packetsScanned = new ArrayList<Packet>();
 	
@@ -56,7 +65,7 @@ public class Scan extends Activity {
 		button_UnScanable = (Button) findViewById(R.id.button_UnScanable);
 		button_packet_away = (Button) findViewById(R.id.button_Colis_Absent);
 		
-		final TextView tvResult_Unscanned = (TextView) this.findViewById(R.id.editText_Code_Barre);
+		tvResult_Unscanned = (TextView) this.findViewById(R.id.editText_Code_Barre);
 		/*
 		 * évènements "clic" provoqué par l'utilisateur.
 		 */
@@ -144,7 +153,7 @@ public class Scan extends Activity {
 			{
 				//Modification du champs colis restant
 				String exp_nbrcolis = "Il reste "+packetsToScan.size()+" coli(s) à scanner";
-				TextView tvcolis_restant = (TextView) this.findViewById(R.id.textView_Nb_Colis);
+				tvcolis_restant = (TextView) this.findViewById(R.id.textView_Nb_Colis);
 				tvcolis_restant.setText(exp_nbrcolis);
 				Log.i("Scan", "Il y a "+packetsToScan.size()+" paquets à scanner pour ette livraison.");
 				
@@ -199,8 +208,7 @@ public class Scan extends Activity {
 					Log.i("Packet sauvé en bdd", packet.toString());
 					
 					// Récupération du TextView du layout courant
-					TextView tvResult = (TextView) this
-							.findViewById(R.id.editText_Code_Barre);
+					tvResult = (TextView) this.findViewById(R.id.editText_Code_Barre);
 
 					// On affecte la valeur
 					tvResult.setText(bareCode);
@@ -211,18 +219,18 @@ public class Scan extends Activity {
 					String poids = String.valueOf(packet.getWeight());
 					String taille = packet.getSize();
 					//Traitement des information : 
-					TextView tvcolis_restant = (TextView) this
+					tvcolis_restant = (TextView) this
 							.findViewById(R.id.textView_Nb_Colis);
 					// On décrémente le nb de colis à scanner.
 					tvcolis_restant.setText("Il reste "+(packet.getDelivery().countPacketToScan() -1)+" coli(s) à scanner");
 					String exp_poids = "Le colis pèse : "+poids+"kg";
 					String exp_taille = "Le colis mesure : "+taille+"cm";
 						//Modification du champs poids 
-							TextView tvpoids = (TextView) this
+							tvpoids = (TextView) this
 									.findViewById(R.id.TextView_poids);
 							tvpoids.setText(exp_poids);
 						// et taille
-							TextView tvtaille = (TextView) this
+							tvtaille = (TextView) this
 									.findViewById(R.id.TextView_taille);
 							tvtaille.setText(exp_taille);
 							
@@ -233,8 +241,15 @@ public class Scan extends Activity {
 						button_UnScanable.setClickable(false);
 					}
 							
-				}else{
-					// Prévenir user que le code n'existe pas
+				}
+
+				else{
+					if(screenchange==true)
+					{
+						screenchange= false;
+					}	
+					else
+					{// Prévenir user que le code n'existe pas
 					new AlertDialog.Builder(this)
 				    .setTitle("Code barre non présent")
 				    .setMessage("Le colis n'est pas présent ou à dejas était scanner")
@@ -244,6 +259,7 @@ public class Scan extends Activity {
 					        }
 					     })
 				     .show();
+					}
 				}
 				
 				
@@ -286,4 +302,79 @@ public class Scan extends Activity {
 		}
 	}
 
+	
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) 
+	{
+	 // TODO Auto-generated method stub
+	 super.onSaveInstanceState(outState);
+	 
+	 
+	
+	 if(tvtaille!=null)
+	 {
+		 outState.putString("Taille", (String) tvtaille.getText());
+	 }
+	 if(tvResult!=null)
+	 {
+		 outState.putString("CodeBarre",(String) tvResult_Unscanned.getText().toString());
+	 }
+	 if(tvcolis_restant!=null)
+	 {
+		 outState.putString("Nb_Colis", (String) tvcolis_restant.getText());
+	 }
+	 if(tvpoids!=null)
+	 {
+		 outState.putString("Poids", (String) tvpoids.getText());
+	 }
+	 
+	 
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState)
+	{
+		tvtaille=null;
+		if (savedInstanceState!=null)
+		{ 
+			 String tvtailleUri=savedInstanceState.getString("Taille");
+			 String tvResult_UnscannedUri = savedInstanceState.getString("CodeBarre");
+			 String tvcolis_restantUri = savedInstanceState.getString("Nb_Colis");
+			 String tvpoidsUri = savedInstanceState.getString("Poids");		
+			 
+			 
+			 if(tvtailleUri!=null)
+			 {
+				 tvtaille = (TextView) this
+							.findViewById(R.id.TextView_taille);
+				 tvtaille.setText(savedInstanceState.getString("Taille"));
+			 }
+			 if(tvResult_UnscannedUri!=null)
+			 {
+				 tvResult_Unscanned = (TextView) this.findViewById(R.id.editText_Code_Barre);
+				 tvResult_Unscanned.setText(savedInstanceState.getString("CodeBarre"));
+			 }
+			 if(tvcolis_restantUri!=null)
+			 {
+				 tvcolis_restant = (TextView) this
+							.findViewById(R.id.textView_Nb_Colis);
+				 tvcolis_restant.setText(savedInstanceState.getString("Nb_Colis"));
+			 }
+			 if(tvpoidsUri!=null)
+			 {
+				 tvpoids = (TextView) this
+							.findViewById(R.id.TextView_poids);
+				 tvpoids.setText(savedInstanceState.getString("Poids"));
+			 }
+		}
+		
+		
+	}
+	
+	public void onConfigurationChanged(Configuration newConfig) {
+	    super.onConfigurationChanged(newConfig);
+	    screenchange = true;
+	    
+	  }
 }

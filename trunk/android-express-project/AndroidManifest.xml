@@ -49,6 +49,7 @@
         </activity>
         <activity
             android:name="com.app.express.activity.Scan"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_scan" >
         </activity>
     </application>
