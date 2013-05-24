@@ -73,11 +73,11 @@ public final class IntentIntegrator {
 
 	public static final int REQUEST_CODE = 0x0ba7c0de; // get it?
 
-	private static final String DEFAULT_TITLE = "Install Barcode Scanner?";
+	private static final String DEFAULT_TITLE = "Installer Barcode Scanner?";
 	private static final String DEFAULT_MESSAGE =
-		"This application requires Barcode Scanner. Would you like to install it?";
-	private static final String DEFAULT_YES = "Yes";
-	private static final String DEFAULT_NO = "No";
+		"Cette application requiert Barcode Scanner. Voulez-vous l'installer ?";
+	private static final String DEFAULT_YES = "Oui";
+	private static final String DEFAULT_NO = "Non";
 
 	private IntentIntegrator() {
 	}
