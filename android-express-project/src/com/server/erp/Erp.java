@@ -3,6 +3,7 @@ package com.server.erp;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -44,12 +45,12 @@ public class Erp {
 	 */
 	public static StringBuffer getRoundsByUser(Context context) {
 		try {
-			InputStream input = context.getAssets().open("erp.xml");
+			InputStreamReader reader = new InputStreamReader(context.getAssets().open("erp.xml"), "UTF-8");
 
 			StringBuffer content = new StringBuffer();
 			int value;
 
-			while ((value = input.read()) != -1) {
+			while ((value = reader.read()) != -1) {
 				// Write into the content the content read.
 				content.append((char) value);
 			}
