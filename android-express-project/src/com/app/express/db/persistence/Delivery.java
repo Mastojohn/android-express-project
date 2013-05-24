@@ -12,6 +12,7 @@ import com.app.express.helper.App;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
@@ -48,7 +49,7 @@ public class Delivery extends BaseDaoEnabled {
 	@DatabaseField(index = true, columnName = "receiver_available", defaultValue = "0", useGetSet = true)
 	private Boolean receiverAvailable = false;
 
-	@DatabaseField(useGetSet = true)
+	@DatabaseField(dataType = DataType.STRING_BYTES, useGetSet = true)
 	private String signature;
 
 	@DatabaseField(columnName = "date_over", useGetSet = true)
