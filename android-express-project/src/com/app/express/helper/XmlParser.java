@@ -304,12 +304,12 @@ public class XmlParser {
 						}else if (infosDestinataire.equals("telephone")) {
 							telephone_destinataire = Read(parser,infosDestinataire);
 						}else if (infosDestinataire.equals("portable")) {
-							portable = Read(parser,infosDestinataire);
+							portable = Read(parser,infosDestinataire);// TODO Stocker le portable également.
 						}
 					}
 					
 					// On créé le destinataire et on l'ajoute à la liste des utilisateurs de la livraison (expéditeur, destinataire)
-					User receiver = new User(App.dbHelper.getUserDao(), delivery, nom_expediteur, Categories.Types.type_user.RECEIVER, rue, complement_adresse, cp, ville, telephone);
+					User receiver = new User(App.dbHelper.getUserDao(), delivery, nom_destinataire, Categories.Types.type_user.RECEIVER, rue_destinataire, complement_adresse, cp_destinataire, ville_destinataire, telephone_destinataire);
 					receiver.create();
 					this.users.add(receiver);
 				}
