@@ -16,22 +16,22 @@
         <colis>
 			<nombre>4</nombre>
 			<paquet>
-				<code_barre>8806071525143</code_barre>
+				<code_barre>30004832</code_barre>
 				<taille>30x10x25</taille>
 				<poids>0.67</poids>
 			</paquet>
 			<paquet>
-				<code_barre>8806071532530</code_barre>
+				<code_barre>30004832</code_barre>
 				<taille>20*40*20</taille>
 				<poids>0.39</poids>
 			</paquet>
 			<paquet>
-				<code_barre>8872021349011</code_barre>
+				<code_barre>30004832</code_barre>
 				<taille>30*30*30</taille>
 				<poids>0.67</poids>
 			</paquet>
 			<paquet>
-				<code_barre>8806071525143</code_barre>
+				<code_barre>30004832</code_barre>
 				<taille>30x10x25
 				</taille>
 				<poids>0.67</poids>
@@ -59,37 +59,37 @@
         <colis>
 			<nombre>7</nombre>
 			<paquet>
-				<code_barre>8830715542722</code_barre>
+				<code_barre>3057068015986</code_barre>
 				<taille>45x25x10</taille>
 				<poids>0,84</poids>
 			</paquet>
 			<paquet>
-				<code_barre>8892040291660</code_barre>
+				<code_barre>3057068015986</code_barre>
 				<taille>20x40x30</taille>
 				<poids>1,62</poids>
 			</paquet>
 			<paquet>
-				<code_barre>8862846115145</code_barre>
+				<code_barre>3057068015986</code_barre>
 				<taille>35x20x35</taille>
 				<poids>1,26</poids>
 			</paquet>
 			<paquet>
-				<code_barre>8842852801475</code_barre>
+				<code_barre>3057068015986</code_barre>
 				<taille>15x50x45</taille>
 				<poids>1,39</poids>
 			</paquet>
 			<paquet>
-				<code_barre>8860552083115</code_barre>
+				<code_barre>3057068015986</code_barre>
 				<taille>15x50x15</taille>
 				<poids>0,94</poids>
 			</paquet>
 			<paquet>
-				<code_barre>8811850742694</code_barre>
+				<code_barre>3057068015986</code_barre>
 				<taille>20x30x40</taille>
 				<poids>1,57</poids>
 			</paquet>
 			<paquet>
-				<code_barre>8857936058198</code_barre>
+				<code_barre>3057068015986</code_barre>
 				<taille>20x35x50</taille>
 				<poids>1,26</poids>
 			</paquet>

@@ -14,8 +14,8 @@
     <string name="title_activity_scan">Scan</string>
     <string name="packetForgotten"><i>Coli(s) manquant(s)</i></string>
     <string name="packetNumber">Il reste 0 coli(s) à scanner</string>
-    <string name="packetWeight"></string>
-    <string name="packetSize"> </string>
+    <string name="packetWeight">Le colis pése : </string>
+    <string name="packetSize">Le colis mesure :  </string>
     
 
 </resources>
