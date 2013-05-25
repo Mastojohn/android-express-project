@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.misc.BaseDaoEnabled;
@@ -47,10 +49,10 @@ public class Round extends BaseDaoEnabled {
 	@DatabaseField(index = true, canBeNull = false, columnName = "deliverer_id", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, useGetSet = true)
 	private Deliverer deliverer;
 
-	@DatabaseField(index = true, canBeNull = false, useGetSet = true)
+	@DatabaseField(index = true, dataType = DataType.DATE_STRING, canBeNull = false, useGetSet = true)
 	private Date day;
 
-	@DatabaseField(columnName = "date_end", useGetSet = true)
+	@DatabaseField(dataType = DataType.DATE_STRING, columnName = "date_end", useGetSet = true)
 	private Date dateEnd;
 
 	@ForeignCollectionField(eager = true, orderColumnName = "priority", maxEagerLevel = 3)
@@ -169,71 +171,106 @@ public class Round extends BaseDaoEnabled {
 
 		return cityName;
 	}
-	
+
 	/**
 	 * Get LatLng object from address string.
+	 * 
 	 * @param strAddress
 	 * @return LatLng|null
 	 */
-	public static LatLng getLatLngByAddress(String strAddress){
+	public static LatLng getLatLngByAddress(String strAddress) {
 		Geocoder coder = new Geocoder(App.context);
 		List<Address> address;
 
 		try {
-		    address = coder.getFromLocationName(strAddress, 5);
-		    if (address == null) {
-		        return null;
-		    }
-		    
-		    Address location = address.get(0);
-		    location.getLatitude();
-		    location.getLongitude();
-		    
-		    return new LatLng(location.getLatitude(), location.getLongitude());
-		}catch(Exception e){
-			Log.w("Round", "Impossible de déterminer la position de l'adresse: "+strAddress, e);
-			Toast.makeText(App.context, "L'adresse \""+strAddress+"\" n'a pas pu être résolue par le système de géolocalisation.\nUn problème de connexion réseau peut être la source de cette erreur.", Toast.LENGTH_LONG).show();
+			address = coder.getFromLocationName(strAddress, 5);
+			if (address == null) {
+				return null;
+			}
+
+			Address location = address.get(0);
+			location.getLatitude();
+			location.getLongitude();
+
+			return new LatLng(location.getLatitude(), location.getLongitude());
+		} catch (Exception e) {
+			Log.w("Round", "Impossible de déterminer la position de l'adresse: " + strAddress, e);
+			Toast.makeText(App.context, "L'adresse \"" + strAddress + "\" n'a pas pu être résolue par le système de géolocalisation.\nUn problème de connexion réseau peut être la source de cette erreur.", Toast.LENGTH_LONG).show();
 			return null;
 		}
 	}
 
 	/**
-	 * Try to parse the XML file where are stored the data of the round.
-	 * Parse only if it's useful.
+	 * Try to parse the XML file where are stored the data of the round. Parse only if it's useful.
 	 * 
 	 * @return boolean
 	 */
 	public static boolean tryParseXmlFileRound() {
-		// Get the round xml file from the ERP. (Simulation)
-		StringBuffer roundBuffer = Erp.getRoundsByUser(App.context);
-		InputStream roundStream = null;
-		XmlParser xmlparser = new XmlParser();
-
-		if (roundBuffer != null) {
-			// Rounds are available. Display content.
-			roundStream = StringHelper.fromStringBuffer(roundBuffer);
-
+		// Check if a round exists from the App.
+		if (App.getCurrendRound() != null) {
+			Log.i("Round", "Une tournée non terminée est en cours. (Session)");
+			return true;
+		} else {
 			try {
-				try {
-					Round round = xmlparser.parse(roundStream);
+				// If not, check if a round with the date of today exists from the DB.
+				Round roundToMatch = new Round();
+				roundToMatch.setDay(new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH).parse(new Date().getDate() + "-" + new Date().getMonth() + "-" +new Date().getYear()));
 
-					// Save the round created as round to do for this day.
+				List<Round> rounds = App.dbHelper.getRoundDao().queryForMatchingArgs(roundToMatch);
+
+				if (rounds.size() > 0) {
+					Round round = rounds.get(0);
+
 					App.setCurrentRound(round);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					Log.e("NextDelivery", "Une exception SQL a été attrapée durant la lecture du fichier XML", e);
+
+					Log.i("Round", "Une tournée non terminée est en cours. (BDD)");
+					return true;
+				} else {
+					// If not, get from XML file.
+
+					// Get the round xml file from the ERP. (Simulation)
+					StringBuffer roundBuffer = Erp.getRoundsByUser(App.context);
+					InputStream roundStream = null;
+					XmlParser xmlparser = new XmlParser();
+
+					if (roundBuffer != null) {
+						// Rounds are available. Display content.
+						roundStream = StringHelper.fromStringBuffer(roundBuffer);
+
+						try {
+							try {
+								Round round = xmlparser.parse(roundStream);
+
+								// Save the round created as round to do for this day.
+								App.setCurrentRound(round);
+								Log.i("Round", "Une nouvelle tournée vient d'être créée. (XML)\n" + round.toString());
+
+								return true;
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								Log.w("NextDelivery", "Une exception SQL a été attrapée durant la lecture du fichier XML", e);
+							}
+						} catch (XmlPullParserException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
+					return false;
 				}
-			} catch (XmlPullParserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (SQLException e) {
+				Log.w("NextDelivery", "Une erreur s'est produite durant la vérification de la présence d'une tournée existante en BDD.", e);
+				return false;
+			} catch (Exception e) {
+				Log.w("NextDelivery", "Une erreur s'est produite pendant la tentative de récupération du fichier XML.", e);
+				return false;
 			}
 		}
 
-		return false;
 	}
 
 	/*

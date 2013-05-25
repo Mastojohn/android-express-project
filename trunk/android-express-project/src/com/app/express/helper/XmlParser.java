@@ -36,8 +36,7 @@ public class XmlParser {
 	private static final String ns = null;
 	private int NbParser = 0;
 
-	public Round parse(InputStream in) throws XmlPullParserException,
-			IOException, SQLException {
+	public Round parse(InputStream in) throws XmlPullParserException, IOException, SQLException {
 		try {
 			XmlPullParser parser = Xml.newPullParser();
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -50,8 +49,7 @@ public class XmlParser {
 		}
 	}
 
-	private List readFeed(XmlPullParser parser) throws XmlPullParserException,
-			IOException, SQLException {
+	private List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException, SQLException {
 		List entries = new ArrayList();
 
 		parser.require(XmlPullParser.START_TAG, getNs(), "tournee");
@@ -73,7 +71,7 @@ public class XmlParser {
 				NbParser = 3;
 				entries.add(readEntry(parser));
 			}
-			
+
 		}
 
 		return entries;
@@ -105,14 +103,7 @@ public class XmlParser {
 		public final String telephone_destinataire;
 		public final String portable;
 
-		private Entry(String id, String nom, String date_tournee,
-				String id_livraison, String nom_expediteur, String rue,
-				String cp, String ville, String telephone, String nombre,
-				String code_barre, String taille, String poids,
-				String nom_destinataire, String rue_destinataire,
-				String cp_destinataire, String ville_destinataire,
-				String complement_adresse, String telephone_destinataire,
-				String portable) {
+		private Entry(String id, String nom, String date_tournee, String id_livraison, String nom_expediteur, String rue, String cp, String ville, String telephone, String nombre, String code_barre, String taille, String poids, String nom_destinataire, String rue_destinataire, String cp_destinataire, String ville_destinataire, String complement_adresse, String telephone_destinataire, String portable) {
 			this.id = id;
 			this.nom = nom;
 			this.date_tournee = date_tournee;
@@ -141,8 +132,7 @@ public class XmlParser {
 	// link tag, hands them off
 	// to their respective "read" methods for processing. Otherwise, skips the
 	// tag.
-	private Entry readEntry(XmlPullParser parser)
-			throws XmlPullParserException, IOException, SQLException {
+	private Entry readEntry(XmlPullParser parser) throws XmlPullParserException, IOException, SQLException {
 		// VARIABLE
 		String id = null;
 		String nom = null;
@@ -166,10 +156,8 @@ public class XmlParser {
 		String portable = null;
 
 		try {
-			users = App.dbHelper.getDeliveryDao().getEmptyForeignCollection(
-					"users");
-			packets = App.dbHelper.getDeliveryDao().getEmptyForeignCollection(
-					"packets");
+			users = App.dbHelper.getDeliveryDao().getEmptyForeignCollection("users");
+			packets = App.dbHelper.getDeliveryDao().getEmptyForeignCollection("packets");
 		} catch (SQLException e) {
 			Log.e("XmlParser", "Une erreur est survenue lors de la génération des collections des objets de persistance !", e);
 			e.printStackTrace();
@@ -185,10 +173,10 @@ public class XmlParser {
 				}
 				String infosLivreur = parser.getName();
 				if (infosLivreur.equals("id")) {
-					id = Read(parser,infosLivreur);
+					id = Read(parser, infosLivreur);
 				}
 				if (infosLivreur.equals("nom")) {
-					nom = Read(parser,infosLivreur);
+					nom = Read(parser, infosLivreur);
 				}
 			}
 			this.deliverer = new Deliverer(App.dbHelper.getDelivererDao(), Integer.parseInt(id), nom);
@@ -200,25 +188,25 @@ public class XmlParser {
 
 		if (NbParser == 2) {
 			parser.require(XmlPullParser.START_TAG, ns, "livraison");
-			
+
 			// On initialise une livraison qu'on crera lorsque l'id de la livraison aura été récupéré.
 			Delivery delivery = null;
-			
+
 			while (parser.next() != XmlPullParser.END_TAG) {
 				if (parser.getEventType() != XmlPullParser.START_TAG) {
 					continue;
 				}
 				String infosLivraison = parser.getName();
 				if (infosLivraison.equals("id")) {
-					id_livraison =  Read(parser,infosLivraison);
+					id_livraison = Read(parser, infosLivraison);
 				}
-				
+
 				// On créer une variable locale temporaire utilisée dans la boucle puis mise dans le liste à la fin.
-				if(delivery == null && id_livraison != null){
+				if (delivery == null && id_livraison != null) {
 					delivery = new Delivery(App.dbHelper.getDeliveryDao(), this.round, id_livraison, priority_delivery);
 					delivery.create();
 				}
-				
+
 				if (infosLivraison.equals("expediteur")) {
 					parser.require(XmlPullParser.START_TAG, ns, "expediteur");
 					while (parser.next() != XmlPullParser.END_TAG) {
@@ -227,23 +215,23 @@ public class XmlParser {
 						}
 						String infosExpediteur = parser.getName();
 						if (infosExpediteur.equals("nom")) {
-							nom_expediteur =  Read(parser,infosExpediteur);
+							nom_expediteur = Read(parser, infosExpediteur);
 						}
 						if (infosExpediteur.equals("rue")) {
-							rue =  Read(parser,infosExpediteur);
+							rue = Read(parser, infosExpediteur);
 						}
 						if (infosExpediteur.equals("cp")) {
-							cp =  Read(parser,infosExpediteur);
+							cp = Read(parser, infosExpediteur);
 						}
 						if (infosExpediteur.equals("ville")) {
-							ville =  Read(parser,infosExpediteur);
+							ville = Read(parser, infosExpediteur);
 						}
 						if (infosExpediteur.equals("telephone")) {
-							telephone = Read(parser,infosExpediteur);
+							telephone = Read(parser, infosExpediteur);
 						}
 					}
-					
-					// On créé l'expéditeur et on l'ajoute  la liste des utilisateurs de la livraison (expéditeur, destinataire)
+
+					// On créé l'expéditeur et on l'ajoute la liste des utilisateurs de la livraison (expéditeur, destinataire)
 					User sender = new User(App.dbHelper.getUserDao(), delivery, nom_expediteur, Categories.Types.type_user.SENDER, rue, "", cp, ville, telephone);
 					sender.create();
 					this.users.add(sender);
@@ -256,25 +244,24 @@ public class XmlParser {
 						}
 						String infosColis = parser.getName();
 						if (infosColis.equals("nombre")) {
-							nombre = Read(parser,infosColis);
+							nombre = Read(parser, infosColis);
 						}
 						if (infosColis.equals("paquet")) {
-							parser.require(XmlPullParser.START_TAG, ns,
-									"paquet");
+							parser.require(XmlPullParser.START_TAG, ns, "paquet");
 							while (parser.next() != XmlPullParser.END_TAG) {
 								if (parser.getEventType() != XmlPullParser.START_TAG) {
 									continue;
 								}
 								String infosPaquet = parser.getName();
 								if (infosPaquet.equals("code_barre")) {
-									code_barre = Read(parser,infosPaquet);
+									code_barre = Read(parser, infosPaquet);
 								} else if (infosPaquet.equals("taille")) {
-									taille = Read(parser,infosPaquet);
+									taille = Read(parser, infosPaquet);
 								} else if (infosPaquet.equals("poids")) {
-									poids = Read(parser,infosPaquet);
+									poids = Read(parser, infosPaquet);
 								}
 							}
-							
+
 							// On créé le colis et on l'ajoute à la liste des colis de la livraison.
 							Packet packet = new Packet(App.dbHelper.getPacketDao(), delivery, code_barre, taille, Double.parseDouble(poids.replace(",", ".")));
 							packet.create();
@@ -292,30 +279,30 @@ public class XmlParser {
 						}
 						String infosDestinataire = parser.getName();
 						if (infosDestinataire.equals("nom")) {
-							nom_destinataire = Read(parser,infosDestinataire);
+							nom_destinataire = Read(parser, infosDestinataire);
 						} else if (infosDestinataire.equals("rue")) {
-							rue_destinataire = Read(parser,infosDestinataire);
+							rue_destinataire = Read(parser, infosDestinataire);
 						} else if (infosDestinataire.equals("cp")) {
-							cp_destinataire = Read(parser,infosDestinataire);
-						}else if (infosDestinataire.equals("ville")) {
-							ville_destinataire = Read(parser,infosDestinataire);
-						}else if (infosDestinataire.equals("complement_adresse")) {
-							complement_adresse = Read(parser,infosDestinataire);
-						}else if (infosDestinataire.equals("telephone")) {
-							telephone_destinataire = Read(parser,infosDestinataire);
-						}else if (infosDestinataire.equals("portable")) {
-							portable = Read(parser,infosDestinataire);// TODO Stocker le portable également.
+							cp_destinataire = Read(parser, infosDestinataire);
+						} else if (infosDestinataire.equals("ville")) {
+							ville_destinataire = Read(parser, infosDestinataire);
+						} else if (infosDestinataire.equals("complement_adresse")) {
+							complement_adresse = Read(parser, infosDestinataire);
+						} else if (infosDestinataire.equals("telephone")) {
+							telephone_destinataire = Read(parser, infosDestinataire);
+						} else if (infosDestinataire.equals("portable")) {
+							portable = Read(parser, infosDestinataire);// TODO Stocker le portable également.
 						}
 					}
-					
+
 					// On créé le destinataire et on l'ajoute à la liste des utilisateurs de la livraison (expéditeur, destinataire)
 					User receiver = new User(App.dbHelper.getUserDao(), delivery, nom_destinataire, Categories.Types.type_user.RECEIVER, rue_destinataire, complement_adresse, cp_destinataire, ville_destinataire, telephone_destinataire);
 					receiver.create();
 					this.users.add(receiver);
 				}
 			}
-			
-			priority_delivery++;			
+
+			priority_delivery++;
 		}
 
 		// Fin de boucle livraison
@@ -323,37 +310,35 @@ public class XmlParser {
 		if (NbParser == 3) {
 			String dateTournee = parser.getName();
 			if (dateTournee.equals("date_tournee")) {
-				date_tournee = Read(parser,dateTournee);
+				date_tournee = Read(parser, dateTournee);
 			}
 
 			try {
 				// On crée le parours/tournée s'il n'existe pas déjà.
-				if(this.round == null){
-					this.round = new Round(App.dbHelper.getRoundDao(), this.deliverer, new SimpleDateFormat(
-							"dd-mm-yyyy", Locale.ENGLISH).parse(date_tournee));
+				if (this.round == null) {
+					this.round = new Round(App.dbHelper.getRoundDao(), this.deliverer, new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH).parse(date_tournee));
 					this.round.create();
 				}
 			} catch (Exception e) {
-				this.round = new Round(App.dbHelper.getRoundDao(), this.deliverer, new Date());
-				this.round.create();
-				Log.w("XmlParser",
-						"Impossible de récupérer la date ce la tournée, mise par défaut à la date du jour.");
+				try {
+					this.round = new Round(App.dbHelper.getRoundDao(), this.deliverer, new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH).parse(new Date().getDate() + "-" + new Date().getMonth() + "-" +new Date().getYear()));
+					this.round.create();
+					Log.w("XmlParser", "Impossible de récupérer la date ce la tournée, mise par défaut à la date du jour.");
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 
-		Entry entry = new Entry(id, nom, date_tournee, id_livraison,
-				nom_expediteur, rue, cp, ville, telephone, nombre, code_barre,
-				taille, poids, nom_destinataire, rue_destinataire,
-				cp_destinataire, ville_destinataire, complement_adresse,
-				telephone_destinataire, portable);
-		
+		Entry entry = new Entry(id, nom, date_tournee, id_livraison, nom_expediteur, rue, cp, ville, telephone, nombre, code_barre, taille, poids, nom_destinataire, rue_destinataire, cp_destinataire, ville_destinataire, complement_adresse, telephone_destinataire, portable);
+
 		return entry;
 
 	}
 
 	// Methode qui va permettre de d'appeler la méthode lire le texte , pour le texte entre ces deux balise
-	private String Read(XmlPullParser parser, String balise)throws IOException,
-		XmlPullParserException{
+	private String Read(XmlPullParser parser, String balise) throws IOException, XmlPullParserException {
 		parser.require(XmlPullParser.START_TAG, ns, balise);
 		String texte = readText(parser);
 		parser.require(XmlPullParser.END_TAG, ns, balise);
@@ -361,8 +346,7 @@ public class XmlParser {
 	}
 
 	// For the tags title and summary, extracts their text values.
-	private String readText(XmlPullParser parser) throws IOException,
-			XmlPullParserException {
+	private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
 		String result = "";
 		if (parser.next() == XmlPullParser.TEXT) {
 			result = parser.getText();
@@ -371,20 +355,19 @@ public class XmlParser {
 		return result;
 	}
 
-	private void skip(XmlPullParser parser) throws XmlPullParserException,
-			IOException {
+	private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
 		if (parser.getEventType() != XmlPullParser.START_TAG) {
 			throw new IllegalStateException();
 		}
 		int depth = 1;
 		while (depth != 0) {
 			switch (parser.next()) {
-			case XmlPullParser.END_TAG:
-				depth--;
-				break;
-			case XmlPullParser.START_TAG:
-				depth++;
-				break;
+				case XmlPullParser.END_TAG:
+					depth--;
+					break;
+				case XmlPullParser.START_TAG:
+					depth++;
+					break;
 			}
 		}
 	}
