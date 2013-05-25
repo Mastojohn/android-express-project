@@ -9,10 +9,12 @@ import com.app.express.R;
 import com.app.express.R.layout;
 import com.app.express.R.menu;
 import com.app.express.config.Categories;
+import com.app.express.db.DatabaseHelper;
 import com.app.express.db.persistence.*;
 import com.app.express.helper.App;
 import com.app.express.helper.IntentIntegrator;
 import com.app.express.helper.IntentResult;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import android.os.Bundle;
@@ -53,6 +55,11 @@ public class Scan extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// Initialize helpers.
+		App.context = getApplicationContext();
+		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+		
 		// Définition de la vue, on lui affecte R.layout.activity_scan ce qui
 		// représente notre vue
 		// déclarer dans le dossier layout
