@@ -42,7 +42,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class RoundTask extends AsyncTask<Void, Integer, Integer> {
+public class RoundTask extends AsyncTask<Boolean, Integer, Integer> {
 
 	private static final String TOAST_MSG = "Calcul de l'itinéraire en cours...";
 	private static final String TOAST_ERR_MAJ = "Impossible de trouver un itinéraire pour ce parcours !";
@@ -81,7 +81,7 @@ public class RoundTask extends AsyncTask<Void, Integer, Integer> {
 	/**
 	 * The list of LatLng points who are in the best sort for the deliverer.
 	 */
-	private final List<LatLng> listLatLngSorted = new ArrayList<LatLng>();
+	private static List<LatLng> listLatLngSorted = new ArrayList<LatLng>();
 
 	/**
 	 * Constructor.
@@ -115,14 +115,24 @@ public class RoundTask extends AsyncTask<Void, Integer, Integer> {
 		Toast.makeText(App.context, TOAST_MSG, Toast.LENGTH_LONG).show();
 	}
 
-	/***
+	/**
+	 * [0]: Force: If false and if the round was already calculated, use the last values for refresh the view. [false]
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Integer doInBackground(Void... params) {
+	protected Integer doInBackground(Boolean... params) {
 		try {
-			// Reset the sorted list.
-			listDeliveriesSorted = new ArrayList<HashMap<String, Object>>();
+			if((listDeliveriesSorted.size() > 0 && listLatLngSorted.size() > 0) && (params == null || params.length == 0 || params[0] == false)){
+				// Don't force because no params[0] or false. Return 1 for refresh the view with the last datas. (Static data are already calculated and available !)
+				Log.i("RoundTask", "RoundTask.execute() => Utilisation du cache !");
+				return 1;
+			}else{
+				Log.i("RoundTask", "RoundTask.execute() => Appel du web service en cours de préparation !");
+				
+				// Reset the sorted lists.
+				listDeliveriesSorted = new ArrayList<HashMap<String, Object>>();
+				listLatLngSorted = new ArrayList<LatLng>();
+			}
 			
 			String waypoints = "&waypoints=";
 			// MAX_POINTS Points maximum. Free mode.
