@@ -90,7 +90,10 @@ public class NextDelivery extends RoboActivity {
 		// Initialize map.
 		setUpMapIfNeeded();
 		
-		new RoundXmlTask().execute();
+		// Refresh.
+		if(lastLocation != null){
+			new RoundTask(((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap(), lastLocation, Round.getDeliveriesToDeliver(App.getCurrendRound())).execute();
+		}
 	}
 
 	@Override
@@ -256,6 +259,9 @@ public class NextDelivery extends RoboActivity {
 			// Display for debug.
 //			Toast.makeText(App.context, msg.toString(), Toast.LENGTH_SHORT).show();
 			Log.i(getClass().getSimpleName(), msg.toString());
+			
+			// Generate the round. Cache is used.
+			new RoundTask(((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap(), lastLocation, Round.getDeliveriesToDeliver(App.getCurrendRound())).execute();
 		}
 
 		@Override
@@ -279,57 +285,6 @@ public class NextDelivery extends RoboActivity {
 		}
 	}
 
-	private class RoundXmlTask extends AsyncTask<Void, Integer, Round> {
-		private static final String TOAST_MSG_GET_ROUND = "Recherche du parcours à effectuer ...";
-		private static final String TOAST_MSG_ROUND_FIND = "Récupération du parcours à effectuer ...";
-		private static final String TOAST_MSG_ROUND_FIND_CACHE = "Récupération des livraisons restantes ...";
-
-		/**
-		 * Display message for tu user. {@inheritDoc}
-		 */
-		@Override
-		protected void onPreExecute() {
-			Toast.makeText(App.context, TOAST_MSG_GET_ROUND, Toast.LENGTH_LONG).show();
-			
-			if (App.currentRoundSet()) {
-				// The round is already set.
-				Toast.makeText(App.context, TOAST_MSG_ROUND_FIND_CACHE, Toast.LENGTH_LONG).show();
-			} else {
-				// We have to load the XML file and refresh the DB.
-				Toast.makeText(App.context, TOAST_MSG_ROUND_FIND, Toast.LENGTH_LONG).show();
-			}
-		}
-		
-		public RoundXmlTask(){
-			
-		}
-
-		/**
-		 * Check if a round is already cached or if the round must be get before. {@inheritDoc}
-		 */
-		@Override
-		protected Round doInBackground(Void... params) {
-			if (!App.currentRoundSet()) {
-				// Get, parse, store on the DB and refresh the App.currentRound.
-				Round.tryParseXmlFileRound();
-			}
-
-			return App.getCurrendRound();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		protected void onPostExecute(final Round round) {
-			// Display the round on the map.
-			try {
-				new RoundTask(((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap(), lastLocation, Round.getDeliveriesToDeliver(round)).execute();
-			} catch (Exception e) {
-				Log.w("NextDelivery:RoundXmlTask", "Impossible de lancer RoundTask()", e);
-			}
-		}
-
-	}
+	
 
 }

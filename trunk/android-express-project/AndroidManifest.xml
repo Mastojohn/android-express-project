@@ -52,6 +52,18 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_scan" >
         </activity>
+        <activity
+            android:name="com.app.express.activity.DeliveryListActivity"
+            android:label="@string/title_delivery_list" >
+        </activity>
+        <activity
+            android:name="com.app.express.activity.DeliveryDetailActivity"
+            android:label="@string/title_delivery_detail"
+            android:parentActivityName="com.app.express.activity.DeliveryListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DeliveryListActivity" />
+        </activity>
     </application>
 
 </manifest>
