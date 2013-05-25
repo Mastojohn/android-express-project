@@ -3,19 +3,13 @@
 
     <string name="app_name">Express</string>
     <string name="action_settings">Préférences</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-    <string name="title_activity_hello_android">HelloAndroid</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_test">Test</string>
     <string name="title_activity_next_delivery">Prochaine destination</string>
     <string name="mapApiKey">AIzaSyBL3RUaAm3h5GZTRP3FnWX5T5l26LZUpss</string>
     <string name="title_activity_scan">Scan</string>
     <string name="packetForgotten"><i>Coli(s) manquant(s)</i></string>
     <string name="packetNumber">Il reste 0 coli(s) à scanner</string>
-    <string name="packetWeight">Le colis pése : </string>
-    <string name="packetSize">Le colis mesure :  </string>
+    <string name="packetWeight">Le colis pèse : </string>
+    <string name="packetSize">Le colis mesure : </string>
     
 
 </resources>

@@ -15,6 +15,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.app.express.db.DatabaseHelper;
 import com.app.express.db.dao.RoundDao;
@@ -191,6 +192,7 @@ public class Round extends BaseDaoEnabled {
 		    return new LatLng(location.getLatitude(), location.getLongitude());
 		}catch(Exception e){
 			Log.w("Round", "Impossible de déterminer la position de l'adresse: "+strAddress, e);
+			Toast.makeText(App.context, "L'adresse \""+strAddress+"\" n'a pas pu être résolue par le système de géolocalisation.\nUn problème de connexion réseau peut être la source de cette erreur.", Toast.LENGTH_LONG).show();
 			return null;
 		}
 	}
