@@ -29,47 +29,47 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "delivery", daoClass = DeliveryDao.class)
 public class Delivery extends BaseDaoEnabled {
 	@DatabaseField(generatedId = true, columnName = "delivery_id", useGetSet = true)
-	private Integer deliveryId;
+	protected Integer deliveryId;
 	
 	@DatabaseField(columnName = "id", uniqueIndexName = "priority_uniq", useGetSet = true)
-	private String id;
+	protected String id;
 
 	@DatabaseField(columnName = "round_id", uniqueIndexName = "priority_uniq", canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3, useGetSet = true)
-	private Round round;
+	protected Round round;
 
 	@DatabaseField(index = true, columnName = "type_delivery", canBeNull = false, defaultValue = Categories.Types.type_delivery.DELIVERY, useGetSet = true)
-	private String typeDelivery = Categories.Types.type_delivery.DELIVERY;
+	protected String typeDelivery = Categories.Types.type_delivery.DELIVERY;
 
 	@DatabaseField(uniqueIndexName = "priority_uniq", canBeNull = false, useGetSet = true)
-	private Integer priority;
+	protected Integer priority;
 
 	@DatabaseField(index = true, columnName = "delivery_over", defaultValue = "0", useGetSet = true)
-	private Boolean deliveryOver = false;
+	protected Boolean deliveryOver = false;
 
 	@DatabaseField(index = true, columnName = "receiver_available", defaultValue = "0", useGetSet = true)
-	private Boolean receiverAvailable = false;
+	protected Boolean receiverAvailable = false;
 
 	@DatabaseField(dataType = DataType.STRING_BYTES, useGetSet = true)
-	private String signature;
+	protected String signature;
 
 	@DatabaseField(columnName = "date_over", useGetSet = true)
-	private Date dateOver;
+	protected Date dateOver;
 
 	@DatabaseField(useGetSet = true)
-	private String latitude;
+	protected String latitude;
 
 	@DatabaseField(useGetSet = true)
-	private String longitude;
+	protected String longitude;
 	
 	@ForeignCollectionField(eager = true, orderColumnName = "name", maxEagerLevel = 3)
-	private ForeignCollection<User> users;
+	protected ForeignCollection<User> users;
 	
 	@ForeignCollectionField(eager = true)
-	private ForeignCollection<Packet> packets;
+	protected ForeignCollection<Packet> packets;
 
-	private User sender;
+	protected User sender;
 
-	private User receiver;
+	protected User receiver;
 
 	/**
 	 * Constructor empty for ORMLite.
@@ -257,7 +257,7 @@ public class Delivery extends BaseDaoEnabled {
 	 * 
 	 * @return User
 	 */
-	private User _getUserByType(String type) {
+	protected User _getUserByType(String type) {
 		User user = null;
 		
 		if (receiver == null) {
@@ -285,6 +285,33 @@ public class Delivery extends BaseDaoEnabled {
 		}
 		
 		return user;
+	}
+	
+	/**
+	 * Get the total of the weight for the delivery.
+	 * 
+	 * @return Double
+	 */
+	public Double getPacketsWeight(){
+		Double weight = 0.0;
+		
+		CloseableIterator<Packet> packetIterator = this.getPackets().closeableIterator();
+		try {
+
+			while (packetIterator.hasNext()) {
+				Packet packet = packetIterator.next();
+				weight += packet.getWeight();
+			}
+		} finally {
+			// Always close the iterator, else the connection from the database isn't destroyed.
+			try {
+				packetIterator.close();
+			} catch (SQLException e) {
+				Log.e(Delivery.class.getName(), "Impossible de récupérer le destinataire de la livraison:" + this.toString(), e);
+			}
+		}
+		
+		return weight;
 	}
 
 	/*

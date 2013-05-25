@@ -32,7 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Scan extends Activity {
-
+// TODO BUG : Quand j'appelle cette classe depuis DeliveryDetailActivity:onCreate() ça diminue le nombre de colis à scanner même si je ne scanne pas !
 	private Button button_Scan;
 	private Button button_UnScanable;
 	private Button button_Valid;
@@ -50,7 +50,8 @@ public class Scan extends Activity {
 	
 	//en dur pour le moment
 	private Delivery delivery;
-	private int deliveryId = 1;
+	private int deliveryId;
+	private Bundle extras;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,11 @@ public class Scan extends Activity {
 		// Initialize helpers.
 		App.context = getApplicationContext();
 		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+		
+		extras = getIntent().getExtras();
+		
+		// Set the delivery to use.
+		deliveryId = extras.getInt("deliveryId");
 		
 		// Définition de la vue, on lui affecte R.layout.activity_scan ce qui
 		// représente notre vue
@@ -182,7 +188,6 @@ public class Scan extends Activity {
 		}
 		
 		// Récupération des parametres
-		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 
 			// On récupere notre parametre String

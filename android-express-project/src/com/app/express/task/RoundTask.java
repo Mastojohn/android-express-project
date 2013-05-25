@@ -82,6 +82,11 @@ public class RoundTask extends AsyncTask<Boolean, Integer, Integer> {
 	 * The list of LatLng points who are in the best sort for the deliverer.
 	 */
 	private static List<LatLng> listLatLngSorted = new ArrayList<LatLng>();
+	
+	/**
+	 * The round can be partially loaded. Used for be sure it correctly loaded.
+	 */
+	public static boolean roundCorrectlyLoaded = false;
 
 	/**
 	 * Constructor.
@@ -384,6 +389,9 @@ public class RoundTask extends AsyncTask<Boolean, Integer, Integer> {
 			}
 			// Add the line.
 			map.addPolyline(polylines);
+			
+			// Signal that the round is available.
+			roundCorrectlyLoaded = true;
 		}
 	}
 }

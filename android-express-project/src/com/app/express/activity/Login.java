@@ -124,75 +124,6 @@ public class Login extends RoboActivity {
 		if(!Gmap.isGoogleMapsInstalled()){
 			Gmap.displayError();
 		}
-		
-		// LEO
-		
-		try{
-			 // Create deliverer.
-			 Dao<Deliverer, Integer> delivererDao = App.dbHelper.getDelivererDao();
-			 Deliverer deliverer = new Deliverer(delivererDao, "léo", "leo@test.fr");
-			 deliverer.create();
-			 deliverer.refresh();
-			 Log.i(NextDelivery.class.getName(), "Livreur ajouté: " + deliverer.toString());
-			
-			 // Create round.
-			 Dao<Round, Integer> roundDao = App.dbHelper.getRoundDao();
-			 Round round = new Round(roundDao, deliverer, new Date());
-			 round.create();
-			 round.refresh();
-			 Log.i(NextDelivery.class.getName(), "Tournée ajoutée: " + round.toString());
-			
-			 // Create delivery.
-			 Dao<Delivery, Integer> deliveryDao = App.dbHelper.getDeliveryDao();
-			 Delivery delivery = new Delivery(deliveryDao, round, 1);
-			 delivery.create();
-			 delivery.refresh();
-			 Log.i(NextDelivery.class.getName(), "Livraison ajoutée: " + delivery.toString());
-			
-			 // Create receiver.
-			 Dao<User, Integer> receiverDao = App.dbHelper.getUserDao();
-			 User receiver = new User(receiverDao, delivery, "Destinataire mathieu", Categories.Types.type_user.RECEIVER, "240 b xxx", "", "13100", "Aix", "");
-			 receiver.create();
-			 receiver.refresh();
-			 Log.i(NextDelivery.class.getName(), "Utilisateur ajouté: " + receiver.toString());
-			
-			 // Create sender.
-			 Dao<User, Integer> senderDao = App.dbHelper.getUserDao();
-			 User sender = new User(senderDao, delivery, "Expéditeur paul", Categories.Types.type_user.SENDER, "", "", "", "", "");
-			 sender.create();
-			 sender.refresh();
-			 Log.i(NextDelivery.class.getName(), "Utilisateur ajouté: " + sender.toString());
-	
-			 // Create packet.
-			 Dao<Packet, Integer> packetDao = App.dbHelper.getPacketDao();
-			 Packet packet = new Packet(packetDao, delivery, "3057068015986", "150x12x54", 5.1, "En cours");
-			 packet.create();
-			 packet.refresh();
-			 Log.i(NextDelivery.class.getName(), "Colis ajouté: " + packet.toString());
-			 
-			 // Create packet.
-			 Packet packet2 = new Packet(packetDao, delivery, "30004832", "54x12x54", 5.1, "En cours");
-			 packet2.create();
-			 packet2.refresh();
-			 Log.i(NextDelivery.class.getName(), "Colis ajouté: " + packet2.toString());
-		 
-		}catch(Exception e){
-			Log.e("ERROR", "Erreur durant ajout données fake.", e);
-		}
-		
-		button_Scan_Interface = (Button) findViewById(R.id.button_Scan_Interface);
-		button_Scan_Interface.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(Login.this, Scan.class);
-						
-		
-						// On lance l'Activity
-						startActivity(intent);
-						
-					}
-				});
 	}
 
 	@Override
@@ -325,7 +256,7 @@ public class Login extends RoboActivity {
 				editor.commit();
 
 				// Call next activity.
-				Intent intent = new Intent(App.context, NextDelivery.class);
+				Intent intent = new Intent(App.context, DeliveryListActivity.class);
 				startActivity(intent);
 
 				finish();

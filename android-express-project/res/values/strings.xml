@@ -10,6 +10,7 @@
     <string name="packetNumber">Il reste 0 coli(s) à scanner</string>
     <string name="packetWeight">Le colis pèse : </string>
     <string name="packetSize">Le colis mesure : </string>
-    
+    <string name="title_delivery_list">Livraisons</string>
+    <string name="title_delivery_detail">Détail de la livraison</string>
 
 </resources>
