@@ -337,8 +337,7 @@ public class XmlParser {
 				this.round = new Round(App.dbHelper.getRoundDao(), this.deliverer, new Date());
 				this.round.create();
 				Log.w("XmlParser",
-						"Impossible de récupérer la date ce la tournée, mise par défaut à la date du jour.",
-						e);
+						"Impossible de récupérer la date ce la tournée, mise par défaut à la date du jour.");
 			}
 		}
 

@@ -42,10 +42,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
+public class RoundTask extends AsyncTask<Void, Integer, Integer> {
 
 	private static final String TOAST_MSG = "Calcul de l'itinéraire en cours...";
 	private static final String TOAST_ERR_MAJ = "Impossible de trouver un itinéraire pour ce parcours !";
+	private static final String TOAST_ERR_OPEN_STREAM = "Impossible d'ouvrir une connexion au service web Google Direction. Vérifiez vos paramètres réseaux.";
+	private static final String TOAST_WS_OK = "Le parcours a été calculé, mise à jour de la carte en cours...";
 	private static final int MAX_POINTS = 8;
 
 	private GoogleMap map;
@@ -85,32 +87,12 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 	 * Constructor.
 	 * 
 	 * @param map
-	 * @param listDeliveriesToSort
-	 */
-	public RoundTask(final GoogleMap map, List<Delivery> listDeliveriesToSort) {
-		SharedPreferences settings = App.context.getSharedPreferences(NextDelivery.PREFS_NAME, App.context.MODE_PRIVATE);
-
-		this.map = map;
-		Log.i("Gmap", location.toString());
-		// Get the current location.
-		startStep = location.getLatitude() + "," + location.getLongitude();
-
-		// Get the location of the enterprise.
-		endStep = settings.getString("defaultStartRound", location.getLatitude() + "," + location.getLongitude());// TODO Faire un système de settings
-																													// permettant de définir l'emplacement de
-																													// l'entreprise.
-
-		this.listDeliveriesToSort = listDeliveriesToSort;
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param map
 	 * @param locationSource
 	 * @param listDeliveriesToSort
 	 */
 	public RoundTask(final GoogleMap map, final Location location, List<Delivery> listDeliveriesToSort) {
+		SharedPreferences settings = App.context.getSharedPreferences(NextDelivery.PREFS_NAME, App.context.MODE_PRIVATE);
+
 		this.map = map;
 		this.location = location;
 		Log.i("Gmap", location.toString());
@@ -118,8 +100,9 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 		startStep = location.getLatitude() + "," + location.getLongitude();
 
 		// Get the location of the enterprise.
-		endStep = location.getLatitude() + "," + location.getLongitude();// TODO Faire un système de settings permettant de définir l'emplacement de
-																			// l'entreprise.
+		endStep = settings.getString("defaultStartRound", location.getLatitude() + "," + location.getLongitude());// TODO Faire un système de settings
+																													// permettant de définir l'emplacement de
+		// l'entreprise.
 
 		this.listDeliveriesToSort = listDeliveriesToSort;
 	}
@@ -136,8 +119,11 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Boolean doInBackground(Void... params) {
+	protected Integer doInBackground(Void... params) {
 		try {
+			// Reset the sorted list.
+			listDeliveriesSorted = new ArrayList<HashMap<String, Object>>();
+			
 			String waypoints = "&waypoints=";
 			// MAX_POINTS Points maximum. Free mode.
 			for (int i = 0; i < (listDeliveriesToSort.size() >= MAX_POINTS ? MAX_POINTS : listDeliveriesToSort.size()); i++) {
@@ -160,8 +146,14 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 
 			Log.i("RoundTask", "Url du webservice google appelée: \n" + url.toString());
 
-			// Appel du web service
-			final InputStream stream = new URL(url.toString()).openStream();
+			InputStream stream;
+			try {
+				// Appel du web service
+				stream = new URL(url.toString()).openStream();
+			} catch (Exception e) {
+				Log.w("RoundTask", TOAST_ERR_OPEN_STREAM, e);
+				return -2;
+			}
 
 			// Traitement des données
 			final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -174,27 +166,15 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 
 			// On récupère d'abord le status de la requête
 			final String status = document.getElementsByTagName("status").item(0).getTextContent();
+
 			if (!"OK".equals(status)) {
 				Log.i("RoundTask", "Erreur lors de l'appel au web service: " + status);
-				// Toast.makeText(App.context, "Une erreur est survenue lors de l'appel au service Google de destination de l'application: <br /><b>"+
-				// status+"</b>", Toast.LENGTH_LONG).show();
-				return false;
+				return -1;
 			}
-			try{
-			Node test1 = document.getElementsByTagName("southwest").item(0).getFirstChild();
-			Node test2 = document.getElementsByTagName("southwest").item(0).getLastChild();
-			NodeList lat  = document.getElementsByTagName("southwest").item(0).getChildNodes();
-			Node contetn = lat.item(1);
-			Node contetn2 = lat.item(3);
-			String nodename = contetn.getNodeName();
-			String nodenameV = contetn.getNodeValue();
-			String nodename2V = contetn2.getNodeValue();
-			// Get bounds.
-			southwest = new LatLng(Double.parseDouble(document.getElementsByTagName("southwest").item(0).getAttributes().getNamedItem("lat").getNodeValue()), Double.parseDouble(document.getElementsByTagName("southwest").item(1).getAttributes().getNamedItem("lng").getNodeValue()));
-			northeast = new LatLng(Double.parseDouble(document.getElementsByTagName("northeast").item(0).getAttributes().getNamedItem("lat").getNodeValue()), Double.parseDouble(document.getElementsByTagName("northeast").item(1).getAttributes().getNamedItem("lng").getNodeValue()));
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+
+			southwest = new LatLng(Double.parseDouble(document.getElementsByTagName("southwest").item(0).getChildNodes().item(1).getTextContent()), Double.parseDouble(document.getElementsByTagName("southwest").item(0).getChildNodes().item(3).getTextContent()));
+			northeast = new LatLng(Double.parseDouble(document.getElementsByTagName("northeast").item(0).getChildNodes().item(1).getTextContent()), Double.parseDouble(document.getElementsByTagName("northeast").item(0).getChildNodes().item(3).getTextContent()));
+
 			// Get the number of leg.
 			int countLeg = document.getElementsByTagName("leg").getLength();
 
@@ -268,10 +248,10 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 				listDeliveriesSorted.add(leg);
 			}
 
-			return true;
+			return 1;
 		} catch (final Exception e) {
 			Log.w("RoundTask", "Une erreur est survenue lors de la récupération du parcours depuis le web service.", e);
-			return false;
+			return 0;
 		}
 	}
 
@@ -315,11 +295,15 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void onPostExecute(final Boolean result) {
-		if (!result) {
-			Toast.makeText(App.context, TOAST_ERR_MAJ, Toast.LENGTH_SHORT).show();
+	protected void onPostExecute(final Integer result) {
+		if (result == -1) {
+			Toast.makeText(App.context, "Une erreur est survenue lors de l'appel au service Google de destination de l'application.", Toast.LENGTH_LONG).show();
+		} else if (result == 0) {
+			Toast.makeText(App.context, TOAST_ERR_MAJ, Toast.LENGTH_LONG).show();
 			Log.w("RoundTask", TOAST_ERR_MAJ);
-		} else {
+		} else if (result == 1) {
+			Toast.makeText(App.context, TOAST_WS_OK, Toast.LENGTH_LONG).show();
+
 			// On déclare le polyline, c'est-à-dire le trait (ici bleu) que l'on ajoute sur la carte pour tracer l'itinéraire
 			final PolylineOptions polylines = new PolylineOptions();
 			polylines.color(Color.BLUE);
@@ -334,7 +318,7 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 
 			// Remove old markers if exists.
 			if (markersDisplayed.size() > 0) {
-				for (int i = 0; i < listSize; i++) {
+				for (int i = 0; i < markersDisplayed.size(); i++) {
 					markersDisplayed.get(i).remove();
 				}
 				// Remove the polyline.
@@ -350,9 +334,8 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 			for (int i = 0; i < listSize; i++) {
 				MarkerOptions markerOptions = new MarkerOptions();
 				markerOptions.position(Round.getLatLngByAddress(listDeliveriesSorted.get(i).get("start_address").toString()));
-				markerOptions.title("(" + i + ") :\n" + listDeliveriesSorted.get(i).get("start_address").toString().replaceAll(", ", ",\n"));
-				Log.i("RoundTask", listDeliveriesSorted.get(i).get("start_address").toString());
-				Log.i("RoundTask", Round.getLatLngByAddress(listDeliveriesSorted.get(i).get("start_address").toString()).toString());
+				markerOptions.title((i == 0 ? "Départ" : (i == listSize - 1 ? "Dernière livraison" : "Livraison N°" + i)));
+				markerOptions.snippet(listDeliveriesSorted.get(i).get("start_address").toString().replaceAll(",\\s", ",\n"));
 
 				// Custom markerOptions.
 				if (i == 0) {
@@ -371,23 +354,26 @@ public class RoundTask extends AsyncTask<Void, Integer, Boolean> {
 			}
 
 			// Update the map.
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(listLatLngSorted.get(0), 13));
-//			map.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(southwest, northeast), 20));
+			// map.moveCamera(CameraUpdateFactory.newLatLngZoom(listLatLngSorted.get(0), 13));
+			map.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(southwest, northeast), 50));
 
 			// Display news markers.
 			for (int i = 0; i < listSize; i++) {
 				MarkerOptions markerOptions = new MarkerOptions();
 				// Get the marker from the static array.
 				markerOptions = markersOptions.get(i);
-				Marker marker = map.addMarker(markerOptions);
 
-				// Put the marker into the static array.
-				markersDisplayed.add(marker);
+				try {
+					Marker marker = map.addMarker(markerOptions);
 
-				if (i == 0) {
-					map.addPolyline(polylines);
+					// Put the marker into the static array.
+					markersDisplayed.add(marker);
+				} catch (IllegalArgumentException e) {
+					Toast.makeText(App.context, "Une erreur réseau est survenue et a empêché la conversion des adresses de livraison vers les points géographiques. (Lat/lng)", Toast.LENGTH_LONG).show();
 				}
 			}
+			// Add the line.
+			map.addPolyline(polylines);
 		}
 	}
 }
