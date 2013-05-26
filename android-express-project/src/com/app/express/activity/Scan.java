@@ -248,7 +248,7 @@ public class Scan extends Activity {
 		
 		// Récupération des parametres
 		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
+		if ((String) extras.get("bareCode") != null) {
 
 			// On récupere notre parametre String
 			String bareCode = (String) extras.get("bareCode");
