@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.app.express.R;
@@ -65,6 +66,7 @@ public class DeliveryDetailFragment extends Fragment {
 			((TextView) rootView.findViewById(R.id.textView_receiverName)).setText(Html.fromHtml(mItem.displayReceiver()));
 			((TextView) rootView.findViewById(R.id.textView_receiverAddress)).setText(Html.fromHtml(mItem.displayAddress()));
 			((TextView) rootView.findViewById(R.id.textView_ReceiverStatsDelivery)).setText(Html.fromHtml(mItem.displayStatsDelivery()));
+			((TableRow) rootView.findViewById(R.id.tableRow1)).setVisibility(View.GONE);
 			
 		}
 

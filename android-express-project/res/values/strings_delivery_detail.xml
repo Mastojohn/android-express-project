@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_open_map">Carte</string>
-    <string name="receiverName">Nom destinataire</string>
-    <string name="receiverAddress">Addresse destinataire</string>
-    <string name="receiverStatsDelivery">Statistiques de la livraison</string>
+    <string name="receiverName"></string>
+    <string name="receiverAddress"></string>
+    <string name="receiverStatsDelivery"></string>
     <string name="scanPaquets">Scanner les colis</string>
     
 </resources>
