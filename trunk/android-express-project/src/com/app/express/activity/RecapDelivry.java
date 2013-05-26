@@ -61,8 +61,7 @@ public class RecapDelivry extends Activity {
 						// Initialisation du scan
 						 	Intent intent = new Intent(RecapDelivry.this, SignatureReceiverActivity.class);					
 							intent.putExtra("deliveryId", deliveryId);
-							startActivity(intent);
-							
+							startActivity(intent);						
 					}
 				});
 				
