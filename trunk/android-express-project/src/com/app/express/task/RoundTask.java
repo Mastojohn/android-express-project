@@ -1,26 +1,21 @@
 package com.app.express.task;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -31,7 +26,6 @@ import com.app.express.db.persistence.Delivery;
 import com.app.express.db.persistence.Round;
 import com.app.express.db.persistence.User;
 import com.app.express.helper.App;
-import com.app.express.helper.HashMapHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -47,6 +41,7 @@ public class RoundTask extends AsyncTask<Boolean, Integer, Integer> {
 	private static final String TOAST_MSG = "Calcul de l'itinéraire en cours...";
 	private static final String TOAST_ERR_MAJ = "Impossible de trouver un itinéraire pour ce parcours !";
 	private static final String TOAST_ERR_OPEN_STREAM = "Impossible d'ouvrir une connexion au service web Google Direction. Vérifiez vos paramètres réseaux.";
+	private static final String TOAST_ERR_GOOGLE = "Une erreur est survenue lors de l'appel au service \"Google Destination\" pour déterminer le parcours.";
 	private static final String TOAST_WS_OK = "Le parcours a été calculé, mise à jour de la carte en cours...";
 	private static final int MAX_POINTS = 8;
 
@@ -166,7 +161,7 @@ public class RoundTask extends AsyncTask<Boolean, Integer, Integer> {
 				// Appel du web service
 				stream = new URL(url.toString()).openStream();
 			} catch (Exception e) {
-				Log.w("RoundTask", TOAST_ERR_OPEN_STREAM, e);
+				Log.w("RoundTask", "Erreur lors de l'appel au web service: ", e);
 				return -2;
 			}
 
@@ -183,7 +178,7 @@ public class RoundTask extends AsyncTask<Boolean, Integer, Integer> {
 			final String status = document.getElementsByTagName("status").item(0).getTextContent();
 
 			if (!"OK".equals(status)) {
-				Log.i("RoundTask", "Erreur lors de l'appel au web service: " + status);
+				Log.w("RoundTask", "Erreur lors de l'appel au web service: " + status);
 				return -1;
 			}
 
@@ -265,7 +260,7 @@ public class RoundTask extends AsyncTask<Boolean, Integer, Integer> {
 
 			return 1;
 		} catch (final Exception e) {
-			Log.w("RoundTask", "Une erreur est survenue lors de la récupération du parcours depuis le web service.", e);
+			Log.w("RoundTask", TOAST_ERR_MAJ, e);
 			return 0;
 		}
 	}
@@ -311,11 +306,12 @@ public class RoundTask extends AsyncTask<Boolean, Integer, Integer> {
 	 */
 	@Override
 	protected void onPostExecute(final Integer result) {
-		if (result == -1) {
-			Toast.makeText(App.context, "Une erreur est survenue lors de l'appel au service Google de destination de l'application.", Toast.LENGTH_LONG).show();
+		if(result == -2){
+			Toast.makeText(App.context, TOAST_ERR_OPEN_STREAM, Toast.LENGTH_LONG).show();
+		}else if (result == -1) {
+			Toast.makeText(App.context, TOAST_ERR_GOOGLE, Toast.LENGTH_LONG).show();
 		} else if (result == 0) {
 			Toast.makeText(App.context, TOAST_ERR_MAJ, Toast.LENGTH_LONG).show();
-			Log.w("RoundTask", TOAST_ERR_MAJ);
 		} else if (result == 1) {
 			Toast.makeText(App.context, TOAST_WS_OK, Toast.LENGTH_LONG).show();
 
