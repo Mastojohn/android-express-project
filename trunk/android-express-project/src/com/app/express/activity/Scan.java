@@ -25,6 +25,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -57,7 +58,7 @@ public class Scan extends Activity {
 	
 	//en dur pour le moment
 	private Delivery delivery;
-	private int deliveryId;
+	private static int deliveryId;
 	private Bundle extras;
 
 	@Override
@@ -67,6 +68,14 @@ public class Scan extends Activity {
 		// Initialize helpers.
 		App.context = getApplicationContext();
 		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+		
+		Bundle extras = getIntent().getExtras();
+		
+		
+		if(extras.getInt("deliveryId") != 0)
+		{
+			deliveryId = extras.getInt("deliveryId");
+		}
 		
 		// Définition de la vue, on lui affecte R.layout.activity_scan ce qui
 		// représente notre vue
@@ -84,83 +93,100 @@ public class Scan extends Activity {
 		/*
 		 * évènements "clic" provoqué par l'utilisateur.
 		 */
-		button_Scan.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// Initialisation du scan
-				IntentIntegrator.initiateScan(Scan.this);
-			}
-		});
-		button_UnScanable.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// Test de la validation du code barre
+				button_Scan.setOnClickListener(new OnClickListener() {
+		
+					@Override
+					public void onClick(View v) {
+						// Initialisation du scan
+						IntentIntegrator.initiateScan(Scan.this);
+					}
+				});
+				button_UnScanable.setOnClickListener(new OnClickListener() {
+		
+					@Override
+					public void onClick(View v) {
+						// Test de la validation du code barre
+//						tvResult.setError(null);
+//						View focusView = null;
+//						boolean cancel = false;
+//						if (TextUtils.isEmpty(tvResult.getText().toString())) {
+//							   tvResult.setError(getString(R.string.error_field_required));
+//							   focusView = tvResult;
+//							   cancel = true;
+//							  }
+//						else if (tvResult.getText().length() < 3) {
+//							tvResult.setError(getString(R.string.error_invalid_password));
+//							focusView = tvResult;
+//							cancel = true;
+//						}
+//						else if(cancel == false)
+//						{
+						String out = tvResult_Unscanned.getText().toString();
+						Intent intent = new Intent(Scan.this, Scan.class);
+						intent.putExtra("bareCode", out);
+						startActivity(intent);
+						finish();
+//						}
+						
+					}
+				});
+				button_packet_away.setOnClickListener(new OnClickListener() {
+		
+					@Override
+					public void onClick(View v) {
+						try {
+						
+						Dao<Packet, Integer> packetDao = App.dbHelper.getPacketDao();
+						//Récuperation des colis de la livraison
+						Packet packetToMatch = new Packet();
+						packetToMatch.setDelivery(delivery);
+						packetToMatch.setPacketScanned(false);
+						packetToMatch.setDeliveredState("En cours");
+						
+						List<Packet> packetsTogetAway;
+						packetsTogetAway = packetDao.queryForMatchingArgs(packetToMatch);
+						// Mise a  l'etat oublier tout les colis restant
+						Packet packet;
+						
+						for(int i=0; i < packetsTogetAway.size();i++)
+						{
+							packet = packetsTogetAway.get(i);
+							Log.i("packet récupéré de la bdd", packet.toString());
+							
+							packet.setDeliveredState("Oublié");
+							
+							packet.update();
+							packetsScanned.add(packet);
+							
+							Log.i("Packet sauvé en bdd en mode oublier", packet.toString());
+						}
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						Intent intent = new Intent(Scan.this, CustomerPresence.class);					
+						intent.putExtra("deliveryId", deliveryId);
+						startActivity(intent);
+						
+					}
+				});
+				button_Valid.setOnClickListener(new OnClickListener() {
+		
+					@Override
+					public void onClick(View v) {
+						// Initialisation du scan
+						 Intent intent = new Intent(Scan.this, CustomerPresence.class);					
+							intent.putExtra("deliveryId", deliveryId);
+							startActivity(intent);
+							
+					}
+				});
+		
+		//End élement on clic
 				
-
-				String out = tvResult_Unscanned.getText().toString();
-				Intent intent = new Intent(Scan.this, Scan.class);
-				intent.putExtra("bareCode", out);
-				startActivity(intent);
-				finish();
-				
-			}
-		});
-		button_packet_away.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				try {
-				
-				Dao<Packet, Integer> packetDao = App.dbHelper.getPacketDao();
-				//Récuperation des colis de la livraison
-				Packet packetToMatch = new Packet();
-				packetToMatch.setDelivery(delivery);
-				packetToMatch.setPacketScanned(false);
-				packetToMatch.setDeliveredState("En cours");
-				
-				List<Packet> packetsTogetAway;
-				packetsTogetAway = packetDao.queryForMatchingArgs(packetToMatch);
-				// Mise a  l'etat oublier tout les colis restant
-				Packet packet;
-				
-				for(int i=0; i < packetsTogetAway.size();i++)
-				{
-					packet = packetsTogetAway.get(i);
-					Log.i("packet récupéré de la bdd", packet.toString());
-					
-					packet.setDeliveredState("Oublié");
-					
-					packet.update();
-					packetsScanned.add(packet);
-					
-					Log.i("Packet sauvé en bdd en mode oublier", packet.toString());
-				}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				Intent intent = new Intent(Scan.this, CustomerPresence.class);					
-				intent.putExtra("deliveryId", deliveryId);
-				startActivity(intent);
-				
-			}
-		});
-		button_Valid.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// Initialisation du scan
-				 Intent intent = new Intent(Scan.this, CustomerPresence.class);					
-					intent.putExtra("deliveryId", deliveryId);
-					startActivity(intent);
-					
-			}
-		});
 		try {
-			//Récupération de la livraison !en dur pour le moment !
+			//Récupération de la livraison 
 			Dao<Delivery, Integer> deliveryDao = App.dbHelper.getDeliveryDao();
 			delivery = deliveryDao.queryForId(deliveryId);
 		} catch (SQLException e1) {
@@ -182,18 +208,15 @@ public class Scan extends Activity {
 			
 			if(packetsToScan.size() > 0)
 			{
-				
-						
-				
 				Packet packet = null;
 				int i=1;
 				Iterator j = packetsToScan.iterator();
-				String tab_barcode[] = new String[packetsToScan.size()];
 				TableLayout table = (TableLayout) findViewById(R.id.list_colis);
 				while(j.hasNext())
 				{					
 						packet = (Packet)j.next();
 						packet.getBarcode();
+						
 						TableRow tr = new TableRow(this);
 						tr.setId(i);
 						LayoutParams params = new LayoutParams(
@@ -213,12 +236,6 @@ public class Scan extends Activity {
 			            code.setLayoutParams(new TableRow.LayoutParams(0));
 			            tr.addView(code);
 			            
-			            
-			            
-			            
-			            
-			            
-			            
 					 Log.i("Barcode"+i, packet.getBarcode());
 					 i++;
 					 
@@ -227,13 +244,13 @@ public class Scan extends Activity {
 				String exp_nbrcolis = "Il reste "+packetsToScan.size()+" coli(s) à scanner";
 				tvcolis_restant = (TextView) this.findViewById(R.id.textView_Nb_Colis);
 				tvcolis_restant.setText(exp_nbrcolis);
-				Log.i("Scan", "Il y a "+packetsToScan.size()+" paquets à scanner pour ette livraison.");
+				Log.i("Scan", "Il y a "+packetsToScan.size()+" paquets à scanner pour cette livraison.");
 				
 				button_Valid.setClickable(false);
 				button_Scan.setClickable(true);
 				button_UnScanable.setClickable(true);
 			}else{
-				Log.i("Scan", "Il n'y a plus de paquet à scanner pour ette livraison.");
+				Log.i("Scan", "Il n'y a plus de paquet à scanner pour cette livraison.");
 				button_Valid.setClickable(true);
 				button_Scan.setClickable(false);
 				button_UnScanable.setClickable(false);
@@ -247,7 +264,7 @@ public class Scan extends Activity {
 		}
 		
 		// Récupération des parametres
-		Bundle extras = getIntent().getExtras();
+		
 		if ((String) extras.get("bareCode") != null) {
 
 			// On récupere notre parametre String
