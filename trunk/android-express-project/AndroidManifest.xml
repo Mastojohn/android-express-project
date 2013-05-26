@@ -47,18 +47,6 @@
             android:label="@string/title_activity_scan" >
         </activity>
         <activity
-            android:name="com.app.express.PackageListActivity"
-            android:label="@string/title_package_list" >
-        </activity>
-        <activity
-            android:name="com.app.express.PackageDetailActivity"
-            android:label="@string/title_package_detail"
-            android:parentActivityName=".PackageListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PackageListActivity" />
-        </activity>
-        <activity
             android:name="com.app.express.activity.RecapDelivry"
             android:label="@string/title_activity_recap_delivry"
             android:screenOrientation="landscape" >  
