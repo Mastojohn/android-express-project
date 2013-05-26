@@ -152,10 +152,10 @@ public class DeliveryContent {
 				content += "<b>Adresse de livraison</b> :<br />";
 				
 			} else if (getTypeDelivery().equals(Categories.Types.type_delivery.RECOVERY)) {
-				content += "<b>Adresse du fournisseur</b> :";
+				content += "<b>Adresse du fournisseur</b> :<br />";
 			}
 			
-			content += receiver.getAddress() + "<br />" + (receiver.getAddressDescription() != null && receiver.getAddressDescription().length() > 0 ? receiver.getAddressDescription() : "") + "<br />" + receiver.getZipCode() + " " + receiver.getCity() + "br />";
+			content += receiver.getAddress() + "<br />" + (receiver.getAddressDescription() != null && receiver.getAddressDescription().length() > 0 ? receiver.getAddressDescription() : "") + "<br />" + receiver.getZipCode() + " " + receiver.getCity() + "<br />";
 
 			return content;
 		}
