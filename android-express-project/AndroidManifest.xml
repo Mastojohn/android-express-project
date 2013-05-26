@@ -32,7 +32,6 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/mapApiKey" />
-
         <activity
             android:name="com.app.express.activity.Login"
             android:label="@string/title_activity_login"
@@ -44,16 +43,8 @@
         </activity>
         <activity
             android:name="com.app.express.activity.Scan"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_scan" >
-        </activity>
-        <activity
-            android:name="com.app.express.activity.SignatureReceiverActivity"
-            android:label="@string/title_activity_signature_receiver" >
-
-        </activity>
-        <activity
-            android:name="com.app.express.activity.SignatureReceiver"
-            android:label="@string/title_activity_signature_receiver" >
         </activity>
         <activity
             android:name="com.app.express.PackageListActivity"
@@ -70,19 +61,12 @@
         <activity
             android:name="com.app.express.activity.RecapDelivry"
             android:label="@string/title_activity_recap_delivry"
-            android:screenOrientation="landscape" >
- 
-               
-
-
+            android:screenOrientation="landscape" >  
         </activity>
         <activity
             android:name="com.app.express.activity.RecapDelivryAway"
             android:label="@string/title_activity_recap_delivry_away"
-            android:screenOrientation="landscape" >
-                               
-            
-            			
+            android:screenOrientation="landscape" >   
         </activity>
         <activity
             android:name="com.app.express.activity.CustomerPresence"
@@ -99,6 +83,21 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DeliveryListActivity" />
+        </activity>
+        <activity
+            android:name="com.app.express.activity.SignatureReceiverActivity"
+            android:label="@string/title_activity_signature_receiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity
+            android:name="com.app.express.activity.SignatureReceiver"
+            android:label="@string/title_activity_signature_receiver" >
+
         </activity>
     </application>
 
