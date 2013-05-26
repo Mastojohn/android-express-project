@@ -22,6 +22,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
@@ -112,6 +113,8 @@ public class RecapDelivryAway extends Activity {
 							}
 						
 						}
+						Intent intent = new Intent(RecapDelivryAway.this, DeliveryListActivity.class);					
+						startActivity(intent);
 					}
 				});
 				
