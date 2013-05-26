@@ -4,6 +4,6 @@
     <string name="receiverName">Nom destinataire</string>
     <string name="receiverAddress">Addresse destinataire</string>
     <string name="receiverStatsDelivery">Statistiques de la livraison</string>
-    <string name="fillDelivery">Bon de livraison</string>
+    <string name="scanPaquets">Scanner les colis</string>
     
 </resources>
