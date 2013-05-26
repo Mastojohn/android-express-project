@@ -37,11 +37,14 @@
             android:name="com.app.express.activity.Login"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
-            <intent-filter>
+			<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter> 
+                                    
+
+
         </activity>
         <activity
             android:name="com.app.express.activity.NextDelivery"
@@ -51,6 +54,39 @@
             android:name="com.app.express.activity.Scan"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_scan" >
+        </activity>
+        <activity
+            android:name="com.app.express.PackageListActivity"
+            android:label="@string/title_package_list" >
+        </activity>
+        <activity
+            android:name="com.app.express.PackageDetailActivity"
+            android:label="@string/title_package_detail"
+            android:parentActivityName=".PackageListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PackageListActivity" />
+        </activity>
+        <activity
+            android:name="com.app.express.activity.RecapDelivry"
+            android:label="@string/title_activity_recap_delivry"
+            android:screenOrientation="landscape" >
+ 
+               
+
+
+        </activity>
+        <activity
+            android:name="com.app.express.activity.RecapDelivryAway"
+            android:label="@string/title_activity_recap_delivry_away"
+            android:screenOrientation="landscape" >
+                               
+            
+            			
+        </activity>
+        <activity
+            android:name="com.app.express.activity.CustomerPresence"
+            android:label="@string/title_activity_customer_presence" >
         </activity>
         <activity
             android:name="com.app.express.activity.DeliveryListActivity"
