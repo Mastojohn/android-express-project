@@ -1,11 +1,9 @@
 package com.app.express.activity;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.Calendar;
-import java.util.Date;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
  
 import android.app.Activity;
 import android.content.Context;
@@ -37,11 +35,14 @@ import android.widget.Toast;
 import com.app.express.R;
 import com.app.express.R.layout;
 import com.app.express.R.menu;
+import com.app.express.db.DatabaseHelper;
 import com.app.express.db.persistence.Deliverer;
 import com.app.express.db.persistence.Delivery;
+import com.app.express.db.persistence.Packet;
 import com.app.express.db.persistence.Round;
 import com.app.express.helper.App;
 import com.app.express.helper.XmlParser;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import android.os.Bundle;
@@ -59,6 +60,8 @@ public class SignatureReceiver extends Activity {
     private Bitmap mBitmap;
     View mView;
     File mypath;
+    private int deliveryId;
+    private Delivery delivery;
  
     private String uniqueId;
 
@@ -82,6 +85,13 @@ public class SignatureReceiver extends Activity {
     {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// Initialize helpers.
+		App.context = getApplicationContext();
+		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+		//récuperation de l'id de la livraison
+			Bundle extras = getIntent().getExtras();
+			deliveryId = extras.getInt("deliveryId");		
+		//end
         setContentView(R.layout.activity_signature_receiver_second);
         
         tempDir = Environment.getExternalStorageDirectory() + "/" + getResources().getString(R.string.external_dir) + "/";
@@ -241,22 +251,29 @@ public class SignatureReceiver extends Activity {
                 newImg = encodeTobase64(baos);
                 Log.e("String BITMAP ->", newImg);
                 
-//                // TESTER LAJOUT EN BDD !!
-//   			 Dao<Delivery, Integer> deliveryDao = App.dbHelper.getDeliveryDao();
-//			 Dao<Round, Integer> roundDao = App.dbHelper.getRoundDao();
-//			 Dao<Deliverer, Integer> delivererDao = App.dbHelper.getDelivererDao();
-//			 Deliverer deliverer = new Deliverer(delivererDao, "léo", "leo@test.fr");
-//			 Round round = new Round(roundDao, deliverer, new Date());
-//			 Delivery delivery = new Delivery(deliveryDao, round, 1);
-//			 delivery.setSignature(newImg);
-//			 delivery.update();
-
             }
             catch(Exception e)
             {
                 Log.v("log_tag", e.toString());
             }
             //xml.WriteXML(getApplicationContext(), newImg);
+//          // TESTER LAJOUT EN BDD !!
+//			 
+	          try {
+					//Récupération de la livraison 
+					Dao<Delivery, Integer> deliveryDao = App.dbHelper.getDeliveryDao();
+					delivery = deliveryDao.queryForId(deliveryId);
+					Log.i("delivery_premier", delivery.toString());
+					delivery.setSignature(newImg);
+					delivery.update();
+					Dao<Delivery, Integer> deliverytest= App.dbHelper.getDeliveryDao();
+					delivery = deliverytest.queryForId(deliveryId);
+					Log.i("delivery_modif", delivery.getSignature());
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} 
+          
             return newImg;
         }
 

@@ -19,6 +19,7 @@ import com.j256.ormlite.dao.Dao;
 import android.os.Bundle;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -43,6 +44,7 @@ public class RecapDelivry extends Activity {
 	private TextView tvnb_colis;
 	private TextView tvpoids;
 	private TextView tvexpediteur;
+	private Button bnt_valid_cmd;
 //	private final TabHost tabs=(TabHost)findViewById(android.R.id.tabhost);
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,19 @@ public class RecapDelivry extends Activity {
 				// Initialize helpers.
 				App.context = getApplicationContext();
 				App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+				//validation finale
+				bnt_valid_cmd = (Button) findViewById(R.id.button_valid_cmd);
+				bnt_valid_cmd.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// Initialisation du scan
+						 	Intent intent = new Intent(RecapDelivry.this, SignatureReceiverActivity.class);					
+							intent.putExtra("deliveryId", deliveryId);
+							startActivity(intent);
+							
+					}
+				});
+				
 				//Récuperation de la livraison	
 				
 				try {

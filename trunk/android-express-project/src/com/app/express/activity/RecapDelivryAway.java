@@ -118,7 +118,7 @@ public class RecapDelivryAway extends Activity {
 				//Récuperation de la livraison	
 				
 				try {
-					//Récupération de la livraison !en dur pour le moment !
+					//Récupération de la livraison 
 					Dao<Delivery, Integer> deliveryDao = App.dbHelper.getDeliveryDao();
 					delivery = deliveryDao.queryForId(deliveryId);
 					Log.i("delivery", delivery.toString());
