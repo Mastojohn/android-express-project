@@ -23,7 +23,17 @@
     <string name="title_activity_signature_receiver">SignatureReceiver</string>
     <string name="packetWeight">Le colis pèse : </string>
     <string name="packetSize">Le colis mesure : </string>
+    <string name="title_package_list">RecapLivraison</string>
+    <string name="title_package_detail">Package Detail</string>
+    <string name="title_activity_recap_delivry">RecapDelivry</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_recap_delivry_away">RecapDelivryAway</string>
+    <string name="title_activity_customer_presence">CustomerPresence</string>
     <string name="title_delivery_list">Livraisons</string>
     <string name="title_delivery_detail">Détail de la livraison</string>
-
+	<string name="hello">Signature</string>
+    <string name="app_name">CaptureSignature</string>
+    <string name="external_dir">GetSignature</string>
+    <string name="title_activity_capture_signature">CaptureSignature</string>
+    <string name="title_activity_signature_receiver">SignatureReceiver</string>
 </resources>

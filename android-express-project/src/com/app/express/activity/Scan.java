@@ -1,8 +1,10 @@
 package com.app.express.activity;
 
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.app.express.R;
@@ -28,11 +30,16 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.TabHost;
+import android.widget.TableLayout;
+import android.widget.TableLayout.LayoutParams;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class Scan extends Activity {
-// TODO BUG : Quand j'appelle cette classe depuis DeliveryDetailActivity:onCreate() ça diminue le nombre de colis à scanner même si je ne scanne pas !
+
 	private Button button_Scan;
 	private Button button_UnScanable;
 	private Button button_Valid;
@@ -60,11 +67,6 @@ public class Scan extends Activity {
 		// Initialize helpers.
 		App.context = getApplicationContext();
 		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-		
-		extras = getIntent().getExtras();
-		
-		// Set the delivery to use.
-		deliveryId = extras.getInt("deliveryId");
 		
 		// Définition de la vue, on lui affecte R.layout.activity_scan ce qui
 		// représente notre vue
@@ -101,6 +103,7 @@ public class Scan extends Activity {
 				Intent intent = new Intent(Scan.this, Scan.class);
 				intent.putExtra("bareCode", out);
 				startActivity(intent);
+				finish();
 				
 			}
 		});
@@ -138,9 +141,24 @@ public class Scan extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				Intent intent = new Intent(Scan.this, CustomerPresence.class);					
+				intent.putExtra("deliveryId", deliveryId);
+				startActivity(intent);
+				
 			}
 		});
-		
+		button_Valid.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Initialisation du scan
+				 Intent intent = new Intent(Scan.this, CustomerPresence.class);					
+					intent.putExtra("deliveryId", deliveryId);
+					startActivity(intent);
+					
+			}
+		});
 		try {
 			//Récupération de la livraison !en dur pour le moment !
 			Dao<Delivery, Integer> deliveryDao = App.dbHelper.getDeliveryDao();
@@ -164,6 +182,47 @@ public class Scan extends Activity {
 			
 			if(packetsToScan.size() > 0)
 			{
+				
+						
+				
+				Packet packet = null;
+				int i=1;
+				Iterator j = packetsToScan.iterator();
+				String tab_barcode[] = new String[packetsToScan.size()];
+				TableLayout table = (TableLayout) findViewById(R.id.list_colis);
+				while(j.hasNext())
+				{					
+						packet = (Packet)j.next();
+						packet.getBarcode();
+						TableRow tr = new TableRow(this);
+						tr.setId(i);
+						LayoutParams params = new LayoutParams(
+						        LayoutParams.WRAP_CONTENT,      
+						        LayoutParams.WRAP_CONTENT
+						);
+						params.setMargins(0, 0, 0, 1);
+						tr.setLayoutParams(params);
+
+						table.addView(tr);
+						
+						//code
+			            TextView code = new TextView(this);
+			            code.setId(100+i);
+			            code.setText(packet.getBarcode());
+			            code.setHeight(50);
+			            code.setLayoutParams(new TableRow.LayoutParams(0));
+			            tr.addView(code);
+			            
+			            
+			            
+			            
+			            
+			            
+			            
+					 Log.i("Barcode"+i, packet.getBarcode());
+					 i++;
+					 
+				}
 				//Modification du champs colis restant
 				String exp_nbrcolis = "Il reste "+packetsToScan.size()+" coli(s) à scanner";
 				tvcolis_restant = (TextView) this.findViewById(R.id.textView_Nb_Colis);
@@ -188,6 +247,7 @@ public class Scan extends Activity {
 		}
 		
 		// Récupération des parametres
+		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 
 			// On récupere notre parametre String
@@ -308,6 +368,7 @@ public class Scan extends Activity {
 						Intent intent = new Intent(Scan.this, Scan.class);
 						intent.putExtra("bareCode", out);
 						startActivity(intent);
+						finish();
 					}
 				}
 			}

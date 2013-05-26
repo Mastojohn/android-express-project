@@ -256,7 +256,7 @@ public class SignatureReceiver extends Activity {
             {
                 Log.v("log_tag", e.toString());
             }
-            xml.WriteXML(getApplicationContext(), newImg);
+            //xml.WriteXML(getApplicationContext(), newImg);
             return newImg;
         }
 

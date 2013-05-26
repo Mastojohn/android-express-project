@@ -26,7 +26,31 @@
         android:layout_alignParentTop="true"
         android:text="@string/packetNumber"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
+	<ScrollView 
+	    android:id="@+id/ScrollViews"
+	    android:layout_width="250dp"
+	    android:layout_height="150dp"
+	    android:orientation="vertical"
+	    android:layout_above="@id/editText_Code_Barre"
+	    android:layout_alignRight="@id/editText_Code_Barre"
+	    >
+	    <TableLayout 
+				    android:id="@+id/list_colis"
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    >
+		        
+				<TableRow 
+				    android:background="#C4C4C4" 
+				    android:layout_margin="1dp"
+				    android:layout_height="20dp">
+			        <TextView 
+			            android:text="Code barre" 
+			            android:layout_column="0" />
+	
+			    	</TableRow>
+		</TableLayout>
+	</ScrollView>   
     <Button
         android:id="@+id/button_UnScanable"
         android:layout_width="wrap_content"
