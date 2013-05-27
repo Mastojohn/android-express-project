@@ -187,7 +187,7 @@ containing a value of this type.
         public static final int TextView_taille=0x7f05002f;
         public static final int action_forgot_password=0x7f050038;
         public static final int action_settings=0x7f050037;
-        public static final int button1=0x7f05001f;
+        public static final int button1=0x7f050021;
         public static final int button_Colis_Absent=0x7f05002d;
         public static final int button_Scan=0x7f05002c;
         public static final int button_UnScanable=0x7f050027;
@@ -196,7 +196,7 @@ containing a value of this type.
         public static final int button_fillDelivery=0x7f05000c;
         public static final int button_map=0x7f05000b;
         public static final int button_v=0x7f050005;
-        public static final int button_valid_cmd=0x7f050021;
+        public static final int button_valid_cmd=0x7f05001f;
         public static final int clear=0x7f050031;
         public static final int delivery_detail=0x7f050036;
         public static final int delivery_detail_container=0x7f050009;
@@ -208,7 +208,7 @@ containing a value of this type.
         public static final int hybrid=0x7f050004;
         public static final int linearLayout=0x7f050035;
         public static final int linearLayout1=0x7f05001c;
-        public static final int linearLayout2=0x7f05001d;
+        public static final int linearLayout2=0x7f05001e;
         public static final int list_colis=0x7f05002a;
         public static final int login=0x7f050019;
         public static final int login_form=0x7f050016;
@@ -235,8 +235,8 @@ containing a value of this type.
         public static final int textView2=0x7f050024;
         public static final int textView_Nb_Colis=0x7f050028;
         public static final int textView_ReceiverStatsDelivery=0x7f050012;
-        public static final int textView_colis_restant=0x7f05001e;
-        public static final int textView_poids_colis=0x7f050020;
+        public static final int textView_colis_restant=0x7f050020;
+        public static final int textView_poids_colis=0x7f05001d;
         public static final int textView_receiverAddress=0x7f050010;
         public static final int textView_receiverName=0x7f05000e;
     }

@@ -1,6 +1,10 @@
 package com.app.express.activity;
 
 import com.app.express.R;
+import com.app.express.db.DatabaseHelper;
+import com.app.express.helper.App;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,14 +16,19 @@ import android.widget.Toast;
 public class SignatureReceiverActivity extends Activity {
 
 	public static final int SIGNATURE_ACTIVITY = 1;
-	private int deliveryId = 2;
+	private int deliveryId;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		//récuperation de l'id de la livraison
-//		Bundle extras = getIntent().getExtras();
-//		deliveryId = extras.getInt("deliveryId");
+		
+		// Initialize helpers.
+		App.context = getApplicationContext();
+ 		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+ 		
+		Bundle extras = getIntent().getExtras();
+		deliveryId = extras.getInt("deliveryId");
 		
 		//end
 		setContentView(R.layout.activity_signature_receiver);
