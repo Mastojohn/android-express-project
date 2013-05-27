@@ -65,7 +65,7 @@ public class RecapDelivry extends RoboActivity {
 	 */
 	private ArrayList<EditText> listCommentDescription = new ArrayList<EditText>();
 
-	private ArrayList<String> listPacketState = new ArrayList<String>();
+	private ArrayList<Spinner> listPacketState = new ArrayList<Spinner>();
 
 	private Dao<Delivery, Integer> deliveryDao;
 
@@ -75,6 +75,8 @@ public class RecapDelivry extends RoboActivity {
 	private Delivery delivery;
 	private int nb_colis;
 	private Double poids_colis = 0.0;
+	private Packet packet;
+	private List<Packet> packetsToDisplay = new ArrayList<Packet>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,35 @@ public class RecapDelivry extends RoboActivity {
 			@Override
 			public void onClick(View v) {
 				// Initialisation du scan
+				
+				Dao<Packet, Integer> packetDao = App.dbHelper.getPacketDao();
+				
+				for (int i = 0; i < packetsToDisplay.size(); i++) 
+				{
+					Packet packet = (Packet)packetsToDisplay.get(i);
+					try {
+						packet.setDescription((listCommentDescription.get(i)).getText().toString());
+						Log.i("listpacket", (listPacketState.get(i)).getSelectedItem().toString());
+						if((listPacketState.get(i)).getSelectedItem().toString().equals("Colis accepté"))
+						{
+							Log.i("sa rentre ?", "ossef");
+							packet.setDeliveredState(Categories.Types.type_delivery_state.DELIVERED);
+						}
+						else if ((listPacketState.get(i)).getSelectedItem().toString().equals("Colis refusé"))
+						{
+							Log.i("sa rentre ?", "ossef");
+							packet.setDeliveredState(Categories.Types.type_delivery_state.REFUSED);
+						}
+						
+						packetDao.update(packet);
+						
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				
 				Intent intent = new Intent(RecapDelivry.this, SignatureReceiverActivity.class);
 				intent.putExtra("deliveryId", deliveryId);
 				startActivity(intent);
@@ -115,7 +146,7 @@ public class RecapDelivry extends RoboActivity {
 		// Récuperation des colis de la livraison
 		ForeignCollection<Packet> packetsToGet = delivery.getPackets();
 		CloseableIterator<Packet> packetIteratorCloseable = packetsToGet.closeableIterator();
-		List<Packet> packetsToDisplay = new ArrayList<Packet>();
+		
 
 		while (packetIteratorCloseable.hasNext()) {
 			Packet packet = packetIteratorCloseable.next();
@@ -166,10 +197,9 @@ public class RecapDelivry extends RoboActivity {
 			// tv.setText("Poids : "+packet.getWeight());
 
 			// Création du spinner ( liste)
-			Spinner Sp = new Spinner(this);
-			Sp.setLayoutParams(lp);
-			Sp.setId(i);
-			Sp.setAdapter(dataAdapter);
+			Spinner sp = new Spinner(this);
+			sp.setLayoutParams(lp);
+			sp.setId(i);
 
 			// création textBox (EditText)
 			EditText commentDescription = new EditText(this);
@@ -179,12 +209,12 @@ public class RecapDelivry extends RoboActivity {
 			
 			// Placement
 			ll.setOrientation(1);
-			Sp.setPadding(20, 0, 50, 10);
-			Sp.setTop(70);
+			sp.setPadding(20, 0, 50, 10);
+			sp.setTop(70);
 			// tv.setPadding(10, 10, 10, 10);
 
 			// Ajour de la textbox et du spinner au linearlayout
-			ll.addView(Sp, relativeParams);
+			ll.addView(sp, relativeParams);
 			// ll.addView(tv, relativeParams);
 			ll.addView(commentDescription, relativeParams);
 
@@ -206,6 +236,7 @@ public class RecapDelivry extends RoboActivity {
 			tabs.addTab(spec);
 
 			listCommentDescription.add(commentDescription);
+			listPacketState.add(sp);
 
 			i++;
 		}
