@@ -37,6 +37,9 @@ public class DeliveryDetailActivity extends RoboFragmentActivity {
 	@InjectView(R.id.button_map)
 	private Button button_map;
 	
+	@InjectView(R.id.generate_xml)
+	private Button generate_xml;
+	
 	@InjectView(R.id.textView_receiverName)
 	private TextView textView_receiverName;
 	
@@ -102,6 +105,15 @@ public class DeliveryDetailActivity extends RoboFragmentActivity {
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent(App.context, NextDelivery.class);// Scan pour le moment.
+				startActivity(intent);
+			}
+		});
+		generate_xml.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+					
+				Intent intent = new Intent(App.context, GenerateXML.class);// Scan pour le moment.
+				intent.putExtra("deliveryId", Integer.parseInt(deliveryId));
 				startActivity(intent);
 			}
 		});
