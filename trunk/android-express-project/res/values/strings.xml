@@ -29,7 +29,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_recap_delivry_away">RecapDelivryAway</string>
     <string name="title_activity_customer_presence">CustomerPresence</string>
-    <string name="title_delivery_list">Livraisons</string>
+    <string name="title_delivery_list">Livraisons restantes</string>
     <string name="title_delivery_detail">Détail de la livraison</string>
 	<string name="hello">Signature</string>
     <string name="app_name">CaptureSignature</string>

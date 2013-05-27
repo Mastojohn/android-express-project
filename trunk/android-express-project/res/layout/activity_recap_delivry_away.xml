@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/linearLayout1"
-        android:text="Livraison Terminé" />
+        android:text="Livraison terminée" />
 
     <TextView
         android:id="@+id/textView1"
@@ -40,7 +40,7 @@
         android:layout_alignLeft="@+id/textView1"
         android:layout_below="@+id/textView1"
         android:layout_marginTop="31dp"
-        android:text="Raison de non dévivrance" />
+        android:text="Informations supplémentaires" />
 
     <EditText
         android:id="@+id/editTextCom"
@@ -57,6 +57,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/button_end"
         android:layout_alignLeft="@+id/textView1"
-        android:text="Les colis pése : " />
+        android:text="Les colis pèsent : " />
 
 </RelativeLayout>
