@@ -219,7 +219,7 @@ public class RecapDelivry extends RoboActivity {
 			ll.setOrientation(1);
 			sp.setPadding(10,50, 0, 10);
 			
-			// tv.setPadding(10, 10, 10, 10);
+			
 
 			// Ajour de la textbox et du spinner au linearlayout
 			ll.addView(tv2, relativeParams);
@@ -228,15 +228,6 @@ public class RecapDelivry extends RoboActivity {
 			ll.addView(tv, relativeParams);
 			ll.addView(commentDescription, relativeParams);
 
-			// Ajout des linealayout au Frame layout
-			// btn.setOnClickListener(new OnClickListener() {
-			//
-			// @Override
-			// public void onClick(View v) {
-			// //v.findViewById(10+i);
-			// //test(v);
-			// }
-			// });
 			fl.addView(ll, lp);
 
 			// generation d'onglet
@@ -253,34 +244,9 @@ public class RecapDelivry extends RoboActivity {
 
 		tabs.setCurrentTab(0);
 
-		// final TabHost tabs=(TabHost)findViewById(R.id.tabhost);
-		// tabs.setup();
-		// TabHost.TabSpec spec=tabs.newTabSpec("buttontab");
-		// spec.setContent(R.id.buttontab);
-		// spec.setIndicator("Btn");
-		// tabs.addTab(spec);
-		// tabs.setCurrentTab(0);
-		// Button btn=(Button)tabs.getCurrentView().findViewById(R.id.buttontab);
-		// btn.setOnClickListener(new View.OnClickListener() {
-		// public void onClick(View view)
-		// {
-		// TabHost.TabSpec spec=tabs.newTabSpec("tag1");
-		// spec.setContent(new TabHost.TabContentFactory() {
-		// public View createTabContent(String tag)
-		// {
-		// return(new AnalogClock(RecapDelivry.this));
-		// }
-		// });
-		// spec.setIndicator("malemi");
-		// tabs.addTab(spec);
-		// }
-		// });
-		//
 	}
 
-	// private void test(View v){
-	// System.out.println("--------------------------------"+tabs.getCurrentTab());
-	// }
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

@@ -40,7 +40,7 @@ public class RecapDelivryAway extends Activity {
 	private TextView tvnb_colis;
 	private TextView tvpoids;
 	private TextView tvexpediteur;
-	private int deliveryId = 2;
+	private int deliveryId;
 	private Button btn_end;
 	private List<Packet> packetsToGet;
 	private Packet packet;
@@ -53,8 +53,8 @@ public class RecapDelivryAway extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recap_delivry_away);
 		
-//		Bundle extras = getIntent().getExtras();
-//		deliveryId = extras.getInt("deliveryId");
+		Bundle extras = getIntent().getExtras();
+		deliveryId = extras.getInt("deliveryId");
 		Log.i("deliveryId", String.valueOf(deliveryId));
 				// Initialize helpers.
 				App.context = getApplicationContext();
