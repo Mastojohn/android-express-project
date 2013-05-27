@@ -175,7 +175,7 @@ public class RecapDelivry extends RoboActivity {
 			Packet packet = (Packet) packetIterator.next();
 
 			LinearLayout ll = new LinearLayout(this);
-			LayoutParams lp = new LayoutParams(500, 500);
+			LayoutParams lp = new LayoutParams(600, 600);
 			ll.setId(i);
 			LinearLayout.LayoutParams relativeParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
@@ -190,33 +190,42 @@ public class RecapDelivry extends RoboActivity {
 			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
 			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-			// //Création du texte poids
-			// TextView tv = new TextView(this);
-			//
-			// tv.setLayoutParams(new LayoutParams(100, 100));
-			// tv.setText("Poids : "+packet.getWeight());
+			 //Création du texte poids
+			 TextView tv = new TextView(this);
+			
+			 tv.setLayoutParams(new LayoutParams(200, 100));
+			 tv.setText("Commentaire additionnels :");
+			 tv.setPadding(10,50, 0, 10);
+			 //Création de texte vide
+			 TextView tv2 = new TextView(this);
+			
+			 tv2.setLayoutParams(new LayoutParams(200, 100));
+			 tv2.setText("");
+			 tv2.setPadding(30,50, 0, 10);
 
 			// Création du spinner ( liste)
 			Spinner sp = new Spinner(this);
-			sp.setLayoutParams(lp);
+			sp.setLayoutParams(new LayoutParams(50, 50));
 			sp.setId(i);
 			sp.setAdapter(dataAdapter);
 
 			// création textBox (EditText)
 			EditText commentDescription = new EditText(this);
-			commentDescription.setLayoutParams(new LayoutParams(550, 400));
+			commentDescription.setLayoutParams(new LayoutParams(150, 50));
 			commentDescription.setTop(100);
 			commentDescription.setWidth(550);
 			
 			// Placement
 			ll.setOrientation(1);
-			sp.setPadding(20, 0, 50, 10);
-			sp.setTop(70);
+			sp.setPadding(10,50, 0, 10);
+			
 			// tv.setPadding(10, 10, 10, 10);
 
 			// Ajour de la textbox et du spinner au linearlayout
+			ll.addView(tv2, relativeParams);
 			ll.addView(sp, relativeParams);
 			// ll.addView(tv, relativeParams);
+			ll.addView(tv, relativeParams);
 			ll.addView(commentDescription, relativeParams);
 
 			// Ajout des linealayout au Frame layout
