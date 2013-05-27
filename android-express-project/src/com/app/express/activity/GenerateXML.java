@@ -479,22 +479,24 @@ public class GenerateXML extends Activity {
 					serializer.endTag("", "nombre");
 
 					// Liste des colis.
-					if (packetIterator.hasNext()) {
+					while (packetIterator.hasNext()) {
+						
 						Packet packet = packetIterator.next();
 
 						serializer.startTag("", "paquet");
 						serializer.startTag("", "code_barre");
-						serializer.text(String.valueOf(packet.getBarcode()));
+						serializer.text(packet.getBarcode());
 						serializer.endTag("", "code_barre");
 						serializer.startTag("", "taille");
-						serializer.text(String.valueOf(packet.getSize()));
+						serializer.text(packet.getSize());
 						serializer.endTag("", "taille");
 						serializer.startTag("", "poids");
 						serializer.text(String.valueOf(packet.getWeight()));
 						serializer.endTag("", "poids");
 						serializer.endTag("", "paquet");
-						serializer.endTag("", "colis");
+						
 					}
+					serializer.endTag("", "colis");
 
 					User receiver = delivery.getReceiver();
 					// FIN DE GESTION DE PLUSIEURS PAQUETS PAR COLIS
