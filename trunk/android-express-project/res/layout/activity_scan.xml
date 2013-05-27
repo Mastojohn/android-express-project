@@ -58,7 +58,7 @@
         android:layout_above="@+id/button_Valider"
         android:layout_alignLeft="@+id/button_Valider"
         android:layout_alignRight="@+id/button_Scan"
-        android:text="Code barre non scannable" />
+        android:text="Rentrer le code manuellement" />
 
     <Button
         android:id="@+id/button_Colis_Absent"
@@ -84,7 +84,7 @@
         android:layout_above="@+id/button_Colis_Absent"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/button_Valider"
-        android:text="Scan" />
+        android:text="Scanner" />
 
     <TextView
         android:id="@+id/TextView_poids"

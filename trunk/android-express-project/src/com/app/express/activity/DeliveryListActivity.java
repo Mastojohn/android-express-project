@@ -45,7 +45,7 @@ public class DeliveryListActivity extends RoboFragmentActivity implements Delive
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Initialize helpers.
 		App.context = getApplicationContext();
 		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
@@ -61,14 +61,15 @@ public class DeliveryListActivity extends RoboFragmentActivity implements Delive
 			// 'activated' state when touched.
 			((DeliveryListFragment) getSupportFragmentManager().findFragmentById(R.id.delivery_list)).setActivateOnItemClick(true);
 		}
-		
+
 		// Launch the thread only if it's useful, else infinite while.
-		if(!App.currentRoundSet()){
+		if (!App.currentRoundSet()) {
 			Toast.makeText(this, "Veuillez patienter durant la récupération de votre parcours...", Toast.LENGTH_LONG).show();
-			new RoundXmlTask().execute();			
-		}else{
+			new RoundXmlTask().execute();
+		} else {
 			// Else, refresh the data content.
-			//DeliveryContent.refreshView();
+			// DeliveryContent.refreshView();
+			
 		}
 	}
 
@@ -95,7 +96,7 @@ public class DeliveryListActivity extends RoboFragmentActivity implements Delive
 			startActivity(detailIntent);
 		}
 	}
-	
+
 	private class RoundXmlTask extends AsyncTask<Void, Integer, Round> {
 		private static final String TOAST_MSG_GET_ROUND = "Recherche du parcours à effectuer ...";
 		private static final String TOAST_MSG_ROUND_FIND = "Récupération du parcours à effectuer ...";
@@ -107,7 +108,7 @@ public class DeliveryListActivity extends RoboFragmentActivity implements Delive
 		@Override
 		protected void onPreExecute() {
 			Toast.makeText(App.context, TOAST_MSG_GET_ROUND, Toast.LENGTH_LONG).show();
-			
+
 			if (App.currentRoundSet()) {
 				// The round is already set.
 				Toast.makeText(App.context, TOAST_MSG_ROUND_FIND_CACHE, Toast.LENGTH_LONG).show();
@@ -116,9 +117,9 @@ public class DeliveryListActivity extends RoboFragmentActivity implements Delive
 				Toast.makeText(App.context, TOAST_MSG_ROUND_FIND, Toast.LENGTH_LONG).show();
 			}
 		}
-		
-		public RoundXmlTask(){
-			
+
+		public RoundXmlTask() {
+
 		}
 
 		/**
