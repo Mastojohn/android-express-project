@@ -7,13 +7,15 @@
     <TableRow
         android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="?android:attr/dividerVertical" >
 
         <Button
             android:id="@+id/button_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/action_open_map" />
+            android:text="@string/action_open_map"
+            android:background="?android:attr/selectableItemBackground" />
         
         
         <Button
@@ -27,7 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:text="@string/scanPaquets" />
+            android:text="@string/scanPaquets"
+            android:background="?android:attr/selectableItemBackground" />
 
     </TableRow>
 

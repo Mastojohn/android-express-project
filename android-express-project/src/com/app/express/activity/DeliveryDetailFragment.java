@@ -1,6 +1,7 @@
 package com.app.express.activity;
 
 import roboguice.inject.InjectView;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -18,6 +19,7 @@ import com.app.express.R.id;
 import com.app.express.R.layout;
 import com.app.express.db.persistence.Delivery;
 import com.app.express.dummy.DeliveryContent;
+import com.app.express.helper.App;
 import com.google.android.gms.internal.de;
 
 /**
@@ -66,7 +68,32 @@ public class DeliveryDetailFragment extends Fragment {
 			((TextView) rootView.findViewById(R.id.textView_receiverName)).setText(Html.fromHtml(mItem.displayReceiver()));
 			((TextView) rootView.findViewById(R.id.textView_receiverAddress)).setText(Html.fromHtml(mItem.displayAddress()));
 			((TextView) rootView.findViewById(R.id.textView_ReceiverStatsDelivery)).setText(Html.fromHtml(mItem.displayStatsDelivery()));
-			((TableRow) rootView.findViewById(R.id.tableRow1)).setVisibility(View.GONE);
+			((Button) rootView.findViewById(R.id.button_fillDelivery)).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					// TODO appeler l'interface que doit faire léo en ce moment.
+					Intent intent = new Intent(App.context, CustomerPresence.class);// Scan pour le moment.
+					intent.putExtra("deliveryId", mItem.getDeliveryId());
+					startActivity(intent);
+				}
+			});
+			((Button) rootView.findViewById(R.id.button_map)).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					Intent intent = new Intent(App.context, NextDelivery.class);// Scan pour le moment.
+					startActivity(intent);
+				}
+			});
+			((Button) rootView.findViewById(R.id.generate_xml)).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					
+					Intent intent = new Intent(App.context, GenerateXML.class);// Scan pour le moment.
+					intent.putExtra("deliveryId", mItem.getDeliveryId());
+					startActivity(intent);
+				}
+			});
+//			((TableRow) rootView.findViewById(R.id.tableRow1)).setVisibility(View.GONE);
 			
 		}
 
