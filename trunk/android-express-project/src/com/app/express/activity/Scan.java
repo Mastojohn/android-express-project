@@ -141,8 +141,7 @@ public class Scan extends Activity {
 						Packet packetToMatch = new Packet();
 						packetToMatch.setDelivery(delivery);
 						packetToMatch.setPacketScanned(false);
-						packetToMatch.setDeliveredState(Categories.Types.type_delivery_state.FORGOTTEN);
-						packetToMatch.setDeliveryAttempted(true);
+						packetToMatch.setDeliveredState(Categories.Types.type_delivery_state.PENDING);
 						
 						
 						List<Packet> packetsTogetAway;
@@ -156,6 +155,7 @@ public class Scan extends Activity {
 							Log.i("packet récupéré de la bdd", packet.toString());
 							
 							packet.setDeliveredState(Categories.Types.type_delivery_state.FORGOTTEN);
+							packet.setDeliveryAttempted(true);
 							
 							packet.update();
 							packetsScanned.add(packet);
