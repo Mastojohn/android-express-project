@@ -74,7 +74,6 @@ public class RecapDelivryAway extends Activity {
 						delivery.setDeliveryOver(true);
 						delivery.setReceiverAvailable(false);
 						//récuperation de la date
-						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 						Date date = new Date();
 						delivery.setDateOver(date);
 						//Recuperation des coordonée gps					
@@ -104,6 +103,7 @@ public class RecapDelivryAway extends Activity {
 							
 							packet = packetsToGet.get(i);
 							packet.setDescription(et_com.getText().toString());
+							packet.setDeliveryAttempted(true);
 							try {
 								packet.update();
 								Log.i("Packet sauvé en bdd", packet.toString());
