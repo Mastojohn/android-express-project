@@ -7,7 +7,7 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
     <string name="title_activity_hello_android">HelloAndroid</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="GenerateXML">Generation du fichier XML</string>
     <string name="title_activity_test">Test</string>
     <string name="title_activity_next_delivery">Prochaine destination</string>
     <string name="mapApiKey">AIzaSyBL3RUaAm3h5GZTRP3FnWX5T5l26LZUpss</string>
@@ -31,9 +31,11 @@
     <string name="title_activity_customer_presence">CustomerPresence</string>
     <string name="title_delivery_list">Livraisons restantes</string>
     <string name="title_delivery_detail">Détail de la livraison</string>
-	<string name="hello">Signature</string>
+    <string name="hello">Signature</string>
     <string name="app_name">CaptureSignature</string>
     <string name="external_dir">GetSignature</string>
     <string name="title_activity_capture_signature">CaptureSignature</string>
     <string name="title_activity_signature_receiver">SignatureReceiver</string>
+    <string name="title_activity_generate_xml">GenerateXML</string>
+
 </resources>
