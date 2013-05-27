@@ -45,7 +45,11 @@ public class DeliveryContent {
 			try {
 				// Foreach deliveries in the round.
 				while (deliveryIterator.hasNext()) {
-					addItem(new DeliveryItem(deliveryIterator.next()));
+					Delivery delivery = deliveryIterator.next();
+					if(!delivery.getDeliveryOver()){
+						addItem(new DeliveryItem(delivery));
+					}
+					
 				}
 			} finally {
 				// Always close the iterator, else the connection from the database

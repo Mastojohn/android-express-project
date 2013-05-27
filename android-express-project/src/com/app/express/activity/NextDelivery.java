@@ -1,67 +1,32 @@
 package com.app.express.activity;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.sql.SQLException;
-import java.util.Date;
-
-import roboguice.RoboGuice;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.ContentView;
-import roboguice.inject.InjectFragment;
-import android.app.Activity;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
 import com.app.express.R;
-import com.app.express.config.Categories;
 import com.app.express.db.DatabaseHelper;
 import com.app.express.db.persistence.Round;
-import com.app.express.db.persistence.Deliverer;
-import com.app.express.db.persistence.Delivery;
-import com.app.express.db.persistence.Packet;
-import com.app.express.db.persistence.Round;
-import com.app.express.db.persistence.User;
 import com.app.express.helper.App;
-import com.app.express.helper.XmlParser;
-import com.app.express.helper.XmlParser.Entry;
-import com.app.express.helper.Gmap;
 import com.app.express.task.RoundTask;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.LocationSource.OnLocationChangedListener;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
-import com.server.erp.Erp;
 
 @ContentView(R.layout.activity_next_delivery)
 public class NextDelivery extends RoboActivity {

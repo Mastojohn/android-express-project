@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/linearLayout1"
-        android:text="Livraison Terminer" />
+        android:text="Livraison terminée" />
 
     <TextView
         android:id="@+id/textView_poids_colis"
@@ -78,6 +78,6 @@
         android:layout_alignTop="@+id/linearLayout1"
         android:layout_marginLeft="34dp"
         android:layout_toRightOf="@+id/linearLayout1"
-        android:text="Les colis pése : " />
+        android:text="Les colis pèse : " />
 
 </RelativeLayout>
