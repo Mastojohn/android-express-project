@@ -2,6 +2,7 @@ package com.app.express.activity;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,11 +24,16 @@ import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,9 +47,11 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @ContentView(R.layout.activity_recap_delivry)
 public class RecapDelivry extends RoboActivity {
+	public static final int SIGNATURE_ACTIVITY = 1;
 
 	@InjectView(R.id.textView_colis_restant)
 	private TextView tvnb_colis;
@@ -108,26 +116,22 @@ public class RecapDelivry extends RoboActivity {
 			@Override
 			public void onClick(View v) {
 				// Initialisation du scan
-				
+
 				Dao<Packet, Integer> packetDao = App.dbHelper.getPacketDao();
-				
-				for (int i = 0; i < packetsToDisplay.size(); i++) 
-				{
-					Packet packet = (Packet)packetsToDisplay.get(i);
+
+				for (int i = 0; i < packetsToDisplay.size(); i++) {
+					Packet packet = (Packet) packetsToDisplay.get(i);
 					try {
 						packet.setDescription((listCommentDescription.get(i)).getText().toString());
 						Log.i("listpacket", (listPacketState.get(i)).getSelectedItem().toString());
-						if((listPacketState.get(i)).getSelectedItem().toString().equals("Colis accepté"))
-						{
+						if ((listPacketState.get(i)).getSelectedItem().toString().equals("Colis accepté")) {
 							Log.i("sa rentre ?", "ossef");
 							packet.setDeliveredState(Categories.Types.type_delivery_state.DELIVERED);
-						}
-						else if ((listPacketState.get(i)).getSelectedItem().toString().equals("Colis refusé"))
-						{
+						} else if ((listPacketState.get(i)).getSelectedItem().toString().equals("Colis refusé")) {
 							Log.i("sa rentre ?", "ossef");
 							packet.setDeliveredState(Categories.Types.type_delivery_state.REFUSED);
 						}
-						
+
 						packetDao.update(packet);
 						Log.i("Mon packet", packet.toString());
 					} catch (SQLException e) {
@@ -135,18 +139,16 @@ public class RecapDelivry extends RoboActivity {
 						e.printStackTrace();
 					}
 				}
-				
-				
-				Intent intent = new Intent(RecapDelivry.this, SignatureReceiverActivity.class);
+
+				Intent intent = new Intent(RecapDelivry.this, SignatureReceiver.class);
 				intent.putExtra("deliveryId", deliveryId);
-				startActivity(intent);
+				startActivityForResult(intent, SIGNATURE_ACTIVITY);
 			}
 		});
 
 		// Récuperation des colis de la livraison
 		ForeignCollection<Packet> packetsToGet = delivery.getPackets();
 		CloseableIterator<Packet> packetIteratorCloseable = packetsToGet.closeableIterator();
-		
 
 		while (packetIteratorCloseable.hasNext()) {
 			Packet packet = packetIteratorCloseable.next();
@@ -170,7 +172,7 @@ public class RecapDelivry extends RoboActivity {
 		tabs.setup();
 
 		Iterator<Packet> packetIterator = packetsToDisplay.iterator();
-		
+
 		while (packetIterator.hasNext()) {
 			Packet packet = (Packet) packetIterator.next();
 
@@ -214,7 +216,7 @@ public class RecapDelivry extends RoboActivity {
 			commentDescription.setLayoutParams(new LayoutParams(150, 50));
 			commentDescription.setTop(100);
 			commentDescription.setWidth(550);
-			
+
 			// Placement
 			ll.setOrientation(1);
 			sp.setPadding(10,50, 0, 10);
@@ -246,7 +248,76 @@ public class RecapDelivry extends RoboActivity {
 
 	}
 
-	
+	/**
+	 * Catch all call to new Intent of startActivityForResult. Get the response from SignatureReceiver.
+	 */
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case SIGNATURE_ACTIVITY:
+				if (resultCode == RESULT_OK) {
+					Bundle bundle = data.getExtras();
+					String status = bundle.getString("status");
+					String signature = bundle.getString("signature");
+					if (status.equalsIgnoreCase("done")) {
+						Packet packet = null;
+						for (int i = 0; i < packetsToDisplay.size(); i++) {
+							// Get the packet.
+							packet = packetsToDisplay.get(i);
+							packet.setDeliveryAttempted(true);
+							packet.setDeliveredState(Categories.Types.type_delivery_state.DELIVERED);
+							packet.setDao(App.dbHelper.getPacketDao());
+							
+							// Save it.
+							try {
+								packet.update();
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+						
+						if(packet != null){
+							// Récuperation des coordonnées gps
+							LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+							Criteria criteria = new Criteria();
+							criteria.setAltitudeRequired(false);
+							criteria.setBearingRequired(false);
+							criteria.setCostAllowed(true);
+							criteria.setSpeedRequired(false);
+							criteria.setPowerRequirement(Criteria.POWER_LOW);
+							criteria.setAccuracy(Criteria.ACCURACY_FINE);
+							String providerFine = locationManager.getBestProvider(criteria, true);
+							Location loc = locationManager.getLastKnownLocation(providerFine);
+
+							Delivery delivery = packet.getDelivery();
+							delivery.setDeliveryOver(true);
+							delivery.setDateOver(new Date());
+							delivery.setReceiverAvailable(true);
+							delivery.setSignature(signature);
+
+							delivery.setLatitude(String.valueOf(loc.getLatitude()));
+							delivery.setLongitude(String.valueOf(loc.getLongitude()));
+							
+							delivery.setDao(App.dbHelper.getDeliveryDao());
+							try {
+								delivery.update();
+
+								Toast.makeText(this, "La livraison a été validée !", Toast.LENGTH_SHORT).show();
+							} catch (SQLException e) {
+								e.printStackTrace();
+								
+								Toast.makeText(this, "Une erreur est survenue durant la modification de la livraison.", Toast.LENGTH_SHORT).show();
+							}
+							
+							Intent intent = new Intent(RecapDelivry.this, DeliveryListActivity.class);
+							startActivity(intent);
+							
+							finish();
+						}
+					}
+				}
+				break;
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
