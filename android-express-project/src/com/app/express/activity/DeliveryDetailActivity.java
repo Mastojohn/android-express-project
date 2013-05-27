@@ -91,7 +91,7 @@ public class DeliveryDetailActivity extends RoboFragmentActivity {
 			@Override
 			public void onClick(View view) {
 				// TODO appeler l'interface que doit faire léo en ce moment.
-				Intent intent = new Intent(App.context, Scan.class);// Scan pour le moment.
+				Intent intent = new Intent(App.context, CustomerPresence.class);// Scan pour le moment.
 				intent.putExtra("deliveryId", Integer.parseInt(deliveryId));
 				startActivity(intent);
 			}

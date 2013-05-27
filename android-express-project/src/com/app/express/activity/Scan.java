@@ -167,7 +167,7 @@ public class Scan extends Activity {
 							e.printStackTrace();
 						}
 						
-						Intent intent = new Intent(Scan.this, CustomerPresence.class);					
+						Intent intent = new Intent(Scan.this, RecapDelivry.class);					
 						intent.putExtra("deliveryId", deliveryId);
 						startActivity(intent);
 						
@@ -178,7 +178,7 @@ public class Scan extends Activity {
 					@Override
 					public void onClick(View v) {
 						// Initialisation du scan
-						 Intent intent = new Intent(Scan.this, CustomerPresence.class);					
+						 Intent intent = new Intent(Scan.this, RecapDelivry.class);					
 							intent.putExtra("deliveryId", deliveryId);
 							startActivity(intent);
 							

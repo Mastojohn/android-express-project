@@ -61,7 +61,7 @@ public class CustomerPresence extends Activity {
 			        if (rb_here.isChecked())
 			        {
 			        	Log.i("test", "present");
-				        Intent intent = new Intent(CustomerPresence.this, RecapDelivry.class);					
+				        Intent intent = new Intent(CustomerPresence.this, Scan.class);					
 						intent.putExtra("deliveryId", delivreryId);
 						startActivity(intent);
 						
