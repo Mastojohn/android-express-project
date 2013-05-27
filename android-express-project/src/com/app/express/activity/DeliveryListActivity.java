@@ -2,6 +2,7 @@ package com.app.express.activity;
 
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.ContentView;
+import roboguice.inject.InjectFragment;
 
 import com.app.express.R;
 import com.app.express.R.id;
@@ -14,11 +15,13 @@ import com.app.express.task.RoundTask;
 import com.google.android.gms.maps.MapFragment;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -61,7 +64,11 @@ public class DeliveryListActivity extends RoboFragmentActivity implements Delive
 		
 		// Launch the thread only if it's useful, else infinite while.
 		if(!App.currentRoundSet()){
+			Toast.makeText(this, "Veuillez patienter durant la récupération de votre parcours...", Toast.LENGTH_LONG).show();
 			new RoundXmlTask().execute();			
+		}else{
+			// Else, refresh the data content.
+			//DeliveryContent.refreshView();
 		}
 	}
 

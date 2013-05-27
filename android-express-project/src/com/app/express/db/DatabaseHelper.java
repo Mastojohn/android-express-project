@@ -33,7 +33,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	/**
 	 * Version of the database. Must be changed when models persistence are changed for regenerated all tables.
 	 */
-	private static final int DATABASE_VERSION = 56;
+	private static final int DATABASE_VERSION = 57;
 
 	/**
 	 * DAO for deliverer instance.

@@ -30,14 +30,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="88dp"
             android:checked="true"
-            android:text="Client Présent" />
+            android:text="Client présent" />
 
         <RadioButton
             android:id="@+id/radioButtonAbsent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Client Absent" />
+            android:text="Client absent" />
     </RadioGroup>
     
 </RelativeLayout>

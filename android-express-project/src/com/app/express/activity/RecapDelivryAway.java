@@ -31,6 +31,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RecapDelivryAway extends Activity {
 
@@ -98,7 +99,7 @@ public class RecapDelivryAway extends Activity {
 				
 				try {
 					delivery.update();
-					Log.i("Delivery sauvé en bdd", delivery.toString());
+					Toast.makeText(App.context, "La livraison est terminée. Client absent.", Toast.LENGTH_SHORT).show();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -119,6 +120,7 @@ public class RecapDelivryAway extends Activity {
 					}
 
 				}
+								
 				Intent intent = new Intent(RecapDelivryAway.this, DeliveryListActivity.class);
 				startActivity(intent);
 			}
@@ -168,7 +170,7 @@ public class RecapDelivryAway extends Activity {
 		// Récupération du TextView du layout courant
 		tvpoids = (TextView) this.findViewById(R.id.textView_poids_colis);
 		// On modifie l'affichage
-		String colis_poids = "Les colis pése : " + poids_colis + " kg";
+		String colis_poids = "Les colis pèsent : " + poids_colis + " kg";
 		// On affecte la valeur
 		tvpoids.setText(colis_poids);
 	}
