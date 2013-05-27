@@ -12,7 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
+@Deprecated
 public class SignatureReceiverActivity extends Activity {
 
 	public static final int SIGNATURE_ACTIVITY = 1;
