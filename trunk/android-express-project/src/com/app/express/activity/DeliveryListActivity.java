@@ -1,5 +1,8 @@
 package com.app.express.activity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectFragment;
@@ -10,6 +13,7 @@ import com.app.express.R.layout;
 import com.app.express.db.DatabaseHelper;
 import com.app.express.db.persistence.Round;
 import com.app.express.dummy.DeliveryContent;
+import com.app.express.dummy.DeliveryContent.DeliveryItem;
 import com.app.express.helper.App;
 import com.app.express.task.RoundTask;
 import com.google.android.gms.maps.MapFragment;
@@ -58,6 +62,11 @@ public class DeliveryListActivity extends RoboFragmentActivity implements Delive
 				// Don't infinite while, not good.
 				getIntent().removeExtra("recreate");
 				Log.i("DeliveryListActivity", "Call himself.");
+				
+				// REFRESH
+				DeliveryContent.ITEMS = new ArrayList<DeliveryItem>();
+				DeliveryContent.ITEM_MAP = new HashMap<String, DeliveryItem>();
+				DeliveryContent.refreshView();
 				Intent intent = new Intent(this, DeliveryListActivity.class);
 				startActivity(intent);
 				
