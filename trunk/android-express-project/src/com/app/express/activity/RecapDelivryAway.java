@@ -48,124 +48,129 @@ public class RecapDelivryAway extends Activity {
 	private LocationManager locationManager = null;
 	private Location loc;
 	private String providerFine = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recap_delivry_away);
-		
+
 		Bundle extras = getIntent().getExtras();
 		deliveryId = extras.getInt("deliveryId");
 		Log.i("deliveryId", String.valueOf(deliveryId));
-				// Initialize helpers.
-				App.context = getApplicationContext();
-				App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-				// sur clic du bouton terminer
-				btn_end = (Button) this.findViewById(R.id.button_end);
-				et_com = (EditText) this.findViewById(R.id.editTextCom); 
-				
-				/*
-				 * évènements "clic" provoqué par l'utilisateur.
-				 */
-				btn_end.setOnClickListener(new OnClickListener() {
+		// Initialize helpers.
+		App.context = getApplicationContext();
+		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+		// sur clic du bouton terminer
+		btn_end = (Button) this.findViewById(R.id.button_end);
+		et_com = (EditText) this.findViewById(R.id.editTextCom);
 
-					@Override
-					public void onClick(View v) {
-						// le colis est mis en absent
-						delivery.setDeliveryOver(true);
-						delivery.setReceiverAvailable(false);
-						//récuperation de la date
-						Date date = new Date();
-						delivery.setDateOver(date);
-						//Recuperation des coordonée gps					
-		        		 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);  
-		        		 Criteria criteria = new Criteria();                    
-		        		 criteria.setAltitudeRequired(false);
-		        		 criteria.setBearingRequired(false);
-		        		 criteria.setCostAllowed(true);
-		        		 criteria.setSpeedRequired(false);
-		        		 criteria.setPowerRequirement(Criteria.POWER_LOW);                      
-		        		 criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		        		 providerFine = locationManager.getBestProvider(criteria, true);
-		        		 loc = locationManager.getLastKnownLocation(providerFine);
-		        		 
-		        		 delivery.setLatitude(""+loc.getLatitude());
-		        		 delivery.setLongitude(""+loc.getLongitude());
-						try {
-							delivery.update();
-							Log.i("Delivery sauvé en bdd", delivery.toString());
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						//Ajout des commentaires relatif a l'absence
-						for(int i=0; packetsToGet.size() > i;i++)
-						{
-							
-							packet = packetsToGet.get(i);
-							packet.setDescription(et_com.getText().toString());
-							packet.setDeliveryAttempted(true);
-							try {
-								packet.update();
-								Log.i("Packet sauvé en bdd", packet.toString());
-							} catch (SQLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						
-						}
-						Intent intent = new Intent(RecapDelivryAway.this, DeliveryListActivity.class);					
-						startActivity(intent);
-					}
-				});
-				
-				//Récuperation de la livraison	
+		/*
+		 * évènements "clic" provoqué par l'utilisateur.
+		 */
+		btn_end.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// le colis est mis en absent
+				delivery.setDeliveryOver(true);
+				delivery.setReceiverAvailable(false);
+				// récuperation de la date
+				Date date = new Date();
+				delivery.setDateOver(date);
+				// Recuperation des coordonée gps
+				locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+				Criteria criteria = new Criteria();
+				criteria.setAltitudeRequired(false);
+				criteria.setBearingRequired(false);
+				criteria.setCostAllowed(true);
+				criteria.setSpeedRequired(false);
+				criteria.setPowerRequirement(Criteria.POWER_LOW);
+				criteria.setAccuracy(Criteria.ACCURACY_FINE);
+				providerFine = locationManager.getBestProvider(criteria, true);
+				loc = locationManager.getLastKnownLocation(providerFine);
 				
 				try {
-					//Récupération de la livraison 
-					Dao<Delivery, Integer> deliveryDao = App.dbHelper.getDeliveryDao();
-					delivery = deliveryDao.queryForId(deliveryId);
-					Log.i("delivery", delivery.toString());
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					delivery.setLatitude("" + loc.getLatitude());
+					delivery.setLongitude("" + loc.getLongitude());
+				} catch (Exception e) {
+					Log.w("RecapDelivery", "Impossible de récupérer les coordonnées GPS !", e);
 				}
-				//Récuperation des colis de la livraison
 				
 				try {
-						Dao<Packet, Integer> packetDao = App.dbHelper.getPacketDao();
-						//Récuperation des colis de la livraison
-						Packet packetTomatch = new Packet();
-						packetTomatch.setDelivery(delivery);
-						Log.i("delivery récupéré de la bdd", delivery.toString());
-						
-						packetsToGet = packetDao.queryForMatchingArgs(packetTomatch);		
-						poids_colis = (double) 0;
-						for(int i=0;packetsToGet.size() > i;i++)
-						{
-							Log.i("colis récupéré de la bdd", packetsToGet.get(i).toString());
-							packet = packetsToGet.get(i);
-							poids_colis = poids_colis + packet.getWeight();
-							nb_colis = nb_colis +1;
-						
-						}
-						
-					} catch (SQLException e1) {
+					delivery.update();
+					Log.i("Delivery sauvé en bdd", delivery.toString());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				// Ajout des commentaires relatif a l'absence
+				for (int i = 0; packetsToGet.size() > i; i++) {
+
+					packet = packetsToGet.get(i);
+					packet.setDescription(et_com.getText().toString());
+					packet.setDeliveryAttempted(true);
+					try {
+						packet.update();
+						Log.i("Packet sauvé en bdd", packet.toString());
+					} catch (SQLException e) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}	
-						//Modification des affichage nb colis et poids 
-						// Récupération du TextView du layout courant
-						tvnb_colis = (TextView) this.findViewById(R.id.textView_colis_restant);
-						//On modifie l'affichage
-						String colis_nb = "Il y a "+nb_colis+" colis";
-						// On affecte la valeur
-						tvnb_colis.setText(colis_nb);
-						// Récupération du TextView du layout courant
-						tvpoids = (TextView) this.findViewById(R.id.textView_poids_colis);
-						//On modifie l'affichage
-						String colis_poids = "Les colis pése : "+poids_colis+" kg";
-						// On affecte la valeur
-						tvpoids.setText(colis_poids);
+						e.printStackTrace();
+					}
+
+				}
+				Intent intent = new Intent(RecapDelivryAway.this, DeliveryListActivity.class);
+				startActivity(intent);
+			}
+		});
+
+		// Récuperation de la livraison
+
+		try {
+			// Récupération de la livraison
+			Dao<Delivery, Integer> deliveryDao = App.dbHelper.getDeliveryDao();
+			delivery = deliveryDao.queryForId(deliveryId);
+			Log.i("delivery", delivery.toString());
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// Récuperation des colis de la livraison
+
+		try {
+			Dao<Packet, Integer> packetDao = App.dbHelper.getPacketDao();
+			// Récuperation des colis de la livraison
+			Packet packetTomatch = new Packet();
+			packetTomatch.setDelivery(delivery);
+			Log.i("delivery récupéré de la bdd", delivery.toString());
+
+			packetsToGet = packetDao.queryForMatchingArgs(packetTomatch);
+			poids_colis = (double) 0;
+			for (int i = 0; packetsToGet.size() > i; i++) {
+				Log.i("colis récupéré de la bdd", packetsToGet.get(i).toString());
+				packet = packetsToGet.get(i);
+				poids_colis = poids_colis + packet.getWeight();
+				nb_colis = nb_colis + 1;
+
+			}
+
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// Modification des affichage nb colis et poids
+		// Récupération du TextView du layout courant
+		tvnb_colis = (TextView) this.findViewById(R.id.textView_colis_restant);
+		// On modifie l'affichage
+		String colis_nb = "Il y a " + nb_colis + " colis";
+		// On affecte la valeur
+		tvnb_colis.setText(colis_nb);
+		// Récupération du TextView du layout courant
+		tvpoids = (TextView) this.findViewById(R.id.textView_poids_colis);
+		// On modifie l'affichage
+		String colis_poids = "Les colis pése : " + poids_colis + " kg";
+		// On affecte la valeur
+		tvpoids.setText(colis_poids);
 	}
 
 	@Override
