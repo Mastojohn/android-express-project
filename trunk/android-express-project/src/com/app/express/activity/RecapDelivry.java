@@ -309,6 +309,7 @@ public class RecapDelivry extends RoboActivity {
 						}
 
 						Intent intent = new Intent(RecapDelivry.this, DeliveryListActivity.class);
+						intent.putExtra("recreate", true);
 						startActivity(intent);
 
 						finish();

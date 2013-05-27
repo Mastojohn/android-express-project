@@ -122,6 +122,7 @@ public class RecapDelivryAway extends Activity {
 				}
 								
 				Intent intent = new Intent(RecapDelivryAway.this, DeliveryListActivity.class);
+				intent.putExtra("recreate", true);
 				startActivity(intent);
 			}
 		});

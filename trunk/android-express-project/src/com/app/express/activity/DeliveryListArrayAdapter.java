@@ -14,7 +14,6 @@ public class DeliveryListArrayAdapter extends ArrayAdapter<DeliveryContent.Deliv
 
 	public DeliveryListArrayAdapter(Context context, int resource, int textViewResourceId, List<DeliveryItem> objects) {
 		super(context, resource, textViewResourceId, objects);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -50,6 +50,21 @@ public class DeliveryListActivity extends RoboFragmentActivity implements Delive
 		App.context = getApplicationContext();
 		App.dbHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
 
+		Bundle extras = getIntent().getExtras();
+		Log.i("DeliveryListActivity", (extras == null ? "Pas d'extra" : "eXtra !"));
+		if (extras != null) {
+			boolean recreate = extras.getBoolean("recreate", false);
+			if (recreate) {
+				// Don't infinite while, not good.
+				getIntent().removeExtra("recreate");
+				Log.i("DeliveryListActivity", "Call himself.");
+				Intent intent = new Intent(this, DeliveryListActivity.class);
+				startActivity(intent);
+				
+				finish();
+			}
+		}
+
 		if (findViewById(R.id.delivery_detail_container) != null) {
 			// The detail container view will be present only in the
 			// large-screen layouts (res/values-large and
@@ -69,7 +84,7 @@ public class DeliveryListActivity extends RoboFragmentActivity implements Delive
 		} else {
 			// Else, refresh the data content.
 			// DeliveryContent.refreshView();
-			
+
 		}
 	}
 
