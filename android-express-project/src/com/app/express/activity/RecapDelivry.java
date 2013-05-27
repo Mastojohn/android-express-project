@@ -79,8 +79,8 @@ public class RecapDelivry extends RoboActivity {
 
 	private Bundle extras;
 
-	private int deliveryId;
-	private Delivery delivery;
+	private static int deliveryId;
+	private static Delivery delivery;
 	private int nb_colis;
 	private Double poids_colis = 0.0;
 	private Packet packet;
@@ -192,18 +192,18 @@ public class RecapDelivry extends RoboActivity {
 			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
 			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-			 //Création du texte poids
-			 TextView tv = new TextView(this);
-			
-			 tv.setLayoutParams(new LayoutParams(200, 100));
-			 tv.setText("Commentaire additionnels :");
-			 tv.setPadding(10,50, 0, 10);
-			 //Création de texte vide
-			 TextView tv2 = new TextView(this);
-			
-			 tv2.setLayoutParams(new LayoutParams(200, 100));
-			 tv2.setText("");
-			 tv2.setPadding(30,50, 0, 10);
+			// Création du texte poids
+			TextView tv = new TextView(this);
+
+			tv.setLayoutParams(new LayoutParams(200, 100));
+			tv.setText("Commentaire additionnels :");
+			tv.setPadding(10, 50, 0, 10);
+			// Création de texte vide
+			TextView tv2 = new TextView(this);
+
+			tv2.setLayoutParams(new LayoutParams(200, 100));
+			tv2.setText("");
+			tv2.setPadding(30, 50, 0, 10);
 
 			// Création du spinner ( liste)
 			Spinner sp = new Spinner(this);
@@ -219,9 +219,7 @@ public class RecapDelivry extends RoboActivity {
 
 			// Placement
 			ll.setOrientation(1);
-			sp.setPadding(10,50, 0, 10);
-			
-			
+			sp.setPadding(10, 50, 0, 10);
 
 			// Ajour de la textbox et du spinner au linearlayout
 			ll.addView(tv2, relativeParams);
@@ -266,7 +264,7 @@ public class RecapDelivry extends RoboActivity {
 							packet.setDeliveryAttempted(true);
 							packet.setDeliveredState(Categories.Types.type_delivery_state.DELIVERED);
 							packet.setDao(App.dbHelper.getPacketDao());
-							
+
 							// Save it.
 							try {
 								packet.update();
@@ -274,45 +272,46 @@ public class RecapDelivry extends RoboActivity {
 								e.printStackTrace();
 							}
 						}
-						
-						if(packet != null){
-							// Récuperation des coordonnées gps
-							LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-							Criteria criteria = new Criteria();
-							criteria.setAltitudeRequired(false);
-							criteria.setBearingRequired(false);
-							criteria.setCostAllowed(true);
-							criteria.setSpeedRequired(false);
-							criteria.setPowerRequirement(Criteria.POWER_LOW);
-							criteria.setAccuracy(Criteria.ACCURACY_FINE);
-							String providerFine = locationManager.getBestProvider(criteria, true);
-							Location loc = locationManager.getLastKnownLocation(providerFine);
 
-							Delivery delivery = packet.getDelivery();
-							delivery.setDeliveryOver(true);
-							delivery.setDateOver(new Date());
-							delivery.setReceiverAvailable(true);
-							delivery.setSignature(signature);
+						// Récuperation des coordonnées gps
+						LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+						Criteria criteria = new Criteria();
+						criteria.setAltitudeRequired(false);
+						criteria.setBearingRequired(false);
+						criteria.setCostAllowed(true);
+						criteria.setSpeedRequired(false);
+						criteria.setPowerRequirement(Criteria.POWER_LOW);
+						criteria.setAccuracy(Criteria.ACCURACY_FINE);
+						String providerFine = locationManager.getBestProvider(criteria, true);
+						Location loc = locationManager.getLastKnownLocation(providerFine);
 
+						delivery.setDeliveryOver(true);
+						delivery.setDateOver(new Date());
+						delivery.setReceiverAvailable(true);
+						delivery.setSignature(signature);
+
+						try {
 							delivery.setLatitude(String.valueOf(loc.getLatitude()));
 							delivery.setLongitude(String.valueOf(loc.getLongitude()));
-							
-							delivery.setDao(App.dbHelper.getDeliveryDao());
-							try {
-								delivery.update();
-
-								Toast.makeText(this, "La livraison a été validée !", Toast.LENGTH_SHORT).show();
-							} catch (SQLException e) {
-								e.printStackTrace();
-								
-								Toast.makeText(this, "Une erreur est survenue durant la modification de la livraison.", Toast.LENGTH_SHORT).show();
-							}
-							
-							Intent intent = new Intent(RecapDelivry.this, DeliveryListActivity.class);
-							startActivity(intent);
-							
-							finish();
+						} catch (Exception e) {
+							Log.w("RecapDelivery", "Impossible de récupérer les coordonnées GPS !", e);
 						}
+
+						delivery.setDao(App.dbHelper.getDeliveryDao());
+						try {
+							delivery.update();
+
+							Toast.makeText(this, "La livraison a été validée !", Toast.LENGTH_SHORT).show();
+						} catch (SQLException e) {
+							e.printStackTrace();
+
+							Toast.makeText(this, "Une erreur est survenue durant la modification de la livraison.", Toast.LENGTH_SHORT).show();
+						}
+
+						Intent intent = new Intent(RecapDelivry.this, DeliveryListActivity.class);
+						startActivity(intent);
+
+						finish();
 					}
 				}
 				break;
