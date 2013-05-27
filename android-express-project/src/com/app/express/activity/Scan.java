@@ -203,7 +203,7 @@ public class Scan extends Activity {
 			Packet packetToMatch = new Packet();
 			packetToMatch.setDelivery(delivery);
 			packetToMatch.setPacketScanned(false);
-			packetToMatch.setDeliveredState("En cours");
+			packetToMatch.setDeliveredState(Categories.Types.type_delivery_state.PENDING);
 			
 			List<Packet> packetsToScan;
 			packetsToScan = packetDao.queryForMatchingArgs(packetToMatch);
@@ -280,7 +280,7 @@ public class Scan extends Activity {
 				packetToMatch.setBarcode(bareCode);
 				packetToMatch.setPacketScanned(false);
 				packetToMatch.setDelivery(delivery);
-				packetToMatch.setDeliveredState("En cours");
+				packetToMatch.setDeliveredState(Categories.Types.type_delivery_state.PENDING);
 				
 				// Ajouter filtre avec delivery pour ne get que les packets de la livraison actuelle.
 				List<Packet> packets = packetDao.queryForMatchingArgs(packetToMatch);
