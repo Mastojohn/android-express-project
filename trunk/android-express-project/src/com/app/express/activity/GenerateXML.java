@@ -608,13 +608,7 @@ public class GenerateXML extends Activity {
 						   serializer.endTag("", "colis");
 							}
 						    // FIN DE GESTION DE PLUSIEURS PAQUETS PAR COLIS
-							if (userReceveirTogetAway.size()>0){
-								User user = null;
-						    	Iterator k = userReceveirTogetAway.iterator();
-						    	while(k.hasNext())
-								{
-						    		user = (User)k.next();
-						    		 if (user.getTypeUser().equals(Categories.Types.type_user.RECEIVER)){
+						    		 if (delivery.getSender().getTypeUser().equals(Categories.Types.type_user.RECEIVER)){
 								    serializer.startTag("", "destinataire");
 									    serializer.startTag("", "nom");
 									    serializer.text(String.valueOf(user.getName()));
@@ -633,8 +627,8 @@ public class GenerateXML extends Activity {
 									    serializer.endTag("", "telephone");
 								    serializer.endTag("", "destinataire");
 							    serializer.endTag("", "livraison");	
-									}
-								}
+									
+								
 					    	}
 						}
 					}
