@@ -55,11 +55,11 @@ public class Scan extends Activity {
 
 	private List<Packet> packetsScanned = new ArrayList<Packet>();
 
-	// en dur pour le moment
 	private Delivery delivery;
+	private Packet packet;
 	private static int deliveryId;
 	private Bundle extras;
-
+	private List<Packet> packetsToScan;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -186,38 +186,21 @@ public class Scan extends Activity {
 			packetToMatch.setPacketScanned(false);
 			packetToMatch.setDeliveredState(Categories.Types.type_delivery_state.PENDING);
 
-			List<Packet> packetsToScan;
+			
 			packetsToScan = packetDao.queryForMatchingArgs(packetToMatch);
 
-			if (packetsToScan.size() > 0) {
-				Packet packet = null;
-				int i = 1;
+			if (packetsToScan.size() > 0) 
+			{
+
+				
+				//Appel de la methode de generation de taleau de code barre
+
+
 				Iterator j = packetsToScan.iterator();
-				TableLayout table = (TableLayout) findViewById(R.id.list_colis);
-				while (j.hasNext()) {
-					packet = (Packet) j.next();
-					packet.getBarcode();
 
-					TableRow tr = new TableRow(this);
-					tr.setId(i);
-					LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-					params.setMargins(0, 0, 0, 1);
-					tr.setLayoutParams(params);
+				fx_liste(j);
 
-					table.addView(tr);
-
-					// code
-					TextView code = new TextView(this);
-					code.setId(100 + i);
-					code.setText(packet.getBarcode());
-					code.setHeight(50);
-					code.setLayoutParams(new TableRow.LayoutParams(0));
-					tr.addView(code);
-
-					Log.i("Barcode" + i, packet.getBarcode());
-					i++;
-
-				}
+				
 				// Modification du champs colis restant
 				String exp_nbrcolis = "Il reste " + packetsToScan.size() + " coli(s) à scanner";
 				tvcolis_restant = (TextView) this.findViewById(R.id.textView_Nb_Colis);
@@ -227,7 +210,10 @@ public class Scan extends Activity {
 				button_Valid.setClickable(false);
 				button_Scan.setClickable(true);
 				button_UnScanable.setClickable(true);
+
+
 			} else {
+
 				Log.i("Scan", "Il n'y a plus de paquet à scanner pour cette livraison.");
 				button_Valid.setClickable(true);
 				button_Scan.setClickable(false);
@@ -408,5 +394,39 @@ public class Scan extends Activity {
 		super.onConfigurationChanged(newConfig);
 		screenchange = true;
 
+	}
+	public void fx_liste(Iterator j)
+	{
+		TableLayout table = (TableLayout) findViewById(R.id.list_colis);
+		int i=1;
+		while(j.hasNext())
+		{					
+				packet = (Packet)j.next();
+				packet.getBarcode();
+				
+				TableRow tr = new TableRow(this);
+				tr.setId(i);
+				LayoutParams params = new LayoutParams(
+				        LayoutParams.WRAP_CONTENT,      
+				        LayoutParams.WRAP_CONTENT
+				);
+				params.setMargins(0, 0, 0, 1);
+				tr.setLayoutParams(params);
+
+				table.addView(tr);
+				
+				//code
+	            TextView code = new TextView(this);
+	            code.setId(100+i);
+	            code.setText(packet.getBarcode());
+	            code.setHeight(50);
+	            code.setLayoutParams(new TableRow.LayoutParams(0));
+	            tr.addView(code);
+	            
+			 Log.i("Barcode"+i, packet.getBarcode());
+			 i++;
+			 
+		}
+		table.refreshDrawableState();
 	}
 }
