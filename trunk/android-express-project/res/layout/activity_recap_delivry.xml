@@ -16,7 +16,11 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
 
-        
+        <TextView
+            android:id="@+id/textView_poids_colis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Les colis pèse : " />
     </LinearLayout>
 
     <LinearLayout
@@ -33,35 +37,27 @@
             android:id="@android:id/tabhost"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="959dp"
-                android:paddingTop="62px" >
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="match_parent"
+                    android:layout_height="959dp"
+                    android:paddingTop="62px" >
 
-                <TabWidget
-                    android:id="@android:id/tabs"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" >
-                </TabWidget>
-
-            </FrameLayout>
-		</LinearLayout>
-        </TabHost> 
+                    <TabWidget
+                        android:id="@android:id/tabs"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+                    </TabWidget>
+                </FrameLayout>
+            </LinearLayout>
+        </TabHost>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView_colis_restant"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/button1"
-        android:layout_alignLeft="@+id/textView_poids_colis"
-        android:text="Il reste X colis " />
 
     <Button
         android:id="@+id/button_valid_cmd"
@@ -72,12 +68,11 @@
         android:text="Livraison terminée" />
 
     <TextView
-        android:id="@+id/textView_poids_colis"
+        android:id="@+id/textView_colis_restant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/linearLayout1"
-        android:layout_marginLeft="34dp"
-        android:layout_toRightOf="@+id/linearLayout1"
-        android:text="Les colis pèse : " />
+        android:layout_alignBottom="@+id/button_valid_cmd"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:text="Il reste X colis " />
 
 </RelativeLayout>

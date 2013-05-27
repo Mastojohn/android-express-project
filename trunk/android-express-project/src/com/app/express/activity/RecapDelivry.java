@@ -129,7 +129,7 @@ public class RecapDelivry extends RoboActivity {
 						}
 						
 						packetDao.update(packet);
-						
+						Log.i("Mon packet", packet.toString());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -200,6 +200,7 @@ public class RecapDelivry extends RoboActivity {
 			Spinner sp = new Spinner(this);
 			sp.setLayoutParams(lp);
 			sp.setId(i);
+			sp.setAdapter(dataAdapter);
 
 			// création textBox (EditText)
 			EditText commentDescription = new EditText(this);
