@@ -105,22 +105,7 @@ public class Scan extends Activity {
 		
 					@Override
 					public void onClick(View v) {
-						// Test de la validation du code barre
-//						tvResult.setError(null);
-//						View focusView = null;
-//						boolean cancel = false;
-//						if (TextUtils.isEmpty(tvResult.getText().toString())) {
-//							   tvResult.setError(getString(R.string.error_field_required));
-//							   focusView = tvResult;
-//							   cancel = true;
-//							  }
-//						else if (tvResult.getText().length() < 3) {
-//							tvResult.setError(getString(R.string.error_invalid_password));
-//							focusView = tvResult;
-//							cancel = true;
-//						}
-//						else if(cancel == false)
-//						{
+						
 						String out = tvResult_Unscanned.getText().toString();
 						Intent intent = new Intent(Scan.this, Scan.class);
 						intent.putExtra("bareCode", out);
